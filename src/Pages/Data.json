@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "title": "Plumber",
+        "img": "/Images/Plumber.jpg"
+    },
+    {
+        "id": 2,
+        "title": "Electrician",
+        "img": "/Images/Electrician.jpg"
+    },
+    {
+        "id": 3,
+        "title": "Carpenter",
+        "img": "/Images/Carpenter.avif"
+    },
+    {
+        "id": 4,
+        "title": "Painter",
+        "img": "/Images/Painter.jpeg"
+    },
+    {
+        "id": 5,
+        "title": "Mason",
+        "img": "/Images/Mason.jpg"
+    },
+    {
+        "id": 6,
+        "title": "Welder",
+        "img": "/Images/Welder.jpeg"
+    },
+    {
+        "id": 7,
+        "title": "Home Servant",
+        "img": "/Images/Home Servant.jpg"
+    },
+    {
+        "id": 8,
+        "title": "Gardener",
+        "img": "/Images/Gardener.webp"
+    }
+]
