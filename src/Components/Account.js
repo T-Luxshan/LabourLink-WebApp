@@ -1,46 +1,52 @@
 import React from "react";
-import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CreateIcon from "@mui/icons-material/Create";
+import Avatar from "@mui/material/Avatar"; // Import Avatar component
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const Account = ({ user }) => {
   return (
-    <Box
-      sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
-    >
-      <Avatar
-        alt={user.name}
-        src={user.profilePicture}
-        sx={{ width: 100, height: 100, marginBottom: 2 }}
-      />
+    <div style={{ textAlign: "center", marginTop: "20px" }}>
       <Typography
         variant="h5"
-        gutterBottom
-        sx={{
-          fontFamily: "Montserrat",
-          fontWeight: "bold",
-          marginBottom: "10px",
-          alignItems: "center",
-        }}
+        style={{ fontWeight: "bold", marginBottom: "20px" }}
       >
-        {user.name}
+        Personal Info
       </Typography>
-      <Typography
-        variant="body1"
-        gutterBottom
-        sx={{ fontFamily: "Montserrat", color: "gray", marginBottom: "5px" }}
+      <Paper
+        style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}
+        elevation={3}
       >
-        Email: {user.email}
-      </Typography>
-      <Typography
-        variant="body1"
-        sx={{ fontFamily: "Montserrat", color: "gray", marginBottom: "5px" }}
-      >
-        Address: {user.address}
-      </Typography>
-
-      {/* Add more user details as needed */}
-    </Box>
+        {/* Avatar */}
+        <Avatar
+          style={{
+            margin: "0 auto",
+            marginBottom: "20px",
+            backgroundColor: "orange",
+          }}
+        >
+          <AccountCircleIcon />
+        </Avatar>
+        {/* Render user information here */}
+        <Typography variant="body1">{`Name: ${user.name}`}</Typography>
+        <Typography variant="body1">{`Email: ${user.email}`}</Typography>
+        {/* Add more user info fields as needed */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginTop: "20px",
+          }}
+        >
+          <Button size="small" color="primary">
+            <CreateIcon />
+            Edit
+          </Button>
+        </div>
+      </Paper>
+    </div>
   );
 };
 
