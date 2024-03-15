@@ -14,7 +14,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import InfoIcon from "@mui/icons-material/Info";
 import ChangePassword from "../Components/ChangePassword";
 import ReactSwitch from "react-switch";
-import { ThemeContext } from "../App";//
+import { ThemeContext } from "../App";//j
 import { useContext } from "react";
 import AboutPage from "../Components/About";
 
