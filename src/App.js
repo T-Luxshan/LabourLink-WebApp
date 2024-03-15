@@ -1,11 +1,11 @@
 import "./App.css";
 import NavigationBar from "./Components/NavigationBar";
-import Home from "./Pages/Home1";
+import Home from "./Pages/Home";
 import Categories from "./Pages/Categories";
 import Footer from "./Components/Footer";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Profile from "./Pages/Profile";
-import userData from "./Pages/Profile/User.json";
+import userData from "./Components/User.json";
 // import { ThemeProvider } from '../src/Context/ThemeContext';
 
 import {  createContext, useState } from "react";

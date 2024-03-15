@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import Account from "./Profile/Account"; // Make sure to import or define the Account component
-import user from "./Profile/User.json"; // Make sure to import or define the user object
+import Account from "../Components/Account"; // Make sure to import or define the Account component
+import user from "../Components/User.json"; // Make sure to import or define the user object
 import TabPanel from "@mui/lab/TabPanel";
 import TabContext from "@mui/lab/TabContext";
 import { Typography, Paper, useMediaQuery } from "@mui/material";
@@ -12,11 +12,11 @@ import CreateIcon from "@mui/icons-material/Create";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SettingsIcon from "@mui/icons-material/Settings";
 import InfoIcon from "@mui/icons-material/Info";
-import ChangePassword from "./Profile/ChangePassword";
+import ChangePassword from "../Components/ChangePassword";
 import ReactSwitch from "react-switch";
 import { ThemeContext } from "../App";
 import { useContext } from "react";
-import AboutPage from "./Profile/About";
+import AboutPage from "../Components/About";
 
 function Profile() {
   const isSmallScreen = useMediaQuery("(max-width:600px)");
