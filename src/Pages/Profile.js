@@ -13,10 +13,10 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SettingsIcon from "@mui/icons-material/Settings";
 import InfoIcon from "@mui/icons-material/Info";
 import ChangePassword from "../Components/ChangePassword";
-import ReactSwitch from "react-switch";
-import { ThemeContext } from "../App";//j
+import { ThemeContext } from "../App";
 import { useContext } from "react";
 import AboutPage from "../Components/About";
+import ChangeTheme from "../Components/ChangeTheme";
 
 function Profile() {
   const isSmallScreen = useMediaQuery("(max-width:600px)");
@@ -179,16 +179,7 @@ function Profile() {
                   }}
                 ></Box>
 
-                <Typography variant="h5" sx={titleStyles.h5}>
-                  Change Theme
-                </Typography>
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                  <label>{theme === "dark?"}</label>
-                  <ReactSwitch
-                    onChange={toggleTheme}
-                    checked={theme === "dark"}
-                  />
-                </div>
+                <ChangeTheme />
               </Paper>
             </Box>
           </TabPanel>
