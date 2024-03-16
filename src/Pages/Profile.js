@@ -31,6 +31,8 @@ function Profile() {
     setValue(newValue);
   };
 
+  
+
   return (
     <TabContext value={value}>
       <Box
@@ -98,7 +100,7 @@ function Profile() {
           }}
         >
           <TabPanel value={0} sx={{ flex: 1 }}>
-            <Account user={user} />
+            <Account/>
           </TabPanel>
 
           <TabPanel value={1} sx={{ flex: 1 }}>

@@ -1,23 +1,35 @@
-import "./App.css";
+import React, { createContext, useState, useEffect } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import NavigationBar from "./Components/NavigationBar";
 import Home from "./Pages/Home";
 import Categories from "./Pages/Categories";
 import Footer from "./Components/Footer";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Profile from "./Pages/Profile";
-import userData from "./Components/User.json";
-// import { ThemeProvider } from '../src/Context/ThemeContext';
-
-import {  createContext, useState } from "react";
+import { getCustomersByEmail } from "./Service/CustomerService";
 
 export const ThemeContext = createContext(null);
 
 function App() {
   const [theme, setTheme] = useState("light");
+  // const [customer, setCustomer] = useState([]);
+
+  // useEffect(() => {
+  //   const fetchCustomerData = async (email) => {
+  //     try {
+  //       const response = await getCustomersByEmail(email);
+  //       setCustomer(response.data); // Update state with fetched customer data
+  //     } catch (error) {
+  //       console.error("Error fetching customer data:", error);
+  //       throw error;
+  //     }
+  //   };
+  
+  //   fetchCustomerData();
+  // }, []);
 
   const toggleTheme = () => {
     setTheme((curr) => (curr === "light" ? "dark" : "light"));
-  };  
+  };
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
@@ -44,13 +56,16 @@ function App() {
                 </>
               }
             />
-            {/* <Route path="/notification" element={<Notification />} /> */}
             <Route
               path="/profile"
               element={
                 <>
                   <NavigationBar />
-                  <Profile user={userData} /> {/* Pass user data as a prop */}
+                  {/* {customer.map((customerItem) => (
+                    <Profile key={customerItem.email} customer={customerItem} />
+                  ))} */}
+
+                  <Profile/>
                 </>
               }
             />

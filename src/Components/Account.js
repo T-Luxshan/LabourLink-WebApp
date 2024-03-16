@@ -1,12 +1,35 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import CreateIcon from "@mui/icons-material/Create";
 import Avatar from "@mui/material/Avatar"; // Import Avatar component
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { getCustomersByEmail } from "../Service/CustomerService"; //importing the API to get all customers
 
-const Account = ({ user }) => {
+const Account = () => {
+  const [customer, setCustomer] = useState({}); //customer is used to store an object initially empty object is passed
+
+  useEffect(() => {
+    const email = "customer@example.com"; // as it is done before doing login function here email is hardcoded
+
+    // Define an asynchronous function to fetch customer data from some external source, like an API.
+    //The await keyword is used to wait for the promise returned by getCustomersByEmail to resolve, and the result is stored in the response variable.
+    const fetchCustomerData = async () => {
+      try {
+        const response = await getCustomersByEmail(email); // Send a request to the server to retrieve customer data based on email
+        console.log(response.data.address); // Log the fetched customer's address to the console // checking wheather it is receiving address
+        setCustomer(response.data); // Update state with fetched customer data
+      } catch (error) {
+        console.error("Error fetching customer data:", error); // Handle any errors that occur during the data fetching process
+        throw error;
+      }
+    };
+
+    fetchCustomerData(); // Invoke the function to fetch customer data when the component mounts
+  }, []);
+  console.log(customer);
+
   return (
     <div style={{ textAlign: "center", marginTop: "20px" }}>
       <Typography
@@ -19,7 +42,6 @@ const Account = ({ user }) => {
         style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}
         elevation={3}
       >
-        {/* Avatar */}
         <Avatar
           style={{
             margin: "0 auto",
@@ -29,10 +51,12 @@ const Account = ({ user }) => {
         >
           <AccountCircleIcon />
         </Avatar>
-        {/* Render user information here */}
-        <Typography variant="body1">{`Name: ${user.name}`}</Typography>
-        <Typography variant="body1">{`Email: ${user.email}`}</Typography>
-        {/* Add more user info fields as needed */}
+
+        <Typography variant="body1">{`Name: ${customer.name}`}</Typography>
+        <Typography variant="body1">{`Email: ${customer.email}`}</Typography>
+        <Typography variant="body1">{`Mobile Number: ${customer.mobileNumber}`}</Typography>
+        <Typography variant="body1">{`Password: ${customer.password}`}</Typography>
+
         <div
           style={{
             display: "flex",
