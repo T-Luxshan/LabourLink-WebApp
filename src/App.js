@@ -6,26 +6,12 @@ import Categories from "./Pages/Categories";
 import Footer from "./Components/Footer";
 import Profile from "./Pages/Profile";
 import { getCustomersByEmail } from "./Service/CustomerService";
+import UpdateAccount from "./Components/UpdateAccount";
 
 export const ThemeContext = createContext(null);
 
 function App() {
   const [theme, setTheme] = useState("light");
-  // const [customer, setCustomer] = useState([]);
-
-  // useEffect(() => {
-  //   const fetchCustomerData = async (email) => {
-  //     try {
-  //       const response = await getCustomersByEmail(email);
-  //       setCustomer(response.data); // Update state with fetched customer data
-  //     } catch (error) {
-  //       console.error("Error fetching customer data:", error);
-  //       throw error;
-  //     }
-  //   };
-  
-  //   fetchCustomerData();
-  // }, []);
 
   const toggleTheme = () => {
     setTheme((curr) => (curr === "light" ? "dark" : "light"));
@@ -61,14 +47,11 @@ function App() {
               element={
                 <>
                   <NavigationBar />
-                  {/* {customer.map((customerItem) => (
-                    <Profile key={customerItem.email} customer={customerItem} />
-                  ))} */}
-
                   <Profile/>
                 </>
               }
             />
+            <Route path="/update-account" element={<UpdateAccount />} />
           </Routes>
         </Router>
       </div>
