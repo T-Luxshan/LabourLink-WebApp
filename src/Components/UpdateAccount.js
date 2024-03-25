@@ -19,7 +19,7 @@ const UpdateAccount = () => {
   const [address, setAddress] = useState("");
 
   const navigate = useNavigate();
-  const { email } = useParams();
+  const { email } = useParams();//
 
   useEffect(() => {
     if (email) {
