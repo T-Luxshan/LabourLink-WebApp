@@ -1,154 +1,208 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { over } from "stompjs";
+import SockJS from "sockjs-client";
 import {
   Container,
   Typography,
-  TextField,
-  Button,
+  Box,
   List,
   ListItem,
   ListItemText,
-  ListItemAvatar,
+  TextField,
+  Button,
   Avatar,
-  Divider,
-  Box,
 } from "@mui/material";
-import SockJS from "sockjs-client";
-import { Stomp } from "@stomp/stompjs";
+import { getUserByEmail } from "../Service/UserService"; 
 
 const ChatApplication = () => {
-  const [nickname, setNickname] = useState("");
-  const [fullname, setFullname] = useState("");
-  const [stompClient, setStompClient] = useState(null);
-  const [selectedUserId, setSelectedUserId] = useState(null);
-  const [connectedUsers, setConnectedUsers] = useState([]);
-  const [messageInput, setMessageInput] = useState("");
+  const [user, setUser] = useState({});
 
   useEffect(() => {
-    if (nickname && fullname) {
-      const socket = new SockJS("/ws");
-      const client = Stomp.over(socket);
-      client.connect({}, onConnected, onError);
-      setStompClient(client);
-    }
-  }, [nickname, fullname]);
+    const email = "customer@example.com";
+    const fetchUserData = async () => {
+      try {
+        const response = await getUserByEmail(email);
+        setUser(response.data);
+      } catch (error) {
+        console.log("Error fetching customer data:", error);
+        throw error;
+      }
+    };
+    fetchUserData();
+  }, []);
+
+  const [userData, setUserData] = useState({
+    username: "",
+    receivername: "",
+    connected: false,
+    message: "",
+  });
+
+  var stompClient = null;
+
+  const connect = () => {
+    let Sock = new SockJS("http://localhost:8080/ws");
+    stompClient = over(Sock);
+    stompClient.connect({}, onConnected, onError);
+  };
 
   const onConnected = () => {
-    stompClient.subscribe(
-      `/user/${nickname}/queue/messages`,
-      onMessageReceived
-    );
-    stompClient.subscribe(`/user/public`, onMessageReceived);
-    stompClient.send(
-      "/app/user.addUser",
-      {},
-      JSON.stringify({
-        nickName: nickname,
-        fullName: fullname,
-        status: "ONLINE",
-      })
-    );
+    stompClient.subscribe()
   };
 
   const onError = () => {
-    console.log(
-      "Could not connect to WebSocket server. Please refresh this page to try again!"
-    );
+    
   };
 
-  const connect = (event) => {
-    event.preventDefault();
-    if (nickname && fullname) {
-      const socket = new SockJS("/ws");
-      const client = Stomp.over(socket);
-      client.connect({}, onConnected, onError);
-      setStompClient(client);
-    }
-  };
-
-  const sendMessage = (event) => {
-    event.preventDefault();
-    const messageContent = messageInput.trim();
-    if (messageContent && stompClient) {
-      const chatMessage = {
-        senderId: nickname,
-        recipientId: selectedUserId,
-        content: messageContent,
-        timestamp: new Date(),
-      };
-      stompClient.send("/app/chat", {}, JSON.stringify(chatMessage));
-    }
-  };
-
-  const onLogout = () => {
-    stompClient.send(
-      "/app/user.disconnectUser",
-      {},
-      JSON.stringify({
-        nickName: nickname,
-        fullName: fullname,
-        status: "OFFLINE",
-      })
-    );
-    window.location.reload();
-  };
-
-  const handleUserItemClick = (userId) => {
-    setSelectedUserId(userId);
-    fetchAndDisplayUserChat();
-  };
-
-  const fetchAndDisplayUserChat = async () => {
-    // Fetch and display user chat logic
-  };
-
-  const onMessageReceived = (message) => {
-    // Handle incoming messages here
-    console.log("Received message:", message);
-  };
 
   return (
-    <Container sx={{ marginTop: "150px" }}>
-      <Typography variant="h3" gutterBottom>
-        One to One Chat
-      </Typography>
-      <Box>
-        {/* Display online users */}
-        <List>
-          {connectedUsers.map((user) => (
-            <ListItem
-              key={user.userId}
-              button
-              onClick={() => handleUserItemClick(user.userId)}
+    <Container sx={{ marginTop: "70px" }}>
+      {userData.connected ? (
+        <Box sx={{ my: 4 }}>
+          <Typography variant="h2" align="center" gutterBottom>
+            Chat with your labour
+          </Typography>
+
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Box
+              sx={{
+                width: "800px",
+                height: "600px",
+                margin: "20px",
+                border: "1px solid #ccc",
+                backgroundColor: "#fff",
+                overflow: "hidden",
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                borderRadius: "8px",
+                display: "flex",
+              }}
             >
-              <ListItemAvatar>
-                <Avatar>{user.fullName[0]}</Avatar>
-              </ListItemAvatar>
-              <ListItemText primary={user.fullName} />
-            </ListItem>
-          ))}
-        </List>
-      </Box>
-      <Box>
-        {/* Display chat messages */}
-        <List>{/* Map through messages and display them */}</List>
-        {/* Input field for typing messages */}
-        <form onSubmit={sendMessage}>
-          <TextField
-            label="Type your message..."
-            value={messageInput}
-            onChange={(e) => setMessageInput(e.target.value)}
-            required
-          />
-          <Button type="submit" variant="contained" color="primary">
-            Send
-          </Button>
-        </form>
-      </Box>
-      <Box>
-        <Button onClick={onLogout} variant="contained" color="secondary">
-          Logout
-        </Button>
-      </Box>
+              {/* Users List */}
+              <Box
+                sx={{
+                  flex: 1,
+                  borderRight: "1px solid #ccc",
+                  padding: "20px",
+                  boxSizing: "border-box",
+                  backgroundColor: "#3498db",
+                  color: "#fff",
+                  borderTopLeftRadius: "8px",
+                  borderBottomLeftRadius: "8px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Box>
+                  <Typography variant="h2" gutterBottom>
+                    Online Users
+                  </Typography>
+                  <List>
+                    {/* Online Users List */}
+                    {/* Replace the static user list with dynamic user data */}
+                    <ListItem button>
+                      <Avatar />
+                      <ListItemText primary="User 1" />
+                    </ListItem>
+                    <ListItem button>
+                      <Avatar />
+                      <ListItemText primary="User 2" />
+                    </ListItem>
+                    {/* End of Online Users List */}
+                  </List>
+                </Box>
+                <Box>
+                  <Typography variant="body1" id="connected-user-fullname">
+                    {/* Connected user's full name */}
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    href="javascript:void(0)"
+                    id="logout"
+                  >
+                    Logout
+                  </Button>
+                </Box>
+              </Box>
+
+              {/* Chat Area */}
+              <Box
+                sx={{
+                  flex: 3,
+                  display: "flex",
+                  flexDirection: "column",
+                  padding: "20px",
+                  boxSizing: "border-box",
+                  borderTopRightRadius: "8px",
+                  borderBottomRightRadius: "8px",
+                }}
+              >
+                <Box sx={{ flex: 1, overflowY: "scroll" }}>
+                  {/* Chat Messages */}
+                  {/* Replace the static chat messages with dynamic messages */}
+                  <div>
+                    <div>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          backgroundColor: "#3498db",
+                          color: "#fff",
+                          padding: "8px",
+                          borderRadius: "5px",
+                          alignSelf: "flex-end",
+                        }}
+                      >
+                        Sender's message
+                      </Typography>
+                    </div>
+                    <div>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          backgroundColor: "#ecf0f1",
+                          color: "#333",
+                          padding: "8px",
+                          borderRadius: "5px",
+                          alignSelf: "flex-start",
+                        }}
+                      >
+                        Receiver's message
+                      </Typography>
+                    </div>
+                  </div>
+                  {/* End of Chat Messages */}
+                </Box>
+
+                {/* Message Input */}
+                <form id="messageForm" name="messageForm" className="hidden">
+                  <Box sx={{ display: "flex", marginTop: "auto" }}>
+                    <TextField
+                      id="message"
+                      label="Type your message..."
+                      variant="outlined"
+                      sx={{ flex: 1, marginRight: "10px" }}
+                    />
+                    <Button variant="contained" color="primary">
+                      Send
+                    </Button>
+                  </Box>
+                </form>
+                {/* End of Message Input */}
+              </Box>
+              {/* End of Chat Area */}
+            </Box>
+          </Box>
+        </Box>
+      ) : (
+        // Render something meaningful here when connected is false
+        // For example, you could display a loading spinner or a message
+        <Box sx={{ my: 4 }}>
+          <Typography variant="h2" align="center" gutterBottom>
+            Connecting...
+          </Typography>
+        </Box>
+      )}
     </Container>
   );
 };
