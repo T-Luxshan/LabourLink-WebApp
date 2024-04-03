@@ -1,19 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Typography, TextField, Button, List, ListItem, ListItemText, ListItemAvatar, Avatar, Divider, Box } from '@mui/material';
-import SockJS from 'sockjs-client';
-import { Stomp } from '@stomp/stompjs';
+import React, { useState, useEffect } from "react";
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
+  Divider,
+  Box,
+} from "@mui/material";
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
 
 const ChatApplication = () => {
-  const [nickname, setNickname] = useState('');
-  const [fullname, setFullname] = useState('');
+  const [nickname, setNickname] = useState("");
+  const [fullname, setFullname] = useState("");
   const [stompClient, setStompClient] = useState(null);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [connectedUsers, setConnectedUsers] = useState([]);
-  const [messageInput, setMessageInput] = useState('');
+  const [messageInput, setMessageInput] = useState("");
 
   useEffect(() => {
     if (nickname && fullname) {
-      const socket = new SockJS('/ws');
+      const socket = new SockJS("/ws");
       const client = Stomp.over(socket);
       client.connect({}, onConnected, onError);
       setStompClient(client);
@@ -21,23 +33,32 @@ const ChatApplication = () => {
   }, [nickname, fullname]);
 
   const onConnected = () => {
-    stompClient.subscribe(`/user/${nickname}/queue/messages`, onMessageReceived);
+    stompClient.subscribe(
+      `/user/${nickname}/queue/messages`,
+      onMessageReceived
+    );
     stompClient.subscribe(`/user/public`, onMessageReceived);
     stompClient.send(
       "/app/user.addUser",
       {},
-      JSON.stringify({ nickName: nickname, fullName: fullname, status: 'ONLINE' })
+      JSON.stringify({
+        nickName: nickname,
+        fullName: fullname,
+        status: "ONLINE",
+      })
     );
   };
 
   const onError = () => {
-    console.log('Could not connect to WebSocket server. Please refresh this page to try again!');
+    console.log(
+      "Could not connect to WebSocket server. Please refresh this page to try again!"
+    );
   };
 
   const connect = (event) => {
     event.preventDefault();
     if (nickname && fullname) {
-      const socket = new SockJS('/ws');
+      const socket = new SockJS("/ws");
       const client = Stomp.over(socket);
       client.connect({}, onConnected, onError);
       setStompClient(client);
@@ -62,7 +83,11 @@ const ChatApplication = () => {
     stompClient.send(
       "/app/user.disconnectUser",
       {},
-      JSON.stringify({ nickName: nickname, fullName: fullname, status: 'OFFLINE' })
+      JSON.stringify({
+        nickName: nickname,
+        fullName: fullname,
+        status: "OFFLINE",
+      })
     );
     window.location.reload();
   };
@@ -78,36 +103,23 @@ const ChatApplication = () => {
 
   const onMessageReceived = (message) => {
     // Handle incoming messages here
-    console.log('Received message:', message);
+    console.log("Received message:", message);
   };
 
   return (
-    <Container>
-      <Typography variant="h2" gutterBottom>
+    <Container sx={{ marginTop: "150px" }}>
+      <Typography variant="h3" gutterBottom>
         One to One Chat
       </Typography>
-      <Box>
-        <form onSubmit={connect}>
-          <TextField
-            label="Nickname"
-            value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
-            required
-          />
-          <TextField
-            label="Real Name"
-            value={fullname}
-            onChange={(e) => setFullname(e.target.value)}
-            required
-          />
-          <Button type="submit" variant="contained" color="primary">Enter Chatroom</Button>
-        </form>
-      </Box>
       <Box>
         {/* Display online users */}
         <List>
           {connectedUsers.map((user) => (
-            <ListItem key={user.userId} button onClick={() => handleUserItemClick(user.userId)}>
+            <ListItem
+              key={user.userId}
+              button
+              onClick={() => handleUserItemClick(user.userId)}
+            >
               <ListItemAvatar>
                 <Avatar>{user.fullName[0]}</Avatar>
               </ListItemAvatar>
@@ -118,9 +130,7 @@ const ChatApplication = () => {
       </Box>
       <Box>
         {/* Display chat messages */}
-        <List>
-          {/* Map through messages and display them */}
-        </List>
+        <List>{/* Map through messages and display them */}</List>
         {/* Input field for typing messages */}
         <form onSubmit={sendMessage}>
           <TextField
@@ -129,11 +139,15 @@ const ChatApplication = () => {
             onChange={(e) => setMessageInput(e.target.value)}
             required
           />
-          <Button type="submit" variant="contained" color="primary">Send</Button>
+          <Button type="submit" variant="contained" color="primary">
+            Send
+          </Button>
         </form>
       </Box>
       <Box>
-        <Button onClick={onLogout} variant="contained" color="secondary">Logout</Button>
+        <Button onClick={onLogout} variant="contained" color="secondary">
+          Logout
+        </Button>
       </Box>
     </Container>
   );

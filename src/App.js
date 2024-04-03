@@ -8,6 +8,7 @@ import Profile from "./Pages/Profile";
 import { getCustomersByEmail } from "./Service/CustomerService";
 import UpdateAccount from "./Components/UpdateAccount";
 import ChatApplication from "./Pages/ChatApplication";
+import ChatApplication2 from "./Pages/ChatAppliccation2";
 
 export const ThemeContext = createContext(null);
 
@@ -53,7 +54,7 @@ function App() {
               }
             />
             <Route path="/update-account" element={<UpdateAccount />} />
-            <Route path="/chat" element={<ChatApplication />} />
+            <Route path="/chat" element={<ChatApplication2 />} />
 
           </Routes>
         </Router>

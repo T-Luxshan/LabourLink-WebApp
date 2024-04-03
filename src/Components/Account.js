@@ -9,10 +9,8 @@
 // import { getCustomersByEmail } from "../Service/CustomerService"; //importing the API to get all customers
 // import UpdateAccount from "./UpdateAccount";
 
-
 // const Account = () => {
 //   const [customer, setCustomer] = useState({}); //customer is used to store an object initially empty object is passed
-
 
 //   useEffect(() => {
 //     const email = "customer@example.com"; // as it is done before doing login function here email is hardcoded
@@ -120,7 +118,7 @@ const Account = () => {
         variant="h5"
         style={{ fontWeight: "bold", marginBottom: "20px" }}
       >
-        Customer Personal Info
+        Customer Personal Info 
       </Typography>
       <Paper
         style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}
