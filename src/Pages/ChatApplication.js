@@ -12,27 +12,42 @@ import {
   Button,
   Avatar,
 } from "@mui/material";
-import { getUserByEmail , findConnectedUsers } from "../Service/UserService";
+import { getUserByEmail, findConnectedUsers } from "../Service/UserService";
 
 const ChatApplication = () => {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState({
+    email: "",
+    receiverEmail: "",
+    status: "OFFLINE",
+    message: "",
+  });
+  
+
+  const [privateChats, setPrivateChats] = useState(new Map());
+  const [publicChats, setPublicChats] = useState([]);
+  const [tab, setTab] = useState("CHATROOM");
+
   const [connectedUsers, setConnectedUsers] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
-  const [email, setEmail] = useState("");
 
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
+  //Getting User details with email
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await getUserByEmail(email);
+        const response = await getUserByEmail(user.email);
         setUser(response.data);
       } catch (error) {
         console.log("Error fetching customer data:", error);
       }
     };
     fetchUserData();
-  }, [email]); // Use `email` as the dependency here
+  }, [user.email]); // Use `email` as the dependency here when email changes refreshes
 
   console.log(user.email);
   console.log(user.name);
@@ -40,13 +55,14 @@ const ChatApplication = () => {
   var stompClient = null;
 
   const connect = (event) => {
-    // Create a SockJS instance and connect with STOMP over WebSocket
-    let socket = new SockJS("http://localhost:8080/ws");
-    stompClient = over(socket);
-    stompClient.connect({}, onConnected, onError);
+    if (user.email) {
+      // Create a SockJS instance and connect with STOMP over WebSocket
+      let socket = new SockJS("http://localhost:8080/ws");
+      stompClient = over(socket);
+      stompClient.connect({}, onConnected, onError);
+    }
 
-    // Prevent the default form submission behavior
-    event.preventDefault();
+
   };
 
   const onConnected = () => {
@@ -89,21 +105,18 @@ const ChatApplication = () => {
     stompClient.send("/app/message", {}, JSON.stringify(chatMessage));
   };
 
-
-
   async function findAndDisplayConnectedUsers() {
     try {
-        const connectedUserResponse = await findConnectedUsers(); // Call the function
-        const connectedUsersData = await connectedUserResponse.data; // Access data property of response
-        const filteredUsers = connectedUsersData.filter(
-            (u) => u.email !== user.email
-        );
-        setConnectedUsers(filteredUsers);
+      const connectedUserResponse = await findConnectedUsers(); // Call the function
+      const connectedUsersData = await connectedUserResponse.data; // Access data property of response
+      const filteredUsers = connectedUsersData.filter(
+        (u) => u.email !== user.email
+      );
+      setConnectedUsers(filteredUsers);
     } catch (error) {
-        console.log("Error fetching connected users:", error);
+      console.log("Error fetching connected users:", error);
     }
-}
-
+  }
 
   const onError = () => {
     console.log("Error connecting to WebSocket server.");
@@ -144,9 +157,18 @@ const ChatApplication = () => {
     }
   };
 
+  const handleEmail = (event) => {
+    const { value } = event.target;
+    setUser({ ...user, email: value });
+  };
+
+  const registerUser = () => {
+    connect();
+  };
+
   return (
     <Container sx={{ marginTop: "70px" }}>
-      {user.email ? (
+      {user.status === "ONLINE" ? (
         <Box sx={{ my: 4 }}>
           <Typography variant="h2" align="center" gutterBottom>
             Chat with {user.name}
@@ -269,11 +291,11 @@ const ChatApplication = () => {
         <Box sx={{ my: 4 }}>
           <TextField
             placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={user.email}
+            onChange={handleEmail}
             margin="normal"
           />
-          <Button variant="contained" color="primary" onClick={connect}>
+          <Button variant="contained" color="primary" onClick={registerUser}>
             Connect
           </Button>
         </Box>

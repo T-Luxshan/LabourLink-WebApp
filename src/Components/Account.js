@@ -118,7 +118,7 @@ const Account = () => {
         variant="h5"
         style={{ fontWeight: "bold", marginBottom: "20px" }}
       >
-        Customer Personal Info 
+        Customer Info 
       </Typography>
       <Paper
         style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}
