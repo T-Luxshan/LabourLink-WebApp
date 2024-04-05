@@ -10,3 +10,7 @@ export const findConnectedUsers = () =>{
     return axios.get(REST_API_BASE_URL + "/users")
   };
   
+
+  export const updateUserStatus = (email, newUser) => {
+    return axios.put(`${REST_API_BASE_URL}/${email}`, newUser);
+};

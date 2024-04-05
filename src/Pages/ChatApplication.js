@@ -12,7 +12,7 @@ import {
   Button,
   Avatar,
 } from "@mui/material";
-import { getUserByEmail, findConnectedUsers } from "../Service/UserService";
+import { getUserByEmail, findConnectedUsers ,updateUserStatus} from "../Service/UserService";
 
 const ChatApplication = () => {
   const [user, setUser] = useState({
@@ -21,7 +21,6 @@ const ChatApplication = () => {
     status: "OFFLINE",
     message: "",
   });
-  
 
   const [privateChats, setPrivateChats] = useState(new Map());
   const [publicChats, setPublicChats] = useState([]);
@@ -31,9 +30,11 @@ const ChatApplication = () => {
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
+  const [receivedMessagesCount, setReceivedMessagesCount] = useState(0);
 
   useEffect(() => {
     console.log(user);
+    
   }, [user]);
 
   //Getting User details with email
@@ -49,6 +50,11 @@ const ChatApplication = () => {
     fetchUserData();
   }, [user.email]); // Use `email` as the dependency here when email changes refreshes
 
+  useEffect(() => {
+    // Update received messages count whenever messages state changes
+    setReceivedMessagesCount(messages.length);
+  }, [messages]);
+
   console.log(user.email);
   console.log(user.name);
 
@@ -61,8 +67,6 @@ const ChatApplication = () => {
       stompClient = over(socket);
       stompClient.connect({}, onConnected, onError);
     }
-
-
   };
 
   const onConnected = () => {
@@ -71,7 +75,11 @@ const ChatApplication = () => {
       return;
     }
 
-    setUser({ ...user, status: "ONLINE" });
+
+
+
+
+
 
     stompClient.subscribe(
       "/user/" + user.email + "/queue/messages",
@@ -79,12 +87,14 @@ const ChatApplication = () => {
     );
     stompClient.subscribe("/user/public", onMessageReceived);
 
-    stompClient.send(
-      "/app/user.add",
-      {},
-      JSON.stringify({ name: user.name, status: "ONLINE" })
-    );
+    // //register the connected user
+    // stompClient.send(
+    //   "/app/user.add",
+    //   {},
+    //   JSON.stringify({ email: user.email, name: user.name, status: "ONLINE" })
+    // );
 
+    //find and display connected users
     findAndDisplayConnectedUsers();
 
     // Call userJoin after establishing the connection
@@ -162,9 +172,26 @@ const ChatApplication = () => {
     setUser({ ...user, email: value });
   };
 
-  const registerUser = () => {
+
+  const updateUserStatusToDB = async (user) => {
+    console.log(user);
+
+    try {
+        const response = await updateUserStatus(user.email, { status: "ONLINE" });
+        console.log(response);
+        console.log("User status changed successfully");
+        // Optionally, you can reset the form or show a success message to the user
+    } catch (error) {
+        console.error("Error updating user status:", error);
+        // Handle errors such as displaying an error message to the user
+    }
+};
+
+  const registerUser = (user, setUser) => {
+    setUser({ ...user, status: "ONLINE" });
+    updateUserStatusToDB(user);
     connect();
-  };
+};
 
   return (
     <Container sx={{ marginTop: "70px" }}>
@@ -211,11 +238,13 @@ const ChatApplication = () => {
                     {connectedUsers.map((user, index) => (
                       <ListItem
                         button
-                        key={user.id}
-                        onClick={() => handleUserClick(user.id)}
+                        key={user.email}
+                        onClick={() => handleUserClick(user.email)}
                       >
                         <Avatar />
-                        <ListItemText primary={user.name} />
+                        <ListItemText
+                          primary={`${user.name} (${receivedMessagesCount})`}
+                        />
                       </ListItem>
                     ))}
                   </List>
@@ -289,16 +318,16 @@ const ChatApplication = () => {
         </Box>
       ) : (
         <Box sx={{ my: 4 }}>
-          <TextField
-            placeholder="Enter your email"
-            value={user.email}
-            onChange={handleEmail}
-            margin="normal"
-          />
-          <Button variant="contained" color="primary" onClick={registerUser}>
-            Connect
-          </Button>
-        </Box>
+    <TextField
+        placeholder="Enter your email"
+        value={user.email}
+        onChange={handleEmail}
+        margin="normal"
+    />
+    <Button variant="contained" color="primary" onClick={() => registerUser(user, setUser)}>
+        Connect
+    </Button>
+</Box>
       )}
     </Container>
   );
