@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState ,useRef} from "react";
 import { over } from "stompjs";
 import SockJS from "sockjs-client";
 import {
@@ -12,7 +12,7 @@ import {
   Button,
   Avatar,
 } from "@mui/material";
-import { getUserByEmail, findConnectedUsers ,updateUserStatus} from "../Service/UserService";
+import { getUserByEmail, findConnectedUsers ,updateUserStatus, findChatMessages} from "../Service/UserService";
 
 const ChatApplication = () => {
   const [user, setUser] = useState({
@@ -22,15 +22,13 @@ const ChatApplication = () => {
     message: "",
   });
 
-  const [privateChats, setPrivateChats] = useState(new Map());
-  const [publicChats, setPublicChats] = useState([]);
-  const [tab, setTab] = useState("CHATROOM");
-
   const [connectedUsers, setConnectedUsers] = useState([]);
-  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [selectedUser, setselectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
   const [receivedMessagesCount, setReceivedMessagesCount] = useState(0);
+
+  const chatAreaRef = useRef(null); // Create a reference to the chat area
 
   useEffect(() => {
     console.log(user);
@@ -58,9 +56,9 @@ const ChatApplication = () => {
   console.log(user.email);
   console.log(user.name);
 
-  var stompClient = null;
+  var stompClient = null; 
 
-  const connect = (event) => {
+  const connect = () => {
     if (user.email) {
       // Create a SockJS instance and connect with STOMP over WebSocket
       let socket = new SockJS("http://localhost:8080/ws");
@@ -75,45 +73,32 @@ const ChatApplication = () => {
       return;
     }
 
-
-
-
-
-
-
     stompClient.subscribe(
       "/user/" + user.email + "/queue/messages",
       onMessageReceived
     );
     stompClient.subscribe("/user/public", onMessageReceived);
 
-    // //register the connected user
-    // stompClient.send(
-    //   "/app/user.add",
-    //   {},
-    //   JSON.stringify({ email: user.email, name: user.name, status: "ONLINE" })
-    // );
-
     //find and display connected users
     findAndDisplayConnectedUsers();
 
     // Call userJoin after establishing the connection
-    userJoin();
+    // userJoin();
   };
 
-  const userJoin = () => {
-    // Ensure that user.email is present and accurate
-    if (!user || !user.email) {
-      console.error("User email is missing or invalid.");
-      return;
-    }
+  // const userJoin = () => {
+  //   // Ensure that user.email is present and accurate
+  //   if (!user || !user.email) {
+  //     console.error("User email is missing or invalid.");
+  //     return;
+  //   }
 
-    var chatMessage = {
-      senderName: user.name,
-      status: "ONLINE",
-    };
-    stompClient.send("/app/message", {}, JSON.stringify(chatMessage));
-  };
+  //   var chatMessage = {
+  //     senderName: user.name,
+  //     status: "ONLINE",
+  //   };
+  //   stompClient.send("/app/message", {}, JSON.stringify(chatMessage));
+  // };
 
   async function findAndDisplayConnectedUsers() {
     try {
@@ -137,35 +122,49 @@ const ChatApplication = () => {
     setMessages((prevMessages) => [...prevMessages, message]);
   };
 
-  const sendMessage = () => {
-    if (messageInput.trim() && selectedUserId) {
+  const sendMessage = (event) => {
+    event.preventDefault();
+    if (messageInput.trim() && selectedUser) {
       const chatMessage = {
         senderId: user.email,
-        recipientId: selectedUserId,
+        recipientId: selectedUser,
         content: messageInput.trim(),
         timestamp: new Date().toISOString(),
       };
+      console.log(chatMessage);
       stompClient.send("/app/chat", {}, JSON.stringify(chatMessage));
       setMessageInput("");
     }
   };
 
-  const handleUserClick = (selectedUserId) => {
-    setSelectedUserId(selectedUserId);
-    fetchAndDisplayUserChat(selectedUserId);
+  const handleUserClick = (selectedUser) => {
+    setselectedUser(selectedUser);
+    fetchAndDisplayUserChat(selectedUser);
   };
 
-  const fetchAndDisplayUserChat = async (selectedUserId) => {
+  const fetchAndDisplayUserChat = async (selectedUser) => {
     try {
-      const UserChatResponse = await fetch(
-        `/messages/${user.email}/${selectedUserId}`
-      );
-      const chatHistory = await UserChatResponse.json();
+      const UserChatResponse = await findChatMessages(user.email, selectedUser);
+      const chatHistory = await UserChatResponse.data;// Access 'data' directly from the Axios response
       setMessages(chatHistory);
     } catch (error) {
       console.log("Error fetching chat history:", error);
     }
+
+
   };
+
+  // const displayMessage = (selectedUser) => {
+    
+    
+  // };
+
+  useEffect(() => {
+    if (chatAreaRef.current) {
+      chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
+    }
+  }, [messages]);
+  
 
   const handleEmail = (event) => {
     const { value } = event.target;
@@ -198,7 +197,7 @@ const ChatApplication = () => {
       {user.status === "ONLINE" ? (
         <Box sx={{ my: 4 }}>
           <Typography variant="h2" align="center" gutterBottom>
-            Chat with {user.name}
+            Chat with Labour
           </Typography>
 
           <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -240,6 +239,7 @@ const ChatApplication = () => {
                         button
                         key={user.email}
                         onClick={() => handleUserClick(user.email)}
+                        style={{ backgroundColor: selectedUser === user.email ? 'red' : 'lightblue' }}
                       >
                         <Avatar />
                         <ListItemText
@@ -267,7 +267,7 @@ const ChatApplication = () => {
                   borderBottomRightRadius: "8px",
                 }}
               >
-                <Box sx={{ flex: 1, overflowY: "scroll" }}>
+                <Box sx={{ flex: 1, overflowY: "scroll" }} ref={chatAreaRef}>
                   {messages.map((message, index) => (
                     <div key={index}>
                       <Typography

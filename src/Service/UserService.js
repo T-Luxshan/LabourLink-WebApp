@@ -11,6 +11,11 @@ export const findConnectedUsers = () =>{
   };
   
 
-  export const updateUserStatus = (email, newUser) => {
+export const updateUserStatus = (email, newUser) => {
     return axios.put(`${REST_API_BASE_URL}/${email}`, newUser);
 };
+
+export const findChatMessages = (senderEmail, recipientEmail) => {
+    return axios.get(`${REST_API_BASE_URL}/messages/${senderEmail}/${recipientEmail}`);
+};
+
