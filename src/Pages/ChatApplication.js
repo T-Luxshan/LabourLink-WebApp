@@ -1,4 +1,4 @@
-import React, { useEffect, useState ,useRef} from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { over } from "stompjs";
 import SockJS from "sockjs-client";
 import {
@@ -12,7 +12,13 @@ import {
   Button,
   Avatar,
 } from "@mui/material";
-import { getUserByEmail, findConnectedUsers ,updateUserStatus, findChatMessages} from "../Service/UserService";
+import {
+  getUserByEmail,
+  findConnectedUsers,
+  updateUserStatus,
+  findChatMessages,
+} from "../Service/UserService";
+var stompClient = null;
 
 const ChatApplication = () => {
   const [user, setUser] = useState({
@@ -32,7 +38,6 @@ const ChatApplication = () => {
 
   useEffect(() => {
     console.log(user);
-    
   }, [user]);
 
   //Getting User details with email
@@ -56,9 +61,7 @@ const ChatApplication = () => {
   console.log(user.email);
   console.log(user.name);
 
-  var stompClient = null; 
-
-  const connect = () => {
+  const connect = (event) => {
     if (user.email) {
       // Create a SockJS instance and connect with STOMP over WebSocket
       let socket = new SockJS("http://localhost:8080/ws");
@@ -83,22 +86,22 @@ const ChatApplication = () => {
     findAndDisplayConnectedUsers();
 
     // Call userJoin after establishing the connection
-    // userJoin();
+    userJoin();
   };
 
-  // const userJoin = () => {
-  //   // Ensure that user.email is present and accurate
-  //   if (!user || !user.email) {
-  //     console.error("User email is missing or invalid.");
-  //     return;
-  //   }
+  const userJoin = () => {
+    // Ensure that user.email is present and accurate
+    if (!user || !user.email) {
+      console.error("User email is missing or invalid.");
+      return;
+    }
 
-  //   var chatMessage = {
-  //     senderName: user.name,
-  //     status: "ONLINE",
-  //   };
-  //   stompClient.send("/app/message", {}, JSON.stringify(chatMessage));
-  // };
+    var chatMessage = {
+      senderName: user.name,
+      status: "ONLINE",
+    };
+    stompClient.send("/app/message", {}, JSON.stringify(chatMessage));
+  };
 
   async function findAndDisplayConnectedUsers() {
     try {
@@ -132,7 +135,11 @@ const ChatApplication = () => {
         timestamp: new Date().toISOString(),
       };
       console.log(chatMessage);
+
+      // Sending the chat message to the backend
       stompClient.send("/app/chat", {}, JSON.stringify(chatMessage));
+      console.log("Message Sent");
+
       setMessageInput("");
     }
   };
@@ -145,52 +152,43 @@ const ChatApplication = () => {
   const fetchAndDisplayUserChat = async (selectedUser) => {
     try {
       const UserChatResponse = await findChatMessages(user.email, selectedUser);
-      const chatHistory = await UserChatResponse.data;// Access 'data' directly from the Axios response
+      const chatHistory = await UserChatResponse.data; // Access 'data' directly from the Axios response
       setMessages(chatHistory);
     } catch (error) {
       console.log("Error fetching chat history:", error);
     }
-
-
   };
-
-  // const displayMessage = (selectedUser) => {
-    
-    
-  // };
 
   useEffect(() => {
     if (chatAreaRef.current) {
       chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
     }
   }, [messages]);
-  
 
   const handleEmail = (event) => {
     const { value } = event.target;
     setUser({ ...user, email: value });
   };
 
-
   const updateUserStatusToDB = async (user) => {
     console.log(user);
 
     try {
-        const response = await updateUserStatus(user.email, { status: "ONLINE" });
-        console.log(response);
-        console.log("User status changed successfully");
-        // Optionally, you can reset the form or show a success message to the user
+      const response = await updateUserStatus(user.email, { status: "ONLINE" });
+      console.log(response);
+      console.log("User status changed successfully");
+      // Optionally, you can reset the form or show a success message to the user
     } catch (error) {
-        console.error("Error updating user status:", error);
-        // Handle errors such as displaying an error message to the user
+      console.error("Error updating user status:", error);
+      // Handle errors such as displaying an error message to the user
     }
-};
+  };
 
   const registerUser = (user, setUser) => {
     setUser({ ...user, status: "ONLINE" });
     updateUserStatusToDB(user);
     connect();
-};
+  };
 
   return (
     <Container sx={{ marginTop: "70px" }}>
@@ -239,7 +237,10 @@ const ChatApplication = () => {
                         button
                         key={user.email}
                         onClick={() => handleUserClick(user.email)}
-                        style={{ backgroundColor: selectedUser === user.email ? 'red' : 'lightblue' }}
+                        style={{
+                          backgroundColor:
+                            selectedUser === user.email ? "red" : "lightblue",
+                        }}
                       >
                         <Avatar />
                         <ListItemText
@@ -318,16 +319,20 @@ const ChatApplication = () => {
         </Box>
       ) : (
         <Box sx={{ my: 4 }}>
-    <TextField
-        placeholder="Enter your email"
-        value={user.email}
-        onChange={handleEmail}
-        margin="normal"
-    />
-    <Button variant="contained" color="primary" onClick={() => registerUser(user, setUser)}>
-        Connect
-    </Button>
-</Box>
+          <TextField
+            placeholder="Enter your email"
+            value={user.email}
+            onChange={handleEmail}
+            margin="normal"
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => registerUser(user, setUser)}
+          >
+            Connect
+          </Button>
+        </Box>
       )}
     </Container>
   );
