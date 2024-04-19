@@ -16,6 +16,6 @@ export const updateUserStatus = (email, newUser) => {
 };
 
 export const findChatMessages = (senderEmail, recipientEmail) => {
-    return axios.get(`${REST_API_BASE_URL}/messages/${senderEmail}/${recipientEmail}`);
+    return axios.get(`http://localhost:8080/messages/${senderEmail}/${recipientEmail}`);
 };
 

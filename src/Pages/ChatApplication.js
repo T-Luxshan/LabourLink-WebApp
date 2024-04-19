@@ -152,7 +152,7 @@ const ChatApplication = () => {
   const fetchAndDisplayUserChat = async (selectedUser) => {
     try {
       const UserChatResponse = await findChatMessages(user.email, selectedUser);
-      const chatHistory = await UserChatResponse.data; // Access 'data' directly from the Axios response
+      const chatHistory = UserChatResponse.data; // Access 'data' directly from the Axios response
       setMessages(chatHistory);
     } catch (error) {
       console.log("Error fetching chat history:", error);
