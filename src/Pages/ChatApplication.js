@@ -116,6 +116,16 @@ const ChatApplication = () => {
     }
   }
 
+  //update connected users and display in realtime at every time message is sent and received
+  useEffect(() => {
+    // Call fetchAndDisplayUserChat when component mounts
+    findAndDisplayConnectedUsers();
+
+    // Optionally return a cleanup function if needed
+    return () => {
+    };
+  }, [messages]);
+
   const onError = () => {
     console.log("Error connecting to WebSocket server.");
   };
@@ -158,6 +168,19 @@ const ChatApplication = () => {
       console.log("Error fetching chat history:", error);
     }
   };
+
+
+  //update chat history and display in realtime at every time message is sent and received
+  useEffect(() => {
+    // Call fetchAndDisplayUserChat when component mounts
+    fetchAndDisplayUserChat(selectedUser);
+
+    // Optionally return a cleanup function if needed
+    return () => {
+    };
+  }, [messages]);
+
+  
 
   useEffect(() => {
     if (chatAreaRef.current) {
