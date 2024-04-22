@@ -1,14 +1,35 @@
-import React, { useState } from "react";
-import { TextField, Button, Container, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { TextField, Button, Container, Typography, getScopedCssBaselineUtilityClass } from "@mui/material";
+import { updateCustomerPassword } from "../Service/CustomerService";
 
 const ChangePassword = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState(null);
+  let email = "customer@example.com"; // Use let instead of const if you intend to reassign email
 
-  const handleSubmit = (event) => {
+  useEffect(() => {
+    // Fetch the initial password from the server
+    updateCustomerPassword(email).then((response) => {
+      setPassword(response.data.password);
+    }).catch((error) => {
+      setError("Error fetching password: " + error.message);
+    });
+  }, [email]);// Use email as the dependency instead of undefined id
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Add your logic for handling password change here
-    console.log("Password changed successfully");
+    console.log(password);
+
+    try {
+      const response = await updateCustomerPassword(email,password);
+      console.log(response);
+      console.log("Password changed successfully");
+      // Optionally, you can reset the form or show a success message to the user
+    } catch (error) {
+      console.error("Error updating password:", error);
+      // Handle errors such as displaying an error message to the user
+    }
   };
 
   return (

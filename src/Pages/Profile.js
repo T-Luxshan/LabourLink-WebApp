@@ -6,17 +6,12 @@ import Account from "../Components/Account"; // Make sure to import or define th
 import user from "../Components/User.json"; // Make sure to import or define the user object
 import TabPanel from "@mui/lab/TabPanel";
 import TabContext from "@mui/lab/TabContext";
-import { Typography, Paper, useMediaQuery } from "@mui/material";
-import Button from "@mui/material/Button";
-import CreateIcon from "@mui/icons-material/Create";
+import { useMediaQuery } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SettingsIcon from "@mui/icons-material/Settings";
 import InfoIcon from "@mui/icons-material/Info";
-import ChangePassword from "../Components/ChangePassword";
-import ReactSwitch from "react-switch";
-import { ThemeContext } from "../App";
-import { useContext } from "react";
-import AboutPage from "../Components/About";
+import About from "../Components/About";
+import Settings from "../Components/SettingsInProfile";
 
 function Profile() {
   const isSmallScreen = useMediaQuery("(max-width:600px)");
@@ -36,7 +31,7 @@ function Profile() {
     setValue(newValue);
   };
 
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  
 
   return (
     <TabContext value={value}>
@@ -105,114 +100,15 @@ function Profile() {
           }}
         >
           <TabPanel value={0} sx={{ flex: 1 }}>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                height: "100%",
-              }}
-            >
-              <Typography
-                variant="h5"
-                sx={{
-                  fontFamily: "Montserrat",
-                  fontWeight: "bold",
-                  marginBottom: "20px",
-                }}
-              >
-                Account
-              </Typography>
-              <Paper elevation={3} sx={paperStyles.root}>
-                <Typography variant="h5" sx={titleStyles.h5}>
-                  Personal Info
-                </Typography>
-                <Account user={user} />
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    marginTop: "20px",
-                  }}
-                >
-                  <Button size="small" color="primary">
-                    <CreateIcon />
-                    Edit
-                  </Button>
-                </Box>
-              </Paper>
-            </Box>
+            <Account/>
           </TabPanel>
 
-          {/* Setting */}
           <TabPanel value={1} sx={{ flex: 1 }}>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                height: "100%",
-              }}
-            >
-              <Typography
-                variant="h5"
-                sx={{
-                  fontFamily: "Montserrat",
-                  fontWeight: "bold",
-                  marginBottom: "20px",
-                }}
-              >
-                Setting
-              </Typography>
-              <Paper elevation={3} sx={paperStyles.root}>
-                <Typography variant="h5" sx={titleStyles.h5}>
-                  Change Password
-                </Typography>
-                <ChangePassword />
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    marginTop: "20px",
-                  }}
-                ></Box>
-
-                <Typography variant="h5" sx={titleStyles.h5}>
-                  Change Theme
-                </Typography>
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                  <label>{theme === "dark?"}</label>
-                  <ReactSwitch
-                    onChange={toggleTheme}
-                    checked={theme === "dark"}
-                  />
-                </div>
-              </Paper>
-            </Box>
+            <Settings />
           </TabPanel>
+
           <TabPanel value={2} sx={{ flex: 1 }}>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                height: "100%",
-              }}
-            >
-              <Paper elevation={3} sx={paperStyles.root}>
-                <AboutPage />
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    marginTop: "20px",
-                  }}
-                ></Box>
-              </Paper>
-            </Box>
+            <About />
           </TabPanel>
         </Box>
       </Box>
