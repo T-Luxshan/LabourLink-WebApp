@@ -109,7 +109,11 @@ const Account = () => {
 
   // Function to handle the edit button click
   const handleEditClick = () => {
-    navigate("/update-account"); // Navigate to the UpdateAccount component
+    navigate("/update-account", {
+      state: {
+        customer,
+      },
+    }); // Navigate to the UpdateAccount component
   };
 
   return (
@@ -118,7 +122,7 @@ const Account = () => {
         variant="h5"
         style={{ fontWeight: "bold", marginBottom: "20px" }}
       >
-        Customer Info 
+        Customer Info
       </Typography>
       <Paper
         style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}

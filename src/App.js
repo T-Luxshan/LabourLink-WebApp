@@ -55,7 +55,7 @@ function App() {
             />
             <Route path="/update-account" element={<UpdateAccount />} />
             <Route path="/chat" element={<ChatApplication />} />
-            <Route path="/chatroom" element={<ChatRoom />} />
+            <Route path="/chatroom" element={<ChatRoom/>} />
 
           </Routes>
         </Router>
