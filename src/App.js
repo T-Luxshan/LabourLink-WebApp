@@ -9,6 +9,8 @@ import { getCustomersByEmail } from "./Service/CustomerService";
 import UpdateAccount from "./Components/UpdateAccount";
 import ChatApplication from "./Pages/ChatApplication";
 import ChatRoom from "./Pages/ChatRoom2";
+import SignInSide from "./Pages/Authentication/SignInSide";
+
 
 export const ThemeContext = createContext(null);
 
@@ -23,7 +25,7 @@ function App() {
     <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
       <div className="App" id={theme}>
         <Router>
-          <NavigationBar />
+          {/* <NavigationBar /> */}
           <Routes>
             <Route
               path="/"
@@ -32,6 +34,15 @@ function App() {
                   <Home />
                   <Categories />
                   <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <>
+                  <SignInSide />
+                  
                 </>
               }
             />
