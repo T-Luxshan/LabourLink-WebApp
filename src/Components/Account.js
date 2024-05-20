@@ -92,8 +92,10 @@ const Account = () => {
   const [customer, setCustomer] = useState({});
   const navigate = useNavigate(); // useNavigate hook for navigation
 
+
+
   useEffect(() => {
-    const email = "customer@example.com";
+    const email = "salesperson2@example.com";
     const fetchCustomerData = async () => {
       try {
         const response = await getCustomersByEmail(email);
@@ -141,7 +143,7 @@ const Account = () => {
         <Typography variant="body1">{`Name: ${customer.name}`}</Typography>
         <Typography variant="body1">{`Email: ${customer.email}`}</Typography>
         <Typography variant="body1">{`Mobile Number: ${customer.mobileNumber}`}</Typography>
-        <Typography variant="body1">{`Password: ${customer.password}`}</Typography>
+        <Typography variant="body1">{`Address: ${customer.address}`}</Typography>
 
         <div
           style={{
