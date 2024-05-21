@@ -31,6 +31,7 @@ function App() {
               path="/"
               element={
                 <>
+                  <NavigationBar />
                   <Home />
                   <Categories />
                   <Footer />
@@ -50,6 +51,7 @@ function App() {
               path="/labourcategories"
               element={
                 <>
+                  <NavigationBar />
                   <Categories />
                   <Footer />
                 </>
