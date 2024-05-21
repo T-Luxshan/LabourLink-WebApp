@@ -23,12 +23,14 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import BookIcon from "@mui/icons-material/Book";
 import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
+import { useNavigate } from 'react-router-dom';
 
 const NavigationBar = () => {
   const [value, setValue] = useState(0);
   const theme = useTheme();
   const isMatch = useMediaQuery(theme.breakpoints.down("md"));
   const [openDrawer, setOpenDrawer] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -104,7 +106,7 @@ const NavigationBar = () => {
           )}
           <Box sx={{ mr: 4 }} /> {/* Add space */}
           <Stack spacing={2} direction="row">
-            <Button sx={{ marginLeft: "auto" }} variant="contained">
+            <Button sx={{ marginLeft: "auto" }} variant="contained" onClick={() => {navigate('/login');}}>
               Log In
             </Button>
             <Button
