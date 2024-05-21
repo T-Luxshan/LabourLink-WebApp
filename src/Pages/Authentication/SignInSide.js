@@ -1,4 +1,5 @@
 import * as React from 'react';
+import  { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,7 +13,8 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import { loginCustomer } from '../../Service/AuthServeice';
+import { useNavigate } from 'react-router-dom';
 
 const defaultTheme = createTheme({
   palette: {
@@ -26,14 +28,34 @@ const defaultTheme = createTheme({
   },
 });
 
-export default function SignInSide() {
-  const handleSubmit = (event) => {
+const SignInSide = () => {
+
+  const [logError, setLogError] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+
     console.log({
       email: data.get('email'),
       password: data.get('password'),
     });
+    try{
+      let response = await loginCustomer("CUSTOMER", data.get('email'), data.get('password')); 
+
+      localStorage.setItem("token", response.data.accessToken);
+      localStorage.setItem("refreshToken", response.data.refreshToken);
+
+      console.log(response);
+      navigate('/');
+            
+      setLogError("");
+    } catch (e){
+      setLogError("Invalid login, please try again");
+    }
+    
+
   };
 
   return (
@@ -74,7 +96,23 @@ export default function SignInSide() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
+
+            
+            
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            { logError &&
+              <Typography variant="subtitle2" gutterBottom color="#742F2F" backgroundColor="#F4D6D2" 
+                sx={{ mt: 0,
+                      mb:0,
+                      pt: 1, 
+                      pr: 2,
+                      pb: 1, 
+                      pl: 2, 
+                      borderRadius: 1
+                        }}>
+                {logError}
+              </Typography>
+            }
               <TextField
                 margin="normal"
                 required
@@ -103,7 +141,7 @@ export default function SignInSide() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2, color: 'white'}}
+                sx={{ mt: 1, mb: 1, color: 'white'}}
               >
                 Sign In
               </Button>
@@ -126,3 +164,5 @@ export default function SignInSide() {
     </ThemeProvider>
   );
 }
+
+export default SignInSide;
