@@ -68,7 +68,7 @@ const SignInSide = () => {
           sm={4}
           md={6}
           sx={{
-            backgroundImage: `url(${require("../../Assets/login.png")})`,
+            backgroundImage: `url(${require("../../Assets/Login.gif")})`,
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[0] : t.palette.grey[900],
@@ -147,7 +147,7 @@ const SignInSide = () => {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <Link href="/forgotpassword" variant="body2">
                     Forgot password?
                   </Link>
                 </Grid>

@@ -86,7 +86,7 @@ const SignUp = () => {
           sm={4}
           md={6}
           sx={{
-            backgroundImage: `url(${require("../../Assets/Signup4.gif")})`,
+            backgroundImage: `url(${require("../../Assets/Signup5.gif")})`,
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[0] : t.palette.grey[900],
