@@ -13,7 +13,7 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { loginCustomer } from '../../Service/AuthServeice';
+import { isCustomerExist, sendOTP } from '../../Service/AuthServeice';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 
@@ -45,12 +45,31 @@ const ForgotPassword = () => {
   const handleOTP = async (data) => {
     console.log(data);
     try {
-      // let response = await loginCustomer("CUSTOMER", data.email);
-      // console.log(response);
-      navigate('/');
+      const lowercasedEmail = data.email.toLowerCase();
+      isCustomerExist(lowercasedEmail)
+        .then(res => {
+          if(res.data){
+            sendOTP(lowercasedEmail)
+              .then(res => {
+                setError("");
+                console.log(res.data);
+                navigate('/');
+              })
+              .catch(error => {
+                console.log(error);
+                setError("Couldn't send OTP, please try again in a few minutes");
+              })
+          }else
+            setError("Account doesn't exist for this email")
+        })
+        .catch(error => {
+          console.log(error);
+          setError("Something went wrong,  please try again in few minutes")
+        })
       setError("");
     } catch (e) {
-      setError("Couldn't send OTP, please try again in a few minutes");
+      setError("Something went wrong,  please try again in few minutes");
+      console.log(e);
     }
   };
 
