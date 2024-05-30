@@ -12,7 +12,8 @@ import ChatRoom from "./Pages/ChatRoom2";
 import SignInSide from "./Pages/Authentication/SignInSide";
 import SignUp from "./Pages/Authentication/SignUp";
 import ForgotPassword from "./Pages/Authentication/ForgotPassword";
-
+import VerifyOTP from "./Pages/Authentication/VerifyOTP";
+import { EmailProvider } from "./Service/EmailContext";
 
 export const ThemeContext = createContext(null);
 
@@ -78,11 +79,27 @@ function App() {
             <Route
               path="/forgotpassword"
               element={
-                <>
-                  <ForgotPassword /> 
-                </>
+                <EmailProvider>
+                  <ForgotPassword />
+                </EmailProvider>
               }
             />
+            <Route
+              path="/verifyotp"
+              element={
+                <EmailProvider>
+                  <VerifyOTP />
+                </EmailProvider>
+              }
+            />
+            {/* <Route
+              path="/changepassword"
+              element={
+                <EmailProvider>
+                  <ChangePassword />
+                </EmailProvider>
+              }
+            /> */}
             <Route path="/update-account" element={<UpdateAccount />} />
             <Route path="/chat" element={<ChatApplication />} />
             <Route path="/chatroom" element={<ChatRoom />} />
