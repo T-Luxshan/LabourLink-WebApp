@@ -16,6 +16,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { isCustomerExist, sendOTP } from '../../Service/AuthServeice';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
+import { useEmailContext } from '../../Service/EmailContext';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const defaultTheme = createTheme({
   palette: {
@@ -36,7 +38,9 @@ const schema = yup.object().shape({
 });
 
 const ForgotPassword = () => {
+  const { setEmail } = useEmailContext();
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { handleSubmit, control, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
@@ -44,30 +48,38 @@ const ForgotPassword = () => {
 
   const handleOTP = async (data) => {
     console.log(data);
+    
     try {
       const lowercasedEmail = data.email.toLowerCase();
       isCustomerExist(lowercasedEmail)
         .then(res => {
           if(res.data){
+            setLoading(true);
             sendOTP(lowercasedEmail)
               .then(res => {
                 setError("");
                 console.log(res.data);
-                navigate('/');
+                setEmail(lowercasedEmail);
+                navigate('/verifyotp');
               })
               .catch(error => {
+                setLoading(false);
                 console.log(error);
                 setError("Couldn't send OTP, please try again in a few minutes");
               })
-          }else
-            setError("Account doesn't exist for this email")
+          }else{
+            setLoading(false);
+            setError("Account doesn't exist for this email");
+          }
         })
         .catch(error => {
+          setLoading(false);
           console.log(error);
           setError("Something went wrong,  please try again in few minutes")
         })
       setError("");
     } catch (e) {
+      setLoading(false);
       setError("Something went wrong,  please try again in few minutes");
       console.log(e);
     }
@@ -130,6 +142,11 @@ const ForgotPassword = () => {
                   />
                 )}
               />
+               {loading ? 
+              <Box sx={{ display: 'flex',  mt:4, ml:20}}>
+                <CircularProgress color='primary'/>
+              </Box>
+              : (
               <Button
                 type="submit"
                 fullWidth
@@ -138,6 +155,7 @@ const ForgotPassword = () => {
               >
                 Send OTP
               </Button>
+              )}
               {error && (
                 <Typography variant="subtitle2" gutterBottom color="#742F2F" backgroundColor="#F4D6D2"
                   sx={{
@@ -152,6 +170,7 @@ const ForgotPassword = () => {
                   {error}
                 </Typography>
               )}
+               
             </Box>
           </Box>
         </Grid>
