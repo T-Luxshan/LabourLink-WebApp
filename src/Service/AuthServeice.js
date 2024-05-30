@@ -80,7 +80,7 @@ axiosAuthInstance.interceptors.request.use(
       }
     }
     else{
-      logoutUser(); // need to login again.
+      // logoutUser(); // need to login again.
     }
     return config;
   },
@@ -92,14 +92,14 @@ axiosAuthInstance.interceptors.request.use(
 export default axiosAuthInstance;
 
 //  logout the user from the application.
-export const logoutUser = () => {
+// export const logoutUser = () => {
   
-  const navigate = useNavigate();
+//   const navigate = useNavigate();
 
-  localStorage.removeItem('token');
-  localStorage.removeItem('refreshToken');
+//   localStorage.removeItem('token');
+//   localStorage.removeItem('refreshToken');
 
-  navigate('/login');
+//   navigate('/login');
 
-}
+// }
 

@@ -10,6 +10,7 @@ import UpdateAccount from "./Components/UpdateAccount";
 import ChatApplication from "./Pages/ChatApplication";
 import ChatRoom from "./Pages/ChatRoom2";
 import SignInSide from "./Pages/Authentication/SignInSide";
+import SignUp from "./Pages/Authentication/SignUp";
 
 
 export const ThemeContext = createContext(null);
@@ -43,6 +44,15 @@ function App() {
               element={
                 <>
                   <SignInSide />
+                  
+                </>
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <>
+                  <SignUp />
                   
                 </>
               }
