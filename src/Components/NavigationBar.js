@@ -111,7 +111,7 @@ const NavigationBar = () => {
             </Button>
             <Button
               sx={{ marginLeft: "auto", color: "white" }}
-              variant="outlined"
+              variant="outlined" onClick={() => {navigate('/signup');}}
             >
               Sign Up
             </Button>
