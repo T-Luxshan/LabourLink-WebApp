@@ -14,7 +14,7 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { loginCustomer } from '../../Service/AuthServeice';
+import { registerCustomer } from '../../Service/AuthServeice';
 import { useNavigate } from 'react-router-dom';
 
 const defaultTheme = createTheme({
@@ -64,16 +64,16 @@ const SignUp = () => {
 
   const onSubmit = async (data) => {
     console.log(data);
-    // try {
-    //   let response = await loginCustomer("CUSTOMER", data.email, data.password); 
-    //   localStorage.setItem("token", response.data.accessToken);
-    //   localStorage.setItem("refreshToken", response.data.refreshToken);
-    //   console.log(response);
-    //   navigate('/');
-    //   setLogError("");
-    // } catch (e) {
-    //   setLogError("Invalid login, please try again");
-    // }
+    try {
+      let response = await registerCustomer(data.name, data.email, data.password ,data.mobileNumber, data.address); 
+      localStorage.setItem("token", response.data.accessToken);
+      localStorage.setItem("refreshToken", response.data.refreshToken);
+      console.log(response);
+      navigate('/');
+      setLogError("");
+    } catch (e) {
+      setLogError("An account with this email or mobile number already exist");
+    }
   };
 
   return (
@@ -86,16 +86,16 @@ const SignUp = () => {
           sm={4}
           md={6}
           sx={{
-            backgroundImage: `url(${require("../../Assets/Signup3.gif")})`,
+            backgroundImage: `url(${require("../../Assets/Signup4.gif")})`,
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[0] : t.palette.grey[900],
-            backgroundSize: '450px 450px', 
+            backgroundSize: '480px 480px', 
             backgroundPosition: 'center',
           }}
         />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={2} 
-        square sx={{ height: '95vh', mt: '15px', overflow: 'auto' }}>
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={5} 
+        square sx={{ height: '95vh', mt: '15px', overflow: 'auto', backgroundColor: 'rgba(0, 0, 0, 0.01)'}}>
           <Box
             sx={{
               my: 1,
@@ -103,13 +103,14 @@ const SignUp = () => {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              backgroundColor: 'white',
+            //   backgroundColor: 'white',
+            backgroundColor: 'rgba(0, 0, 0, 0.001)'
             }}
           >
             <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
               <LockOutlinedIcon />
             </Avatar>
-            <Typography component="h1" variant="h5">
+            <Typography component="h1" variant="h5" sx={{mt:0}}>
               Sign Up
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
@@ -120,8 +121,8 @@ const SignUp = () => {
                   color="#742F2F"
                   backgroundColor="#F4D6D2"
                   sx={{
-                    mt: 0,
-                    mb: 0,
+                    mt: 1,
+                    mb: 1,
                     pt: 1,
                     pr: 2,
                     pb: 1,
@@ -148,7 +149,7 @@ const SignUp = () => {
                     autoFocus
                     error={!!errors.name}
                     helperText={errors.name ? errors.name.message : ''}
-                    sx={{ mb: 0 }}
+                    sx={{ mb: 0, mt:0 }}
                   />
                 )}
               />
@@ -165,7 +166,7 @@ const SignUp = () => {
                     id="email"
                     label="Email Address"
                     autoComplete="email"
-                    autoFocus
+                    // autoFocus
                     error={!!errors.email}
                     helperText={errors.email ? errors.email.message : ''}
                     sx={{ mb: 0 }}
@@ -229,7 +230,7 @@ const SignUp = () => {
                     id="number"
                     label="Mobile Number"
                     autoComplete="number"
-                    autoFocus
+                    // autoFocus
                     error={!!errors.mobileNumber}
                     helperText={errors.mobileNumber ? errors.mobileNumber.message : ''}
                     sx={{ mb: 0 }}
@@ -249,7 +250,7 @@ const SignUp = () => {
                     id="address"
                     label="Address"
                     autoComplete="address"
-                    autoFocus
+                    // autoFocus
                     error={!!errors.address}
                     helperText={errors.address ? errors.address.message : ''}
                     sx={{ mb: 0 }}
@@ -265,7 +266,7 @@ const SignUp = () => {
                 Sign Up
               </Button>
               <Grid item sx={{ ml: 15 }}>
-                <Link href="#" variant="body2">
+                <Link href="/login" variant="body2">
                   {"Have an account? Sign In"}
                 </Link>
               </Grid>
