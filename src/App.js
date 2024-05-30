@@ -11,6 +11,7 @@ import ChatApplication from "./Pages/ChatApplication";
 import ChatRoom from "./Pages/ChatRoom2";
 import SignInSide from "./Pages/Authentication/SignInSide";
 import SignUp from "./Pages/Authentication/SignUp";
+import ForgotPassword from "./Pages/Authentication/ForgotPassword";
 
 
 export const ThemeContext = createContext(null);
@@ -43,8 +44,7 @@ function App() {
               path="/login"
               element={
                 <>
-                  <SignInSide />
-                  
+                  <SignInSide />                 
                 </>
               }
             />
@@ -52,8 +52,7 @@ function App() {
               path="/signup"
               element={
                 <>
-                  <SignUp />
-                  
+                  <SignUp /> 
                 </>
               }
             />
@@ -73,6 +72,14 @@ function App() {
                 <>
                   <NavigationBar />
                   <Profile/>
+                </>
+              }
+            />
+            <Route
+              path="/forgotpassword"
+              element={
+                <>
+                  <ForgotPassword /> 
                 </>
               }
             />
