@@ -60,7 +60,6 @@ const ChangePassword = () => {
     resolver: yupResolver(schema),
   });
 
-  //
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -73,7 +72,6 @@ const ChangePassword = () => {
     // setOpen(false);
     navigate('/login');
   };
-  //
  
   const handleChangePassword = async (data) => {
     console.log(data);
@@ -162,7 +160,6 @@ const ChangePassword = () => {
                     />
                   )}
                 />
-                {/*  */}
                 <React.Fragment>
                     <Dialog
                         fullScreen={fullScreen}
@@ -185,7 +182,6 @@ const ChangePassword = () => {
                         </DialogActions>
                     </Dialog>
                     </React.Fragment>
-                {/*  */}
                {loading ? 
               <Box sx={{ display: 'flex',  mt:4, ml:20}}>
                 <CircularProgress color='primary'/>
