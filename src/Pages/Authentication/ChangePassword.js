@@ -98,11 +98,11 @@ const ChangePassword = () => {
           sm={4}
           md={6}
           sx={{
-            backgroundImage: `url(${require("../../Assets/Forgot2.gif")})`,
+            backgroundImage: `url(${require("../../Assets/password.gif")})`,
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[0] : t.palette.grey[900],
-            backgroundSize: 'contain',
+            backgroundSize: '500px 500px', 
             backgroundPosition: 'center',
           }}
         />
