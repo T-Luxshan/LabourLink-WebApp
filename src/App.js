@@ -13,6 +13,7 @@ import SignInSide from "./Pages/Authentication/SignInSide";
 import SignUp from "./Pages/Authentication/SignUp";
 import ForgotPassword from "./Pages/Authentication/ForgotPassword";
 import VerifyOTP from "./Pages/Authentication/VerifyOTP";
+import ChangePassword from "./Pages/Authentication/ChangePassword";
 import { EmailProvider } from "./Service/EmailContext";
 
 export const ThemeContext = createContext(null);
@@ -92,14 +93,14 @@ function App() {
                 </EmailProvider>
               }
             />
-            {/* <Route
+            <Route
               path="/changepassword"
               element={
                 <EmailProvider>
                   <ChangePassword />
                 </EmailProvider>
               }
-            /> */}
+            />
             <Route path="/update-account" element={<UpdateAccount />} />
             <Route path="/chat" element={<ChatApplication />} />
             <Route path="/chatroom" element={<ChatRoom />} />
