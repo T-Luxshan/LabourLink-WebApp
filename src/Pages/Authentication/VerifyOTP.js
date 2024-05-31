@@ -51,7 +51,7 @@ const VerifyOTP = () => {
     verifyOTP(OTP, email)
         .then(res => {
             console.log(res);
-            navigate("/");
+            navigate("/changepassword");
         }).catch(err => {
             console.log(error);
             setError("OTP verification failed");
