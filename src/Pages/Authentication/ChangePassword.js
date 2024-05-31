@@ -18,6 +18,13 @@ import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { useEmailContext } from '../../Service/EmailContext';
 import CircularProgress from '@mui/material/CircularProgress';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
 const defaultTheme = createTheme({
   palette: {
@@ -52,26 +59,29 @@ const ChangePassword = () => {
   const { handleSubmit, control, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
   });
+
+  //
+  const [open, setOpen] = React.useState(false);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    // setOpen(false);
+    navigate('/login');
+  };
+  //
  
-  // Dialog box
-//   const [open, setOpen] = React.useState(false);
-//   const handleClickOpen = () => {
-//     setOpen(true);
-//   };
-
-//   const handleClose = (value) => {
-//     setOpen(false);
-//     setSelectedValue(value);
-//   };
-
-  // dialog box
-
   const handleChangePassword = async (data) => {
     console.log(data);
     
-    changePassword(email, data.password, data.changePassword)
+    changePassword(email, data.password, data.confirmPassword)
         .then(res => {
             console.log(res);
+            handleClickOpen();
             setError("");
         })
         .catch(error => {
@@ -129,7 +139,6 @@ const ChangePassword = () => {
                       autoComplete="current-password"
                       error={!!errors.password}
                       helperText={errors.password ? errors.password.message : ''}
-                    //   sx={{ flex: 1, mr: 1, mb: 0 }}
                     />
                   )}
                 />
@@ -150,10 +159,33 @@ const ChangePassword = () => {
                       autoComplete="current-password"
                       error={!!errors.confirmPassword}
                       helperText={errors.confirmPassword ? errors.confirmPassword.message : ''}
-                    //   sx={{ flex: 1, ml: 1, mb: 0 }}
                     />
                   )}
                 />
+                {/*  */}
+                <React.Fragment>
+                    <Dialog
+                        fullScreen={fullScreen}
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="responsive-dialog-title"
+                    >
+                        <DialogTitle sx={{color: 'green'}}>
+                        Password has been changed sucessfully!!
+                        </DialogTitle>
+                        <DialogContent>
+                        <DialogContentText >
+                            Please log in to your account
+                        </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                        <Button onClick={handleClose} autoFocus>
+                            Log in
+                        </Button>
+                        </DialogActions>
+                    </Dialog>
+                    </React.Fragment>
+                {/*  */}
                {loading ? 
               <Box sx={{ display: 'flex',  mt:4, ml:20}}>
                 <CircularProgress color='primary'/>
