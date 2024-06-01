@@ -95,6 +95,8 @@ const Home = () => {
         >
           Join Us, Find your fit and feel appreciated!
         </Typography>
+        
+        <Link to="/labourcategories">
         <Button
           variant="contained"
           sx={{
@@ -106,6 +108,7 @@ const Home = () => {
         >
           Hire Now <FiArrowRight />
         </Button>
+        </Link>
       </Paper>
       {/* Fixed Chat Icon */}
       {/* Fixed Chat Icon with Hover Text */}

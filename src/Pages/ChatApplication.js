@@ -25,7 +25,7 @@ var stompClient = null;
 
 const ChatApplication = () => {
   const [user, setUser] = useState({
-    email: "",
+    email: "johndoe@example.com",
     receiverEmail: "",
     status: "OFFLINE",
     message: "",
@@ -61,9 +61,6 @@ const ChatApplication = () => {
     // Update received messages count whenever messages state changes
     setReceivedMessagesCount(messages.length);
   }, [messages]);
-
-  console.log(user.email);
-  console.log(user.name);
 
   const connect = (event) => {
     if (user.email) {
@@ -157,6 +154,27 @@ const ChatApplication = () => {
     }
   };
 
+    useEffect(() => {
+    // Assuming `initialUser` is the user data you get when the component mounts
+    const initialUser = { name: 'John Doe' }; // Replace with actual user data
+
+    if (initialUser) {
+      registerUser(initialUser);
+    }
+  }, []); // Empty dependency array ensures this runs only on mount
+
+  useEffect(() => {
+    if (selectedUser) {
+      handleUserClick(selectedUser);
+    }
+  }, [selectedUser]); // Runs whenever `selectedUser` changes
+
+  const registerUser = (user) => {
+    setUser({ ...user, status: "ONLINE" });
+    updateUserStatusToDB(user);
+    connect();
+  };
+
   const handleUserClick = (selectedUser) => {
     setselectedUser(selectedUser);
     console.log(selectedUser);
@@ -188,10 +206,10 @@ const ChatApplication = () => {
     }
   }, [messages]);
 
-  const handleEmail = (event) => {
-    const { value } = event.target;
-    setUser({ ...user, email: value });
-  };
+  // const handleEmail = (event) => {
+  //   const { value } = event.target;
+  //   setUser({ ...user, email: value });
+  // };
 
   const updateUserStatusToDB = async (user) => {
     console.log(user);
@@ -205,12 +223,6 @@ const ChatApplication = () => {
       console.error("Error updating user status:", error);
       // Handle errors such as displaying an error message to the user
     }
-  };
-
-  const registerUser = (user, setUser) => {
-    setUser({ ...user, status: "ONLINE" });
-    updateUserStatusToDB(user);
-    connect();
   };
 
   return (
@@ -413,13 +425,13 @@ const ChatApplication = () => {
         </Box>
       ) : (
         <Box sx={{ my: 4, textAlign: 'center' }}>
-          <TextField
+          {/* <TextField
             placeholder="Enter your email"
             value={user.email}
             onChange={handleEmail}
             margin="normal"
             sx={{ marginBottom: '20px' }}
-          />
+          /> */}
           <Button variant="contained" color="primary" onClick={() => registerUser(user, setUser)}>
             Connect
           </Button>

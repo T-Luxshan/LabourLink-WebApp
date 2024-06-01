@@ -95,7 +95,7 @@ const Account = () => {
 
 
   useEffect(() => {
-    const email = "salesperson2@example.com";
+    const email = "johndoe@example.com";
     const fetchCustomerData = async () => {
       try {
         const response = await getCustomersByEmail(email);
