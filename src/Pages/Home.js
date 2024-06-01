@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from 'react-router-dom';
 import {
   Box,
   Paper,
@@ -11,11 +12,13 @@ import { FiArrowRight } from "react-icons/fi";
 import NavigationBar from "../Components/NavigationBar";
 import BannerBackground from "../Assets/home-banner-background.png";
 import LaborBanner from "../Assets/Labor-Banner.png";
+import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
 
 const Home = () => {
   const theme = useTheme();
 
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 600);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -28,6 +31,7 @@ const Home = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -91,6 +95,8 @@ const Home = () => {
         >
           Join Us, Find your fit and feel appreciated!
         </Typography>
+        
+        <Link to="/labourcategories">
         <Button
           variant="contained"
           sx={{
@@ -102,7 +108,59 @@ const Home = () => {
         >
           Hire Now <FiArrowRight />
         </Button>
+        </Link>
       </Paper>
+      {/* Fixed Chat Icon */}
+      {/* Fixed Chat Icon with Hover Text */}
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: "16px",
+          left: "16px",
+          zIndex: 1000,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {isHovered && (
+          <Typography
+            sx={{
+              mb: "10px",
+              backgroundColor: "#00204A",
+              borderRadius: "4px",
+              padding: "4px 8px",
+              boxShadow: "0px 0px 10px rgba(0,0,0,0.1)",
+              color: "white",
+              animation: "fadeIn 0.5s ease-in-out", // Add animation here
+              "@keyframes fadeIn": {
+                from: { opacity: 0, transform: "translateX(10px)" },
+                to: { opacity: 1, transform: "translateX()" },
+              },
+            }}
+          >
+            Start chat
+          </Typography>
+        )}
+        <Box
+          sx={{
+            backgroundColor: "#00204A",
+            borderRadius: "50%",
+            boxShadow: "0px 0px 10px rgba(0,0,0,0.1)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "56px",
+            height: "56px",
+          }}
+        >
+          <Link to="/chat">
+            <IoChatbubbleEllipsesSharp size={32} color="white" />
+          </Link>
+        </Box>
+      </Box>
     </Box>
   );
 };

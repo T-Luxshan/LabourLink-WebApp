@@ -1,14 +1,14 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import NavigationBar from "./Components/NavigationBar";
 import Home from "./Pages/Home";
 import Categories from "./Pages/Categories";
 import Footer from "./Components/Footer";
 import Profile from "./Pages/Profile";
-import { getCustomersByEmail } from "./Service/CustomerService";
 import UpdateAccount from "./Components/UpdateAccount";
 import ChatApplication from "./Pages/ChatApplication";
 import ChatRoom from "./Pages/ChatRoom2";
+import Notification from "./Pages/Notification";
 
 export const ThemeContext = createContext(null);
 
@@ -49,14 +49,22 @@ function App() {
               element={
                 <>
                   <NavigationBar />
-                  <Profile/>
+                  <Profile />
                 </>
               }
             />
             <Route path="/update-account" element={<UpdateAccount />} />
             <Route path="/chat" element={<ChatApplication />} />
             <Route path="/chatroom" element={<ChatRoom />} />
-
+            <Route
+              path="/notification"
+              element={
+                <>
+                  <NavigationBar />
+                  <Notification />
+                </>
+              }
+            />
           </Routes>
         </Router>
       </div>

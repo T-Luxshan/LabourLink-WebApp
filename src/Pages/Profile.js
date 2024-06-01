@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import Account from "../Components/Account"; // Make sure to import or define the Account component
-import user from "../Components/User.json"; // Make sure to import or define the user object
+import Account from "../Components/Account"; 
+import user from "../Components/User.json"; 
 import TabPanel from "@mui/lab/TabPanel";
 import TabContext from "@mui/lab/TabContext";
 import { useMediaQuery } from "@mui/material";

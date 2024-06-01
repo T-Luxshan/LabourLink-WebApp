@@ -92,8 +92,10 @@ const Account = () => {
   const [customer, setCustomer] = useState({});
   const navigate = useNavigate(); // useNavigate hook for navigation
 
+
+
   useEffect(() => {
-    const email = "customer@example.com";
+    const email = "johndoe@example.com";
     const fetchCustomerData = async () => {
       try {
         const response = await getCustomersByEmail(email);
@@ -109,7 +111,11 @@ const Account = () => {
 
   // Function to handle the edit button click
   const handleEditClick = () => {
-    navigate("/update-account"); // Navigate to the UpdateAccount component
+    navigate("/update-account", {
+      state: {
+        customer,
+      },
+    }); // Navigate to the UpdateAccount component
   };
 
   return (
@@ -118,7 +124,7 @@ const Account = () => {
         variant="h5"
         style={{ fontWeight: "bold", marginBottom: "20px" }}
       >
-        Customer Info 
+        Customer Info
       </Typography>
       <Paper
         style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}
@@ -137,7 +143,7 @@ const Account = () => {
         <Typography variant="body1">{`Name: ${customer.name}`}</Typography>
         <Typography variant="body1">{`Email: ${customer.email}`}</Typography>
         <Typography variant="body1">{`Mobile Number: ${customer.mobileNumber}`}</Typography>
-        <Typography variant="body1">{`Password: ${customer.password}`}</Typography>
+        <Typography variant="body1">{`Address: ${customer.address}`}</Typography>
 
         <div
           style={{
