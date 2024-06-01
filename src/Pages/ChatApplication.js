@@ -11,7 +11,10 @@ import {
   TextField,
   Button,
   Avatar,
+  Drawer,
+  IconButton,
 } from "@mui/material";
+import MenuIcon from '@mui/icons-material/Menu';
 import {
   getUserByEmail,
   findConnectedUsers,
@@ -22,7 +25,7 @@ var stompClient = null;
 
 const ChatApplication = () => {
   const [user, setUser] = useState({
-    email: "",
+    email: "johndoe@example.com",
     receiverEmail: "",
     status: "OFFLINE",
     message: "",
@@ -33,6 +36,7 @@ const ChatApplication = () => {
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
   const [receivedMessagesCount, setReceivedMessagesCount] = useState(0);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const chatAreaRef = useRef(null); // Create a reference to the chat area
 
@@ -57,9 +61,6 @@ const ChatApplication = () => {
     // Update received messages count whenever messages state changes
     setReceivedMessagesCount(messages.length);
   }, [messages]);
-
-  console.log(user.email);
-  console.log(user.name);
 
   const connect = (event) => {
     if (user.email) {
@@ -122,8 +123,7 @@ const ChatApplication = () => {
     findAndDisplayConnectedUsers();
 
     // Optionally return a cleanup function if needed
-    return () => {
-    };
+    return () => {};
   }, [messages]);
 
   const onError = () => {
@@ -154,8 +154,30 @@ const ChatApplication = () => {
     }
   };
 
+    useEffect(() => {
+    // Assuming `initialUser` is the user data you get when the component mounts
+    const initialUser = { name: 'John Doe' }; // Replace with actual user data
+
+    if (initialUser) {
+      registerUser(initialUser);
+    }
+  }, []); // Empty dependency array ensures this runs only on mount
+
+  useEffect(() => {
+    if (selectedUser) {
+      handleUserClick(selectedUser);
+    }
+  }, [selectedUser]); // Runs whenever `selectedUser` changes
+
+  const registerUser = (user) => {
+    setUser({ ...user, status: "ONLINE" });
+    updateUserStatusToDB(user);
+    connect();
+  };
+
   const handleUserClick = (selectedUser) => {
     setselectedUser(selectedUser);
+    console.log(selectedUser);
     fetchAndDisplayUserChat(selectedUser);
   };
 
@@ -169,18 +191,14 @@ const ChatApplication = () => {
     }
   };
 
-
   //update chat history and display in realtime at every time message is sent and received
   useEffect(() => {
     // Call fetchAndDisplayUserChat when component mounts
     fetchAndDisplayUserChat(selectedUser);
 
     // Optionally return a cleanup function if needed
-    return () => {
-    };
+    return () => {};
   }, [messages]);
-
-  
 
   useEffect(() => {
     if (chatAreaRef.current) {
@@ -188,10 +206,10 @@ const ChatApplication = () => {
     }
   }, [messages]);
 
-  const handleEmail = (event) => {
-    const { value } = event.target;
-    setUser({ ...user, email: value });
-  };
+  // const handleEmail = (event) => {
+  //   const { value } = event.target;
+  //   setUser({ ...user, email: value });
+  // };
 
   const updateUserStatusToDB = async (user) => {
     console.log(user);
@@ -207,152 +225,214 @@ const ChatApplication = () => {
     }
   };
 
-  const registerUser = (user, setUser) => {
-    setUser({ ...user, status: "ONLINE" });
-    updateUserStatusToDB(user);
-    connect();
-  };
-
   return (
-    <Container sx={{ marginTop: "70px" }}>
-      {user.status === "ONLINE" ? (
+    <Container sx={{ marginTop: '70px' }}>
+      {user.status === 'ONLINE' ? (
         <Box sx={{ my: 4 }}>
-          <Typography variant="h2" align="center" gutterBottom>
+          <Typography
+            variant="h4"
+            align="center"
+            gutterBottom
+            sx={{
+              color: 'black',
+              fontWeight: 'bold',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+              marginBottom: '2px',
+              marginTop: '100px',
+            }}
+          >
             Chat with Labour
           </Typography>
-
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Box
               sx={{
-                width: "800px",
-                height: "600px",
-                margin: "20px",
-                border: "1px solid #ccc",
-                backgroundColor: "#fff",
-                overflow: "hidden",
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                borderRadius: "8px",
-                display: "flex",
+                width: { xs: '100%', md: '100%' },
+                height: { xs: 'auto', md: '460px' },
+                margin: '20px',
+                border: '1px solid #ccc',
+                backgroundColor: '#fff',
+                overflow: 'hidden',
+                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                borderRadius: '8px',
+                display: 'flex',
+                flexDirection: { xs: 'column', md: 'row' },
               }}
             >
               <Box
+                component="nav"
                 sx={{
-                  flex: 1,
-                  borderRight: "1px solid #ccc",
-                  padding: "20px",
-                  boxSizing: "border-box",
-                  backgroundColor: "#3498db",
-                  color: "#fff",
-                  borderTopLeftRadius: "8px",
-                  borderBottomLeftRadius: "8px",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
+                  display: { xs: 'block', md: 'none' },
                 }}
               >
-                <Box>
-                  <Typography variant="h4" gutterBottom>
-                    Online Users
-                  </Typography>
-                  <List>
-                    {connectedUsers.map((user, index) => (
-                      <ListItem
-                        button
-                        key={user.email}
-                        onClick={() => handleUserClick(user.email)}
-                        style={{
-                          backgroundColor:
-                            selectedUser === user.email ? "red" : "lightblue",
-                        }}
-                      >
-                        <Avatar />
-                        <ListItemText
-                          primary={`${user.name} (${receivedMessagesCount})`}
-                        />
-                      </ListItem>
-                    ))}
-                  </List>
-                </Box>
-                <Box>
-                  <Typography variant="body1" id="connected-user-fullname">
-                    {/* Connected user's full name */}
-                  </Typography>
-                </Box>
+                <IconButton
+                  color="inherit"
+                  aria-label="open drawer"
+                  edge="start"
+                  onClick={() => setDrawerOpen(true)}
+                  sx={{ marginLeft: 2 }}
+                >
+                  <MenuIcon />
+                </IconButton>
+                <Drawer
+                  variant="temporary"
+                  open={drawerOpen}
+                  onClose={() => setDrawerOpen(false)}
+                  ModalProps={{
+                    keepMounted: true, // Better open performance on mobile.
+                  }}
+                  sx={{
+                    '& .MuiDrawer-paper': {
+                      boxSizing: 'border-box',
+                      width: 240,
+                      backgroundColor: '#3498db',
+                      color: '#fff',
+                    },
+                  }}
+                >
+                  <Box sx={{ padding: '20px', height: '100%', overflowY: 'auto' }}>
+                    <Typography variant="h6" gutterBottom>
+                      Connected Users
+                    </Typography>
+                    <List>
+                      {connectedUsers.map((user) => (
+                        <ListItem
+                          button
+                          key={user.email}
+                          onClick={() => handleUserClick(user.email)}
+                          sx={{
+                            backgroundColor:
+                              selectedUser === user.email ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
+                            marginBottom: '5px',
+                            borderRadius: '4px',
+                            '&:hover': {
+                              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                            },
+                          }}
+                        >
+                          <Avatar sx={{ marginRight: '10px' }} />
+                          <ListItemText
+                            primary={`${user.name}`}
+                            // primary={`${user.name} (${receivedMessagesCount[user.email] || 0})`}
+                            primaryTypographyProps={{ color: '#fff' }}
+                          />
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Box>
+                </Drawer>
+              </Box>
+
+              <Box
+                sx={{
+                  flex: { xs: 'none', md: 1 },
+                  display: { xs: 'none', md: 'flex' },
+                  flexDirection: 'column',
+                  padding: '20px',
+                  backgroundColor: '#3498db',
+                  color: '#fff',
+                  borderTopLeftRadius: '8px',
+                  borderTopRightRadius: { xs: '8px', md: 0 },
+                  borderBottomLeftRadius: { xs: 0, md: '8px' },
+                  overflowY: 'auto',
+                }}
+              >
+                <Typography variant="h5" gutterBottom>
+                Connected Users
+                </Typography>
+                <List sx={{ flex: 1, overflowY: 'auto' }}>
+                  {connectedUsers.map((user) => (
+                    <ListItem
+                      button
+                      key={user.email}
+                      onClick={() => handleUserClick(user.email)}
+                      sx={{
+                        backgroundColor:
+                          selectedUser === user.email ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
+                        marginBottom: '5px',
+                        borderRadius: '4px',
+                        '&:hover': {
+                          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        },
+                      }}
+                    >
+                      <Avatar sx={{ marginRight: '10px' }} />
+                      <ListItemText
+                        // primary={`${user.name} (${receivedMessagesCount[user.email] || 0})`}
+                        primary={`${user.name}`}
+                        primaryTypographyProps={{ color: '#fff' }}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
               </Box>
 
               <Box
                 sx={{
                   flex: 3,
-                  display: "flex",
-                  flexDirection: "column",
-                  padding: "20px",
-                  boxSizing: "border-box",
-                  borderTopRightRadius: "8px",
-                  borderBottomRightRadius: "8px",
+                  display: 'flex',
+                  flexDirection: 'column',
+                  padding: '20px',
+                  boxSizing: 'border-box',
+                  borderTopRightRadius: '8px',
+                  borderBottomRightRadius: { md: '8px' },
+                  borderBottomLeftRadius: { xs: '8px', md: 0 },
                 }}
               >
-                <Box sx={{ flex: 1, overflowY: "scroll" }} ref={chatAreaRef}>
+                <Box sx={{ flex: 1, overflowY: 'auto', marginBottom: '20px' }} ref={chatAreaRef}>
                   {messages.map((message, index) => (
-                    <div key={index}>
+                    <Box
+                      key={index}
+                      sx={{
+                        display: 'flex',
+                        justifyContent: message.senderId === user.email ? 'flex-end' : 'flex-start',
+                        marginBottom: '10px',
+                      }}
+                    >
                       <Typography
                         variant="body1"
                         sx={{
                           backgroundColor:
-                            message.senderId === user.email
-                              ? "#3498db"
-                              : "#ecf0f1",
-                          color:
-                            message.senderId === user.email ? "#fff" : "#333",
-                          padding: "8px",
-                          borderRadius: "5px",
-                          alignSelf:
-                            message.senderId === user.email
-                              ? "flex-end"
-                              : "flex-start",
+                            message.senderId === user.email ? '#3498db' : '#ecf0f1',
+                          color: message.senderId === user.email ? '#fff' : '#333',
+                          padding: '10px',
+                          borderRadius: '8px',
+                          maxWidth: '75%',
+                          wordWrap: 'break-word',
                         }}
                       >
                         {message.content}
                       </Typography>
-                    </div>
+                    </Box>
                   ))}
                 </Box>
-
-                <form id="messageForm" name="messageForm" className="hidden">
-                  <Box sx={{ display: "flex", marginTop: "auto" }}>
-                    <TextField
-                      id="message"
-                      label="Type your message..."
-                      variant="outlined"
-                      sx={{ flex: 1, marginRight: "10px" }}
-                      value={messageInput}
-                      onChange={(e) => setMessageInput(e.target.value)}
-                    />
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={sendMessage}
-                    >
-                      Send
-                    </Button>
-                  </Box>
-                </form>
+                <Box component="form" sx={{ display: 'flex' }} onSubmit={sendMessage}>
+                  <TextField
+                    id="message"
+                    label="Type your message..."
+                    variant="outlined"
+                    sx={{ flex: 1, marginRight: '10px' }}
+                    value={messageInput}
+                    onChange={(e) => setMessageInput(e.target.value)}
+                  />
+                  <Button type="submit" variant="contained" color="primary">
+                    Send
+                  </Button>
+                </Box>
               </Box>
             </Box>
           </Box>
         </Box>
       ) : (
-        <Box sx={{ my: 4 }}>
-          <TextField
+        <Box sx={{ my: 4, textAlign: 'center' }}>
+          {/* <TextField
             placeholder="Enter your email"
             value={user.email}
             onChange={handleEmail}
             margin="normal"
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => registerUser(user, setUser)}
-          >
+            sx={{ marginBottom: '20px' }}
+          /> */}
+          <Button variant="contained" color="primary" onClick={() => registerUser(user, setUser)}>
             Connect
           </Button>
         </Box>
@@ -360,5 +440,6 @@ const ChatApplication = () => {
     </Container>
   );
 };
+
 
 export default ChatApplication;

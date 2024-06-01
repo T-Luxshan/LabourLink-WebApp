@@ -1,20 +1,23 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import NavigationBar from "./Components/NavigationBar";
 import Home from "./Pages/Home";
 import Categories from "./Pages/Categories";
 import Footer from "./Components/Footer";
 import Profile from "./Pages/Profile";
-import { getCustomersByEmail } from "./Service/CustomerService";
 import UpdateAccount from "./Components/UpdateAccount";
 import ChatApplication from "./Pages/ChatApplication";
 import ChatRoom from "./Pages/ChatRoom2";
+
 import SignInSide from "./Pages/Authentication/SignInSide";
 import SignUp from "./Pages/Authentication/SignUp";
 import ForgotPassword from "./Pages/Authentication/ForgotPassword";
 import VerifyOTP from "./Pages/Authentication/VerifyOTP";
 import ChangePassword from "./Pages/Authentication/ChangePassword";
 import { EmailProvider } from "./Service/EmailContext";
+
+import Notification from "./Pages/Notification";
+
 
 export const ThemeContext = createContext(null);
 
@@ -73,7 +76,7 @@ function App() {
               element={
                 <>
                   <NavigationBar />
-                  <Profile/>
+                  <Profile />
                 </>
               }
             />
@@ -104,7 +107,15 @@ function App() {
             <Route path="/update-account" element={<UpdateAccount />} />
             <Route path="/chat" element={<ChatApplication />} />
             <Route path="/chatroom" element={<ChatRoom />} />
-
+            <Route
+              path="/notification"
+              element={
+                <>
+                  <NavigationBar />
+                  <Notification />
+                </>
+              }
+            />
           </Routes>
         </Router>
       </div>

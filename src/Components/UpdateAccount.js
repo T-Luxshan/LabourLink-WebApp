@@ -9,28 +9,21 @@ import {
 } from "@mui/material";
 import {
   getCustomersByEmail,
-  updateCustomer
+  updateCustomer,
 } from "../Service/CustomerService";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const UpdateAccount = () => {
-  const [name, setName] = useState("");
-  const [mobileNumber, setMobileNumber] = useState("");
-  const [address, setAddress] = useState("");
-
   const navigate = useNavigate();
-  const { email } = useParams();//
+  const location = useLocation();
+  // const { email } = useParams();//
 
-  useEffect(() => {
-    if (email) {
-      getCustomersByEmail(email).then((response) => {
-        const { name, mobileNumber, address } = response; // Assuming the response contains these properties
-        setName(name);
-        setMobileNumber(mobileNumber);
-        setAddress(address);
-      });
-    }
-  }, [email]);
+  const [name, setName] = useState(location.state?.customer.name);
+  const [mobileNumber, setMobileNumber] = useState(
+    location.state?.customer.mobileNumber
+  );
+  const [address, setAddress] = useState(location.state?.customer.address);
+  const [email, setEmail] = useState(location.state?.customer.email);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,7 +53,7 @@ const UpdateAccount = () => {
               fontFamily: "Montserrat", // Set font family to Montserrat
               fontWeight: "bold", // Optionally set font weight to bold
               mt: 2, // Optional margin top
-              textAlign:'center',
+              textAlign: "center",
             }}
           >
             Update Customer
