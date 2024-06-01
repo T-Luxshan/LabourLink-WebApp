@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { over } from "stompjs";
 import SockJS from "sockjs-client";
+import NavigationBar from "../Components/NavigationBar";
 import {
   Container,
   Typography,
@@ -227,6 +228,7 @@ const ChatApplication = () => {
 
   return (
     <Container sx={{ marginTop: '70px' }}>
+      <NavigationBar/>
       {user.status === 'ONLINE' ? (
         <Box sx={{ my: 4 }}>
           <Typography

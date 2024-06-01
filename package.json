@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
+    "@hookform/resolvers": "^3.4.2",
     "@material-ui/core": "^4.12.4",
     "@mui/icons-material": "^5.15.9",
     "@mui/lab": "^5.0.0-alpha.165",
@@ -15,10 +16,14 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.7",
+    "dayjs": "^1.11.11",
+    "jwt-decode": "^4.0.0",
     "net": "^1.0.2",
     "net-browserify": "^0.2.4",
+    "otp-input-react": "^0.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.51.5",
     "react-icons": "^5.0.1",
     "react-notifications-component": "^4.0.1",
     "react-push-notification": "^1.5.4",
@@ -26,7 +31,8 @@
     "react-switch": "^7.0.0",
     "sockjs-client": "^1.6.1",
     "stompjs": "^2.3.3",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "yup": "^1.4.0"
   },
   "scripts": {
     "start": "react-scripts start",

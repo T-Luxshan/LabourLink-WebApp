@@ -8,7 +8,16 @@ import Profile from "./Pages/Profile";
 import UpdateAccount from "./Components/UpdateAccount";
 import ChatApplication from "./Pages/ChatApplication";
 import ChatRoom from "./Pages/ChatRoom2";
+
+import SignInSide from "./Pages/Authentication/SignInSide";
+import SignUp from "./Pages/Authentication/SignUp";
+import ForgotPassword from "./Pages/Authentication/ForgotPassword";
+import VerifyOTP from "./Pages/Authentication/VerifyOTP";
+import ChangePassword from "./Pages/Authentication/ChangePassword";
+import { EmailProvider } from "./Service/EmailContext";
+
 import Notification from "./Pages/Notification";
+
 
 export const ThemeContext = createContext(null);
 
@@ -23,12 +32,13 @@ function App() {
     <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
       <div className="App" id={theme}>
         <Router>
-          <NavigationBar />
+          {/* <NavigationBar /> */}
           <Routes>
             <Route
               path="/"
               element={
                 <>
+                  <NavigationBar />
                   <Home />
                   <Categories />
                   <Footer />
@@ -36,9 +46,26 @@ function App() {
               }
             />
             <Route
+              path="/login"
+              element={
+                <>
+                  <SignInSide />                 
+                </>
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <>
+                  <SignUp /> 
+                </>
+              }
+            />
+            <Route
               path="/labourcategories"
               element={
                 <>
+                  <NavigationBar />
                   <Categories />
                   <Footer />
                 </>
@@ -51,6 +78,30 @@ function App() {
                   <NavigationBar />
                   <Profile />
                 </>
+              }
+            />
+            <Route
+              path="/forgotpassword"
+              element={
+                <EmailProvider>
+                  <ForgotPassword />
+                </EmailProvider>
+              }
+            />
+            <Route
+              path="/verifyotp"
+              element={
+                <EmailProvider>
+                  <VerifyOTP />
+                </EmailProvider>
+              }
+            />
+            <Route
+              path="/changepassword"
+              element={
+                <EmailProvider>
+                  <ChangePassword />
+                </EmailProvider>
               }
             />
             <Route path="/update-account" element={<UpdateAccount />} />
