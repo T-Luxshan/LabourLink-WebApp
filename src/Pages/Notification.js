@@ -5,7 +5,7 @@ import logo from '../Images/app-logo3.png';
 import { Container, Typography, List, ListItem, ListItemText, ListItemAvatar, Avatar, Divider, Badge, IconButton } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { findNotifications, saveNotifications, updateNotificationReadStatus } from '../Service/NotificationService'
+import { findNotifications, saveNotifications, updateNotificationReadStatus, deleteNotification } from '../Service/NotificationService'
 
 
 function Notification() {
@@ -82,20 +82,29 @@ function Notification() {
   };
 
   const markNotificationAsRead = async (id) => {
-    console.log(id);
+    // console.log(`Marking notification as read: ${id}`);
     try {
-      // Update the notification read status on the server
-      await updateNotificationReadStatus(id, { read: true }); // Send only the 'read' field to be updated
-      // Update the local state to mark the notification as read
+      const response = await updateNotificationReadStatus(id, { read: true });
+      console.log("Server response:", response.data);
+
       setNotifications(notifications.map(notification => {
         if (notification.id === id) {
-          return { ...notification, read: true }; // Spread the existing notification properties and update 'read' to true
+          return { ...notification, read: true };
         } else {
           return notification;
         }
       }));
     } catch (error) {
       console.error("Error updating notification read status", error);
+    }
+  };
+
+  const handleDeleteNotification = async (id) => {
+    try {
+      await deleteNotification(id);
+      setNotifications(notifications.filter(notification => notification.id !== id));
+    } catch (error) {
+      console.error("Error deleting notification", error);
     }
   };
   
@@ -129,6 +138,7 @@ function Notification() {
                   },
                   padding: 2
                 }}
+                onClick={() => markNotificationAsRead(notification.id)} // Call markNotificationAsRead function with notification id
               >
                 <ListItemAvatar>
                   <Badge
@@ -163,8 +173,8 @@ function Notification() {
                 <IconButton
                   edge="end"
                   aria-label="delete"
-                  onClick={() => markNotificationAsRead(notification.id)} // Call markNotificationAsRead function with notification id
                   sx={{ color: 'error.main' }}
+                  onClick={() => handleDeleteNotification(notification.id)}
                 >
                   <DeleteIcon />
                 </IconButton>

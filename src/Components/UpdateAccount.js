@@ -12,6 +12,7 @@ import {
   updateCustomer,
 } from "../Service/CustomerService";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import NavigationBar from "./NavigationBar"
 
 const UpdateAccount = () => {
   const navigate = useNavigate();
@@ -45,6 +46,7 @@ const UpdateAccount = () => {
 
   return (
     <div>
+      <NavigationBar/>
       <Card sx={{ width: "500px", margin: "auto", marginTop: "150px" }}>
         <CardContent>
           <Typography
