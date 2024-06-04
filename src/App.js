@@ -18,6 +18,7 @@ import { EmailProvider } from "./Service/EmailContext";
 
 import Notification from "./Pages/Notification";
 import Review from "./Components/Review";
+import Report from "./Components/Report";
 
 
 export const ThemeContext = createContext(null);
@@ -123,6 +124,15 @@ function App() {
                 <>
                   {/* <NavigationBar /> */}
                   <Review />
+                </>
+              }
+            />
+            <Route
+              path="/report"
+              element={
+                <>
+                  {/* <NavigationBar /> */}
+                  <Report/>
                 </>
               }
             />
