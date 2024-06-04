@@ -17,6 +17,7 @@ import ChangePassword from "./Pages/Authentication/ChangePassword";
 import { EmailProvider } from "./Service/EmailContext";
 
 import Notification from "./Pages/Notification";
+import MapView from "./Pages/MapView";
 
 
 export const ThemeContext = createContext(null);
@@ -104,6 +105,13 @@ function App() {
                 </EmailProvider>
               }
             />
+            <Route
+              path="/hire"
+              element={
+                <MapView/>
+              }
+            />
+            
             <Route path="/update-account" element={<UpdateAccount />} />
             <Route path="/chat" element={<ChatApplication />} />
             <Route path="/chatroom" element={<ChatRoom />} />
