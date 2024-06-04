@@ -17,6 +17,7 @@ import ChangePassword from "./Pages/Authentication/ChangePassword";
 import { EmailProvider } from "./Service/EmailContext";
 
 import Notification from "./Pages/Notification";
+import Review from "./Components/Review";
 
 
 export const ThemeContext = createContext(null);
@@ -113,6 +114,15 @@ function App() {
                 <>
                   <NavigationBar />
                   <Notification />
+                </>
+              }
+            />
+            <Route
+              path="/review"
+              element={
+                <>
+                  <NavigationBar />
+                  <Review />
                 </>
               }
             />
