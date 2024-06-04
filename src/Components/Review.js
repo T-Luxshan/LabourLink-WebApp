@@ -16,6 +16,7 @@ import TextField from '@mui/material/TextField';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
+import { addReview } from '../Service/ReviewService';
 
 const defaultTheme = createTheme({
   palette: {
@@ -60,6 +61,11 @@ const Review = () => {
     if(jobRole){
       setError('');  
       console.log(jobRole, description, rating );
+
+      addReview(jobRole, description, rating, labour.email)
+        .then(res=>console.log(res))
+        .catch(err=>console.log(err))
+
       setOpen(false);
     }else{
       setError("Please select the job role.")
