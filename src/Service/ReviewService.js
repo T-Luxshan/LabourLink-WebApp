@@ -11,7 +11,7 @@ export const addReview = (jobRole, description, rating, labourEmail) => {
 
 //API for edit review
 export const editReview = (id, jobRole, description, rating, labourEmail) => {
-    return axiosAuthInstance.post(`${REST_API_BASE_URL_REVIEW}/editReview/${id}`,{
+    return axiosAuthInstance.put(`${REST_API_BASE_URL_REVIEW}/editReview/${id}`,{
         jobRole, description, rating, labourEmail
     });
 };

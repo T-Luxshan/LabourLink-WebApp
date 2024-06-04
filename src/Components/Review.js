@@ -16,7 +16,7 @@ import TextField from '@mui/material/TextField';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
-import { addReview } from '../Service/ReviewService';
+import { addReview, editReview } from '../Service/ReviewService';
 
 const defaultTheme = createTheme({
   palette: {
@@ -40,6 +40,7 @@ const Review = () => {
   const [description, setDescription] = React.useState('');
   const [rating, setRating] = React.useState(2.5);
   const [error, setError] = React.useState('');
+  const [reviewId, setReviewID] = React.useState(null);
 
   const availableJobRoles = ["CARPENTER", "ELECTRICIAN", "PLUMBER", "PAINTER", "MASON", "WELDER", "DRIVER"];
   const labour = {
@@ -61,12 +62,24 @@ const Review = () => {
     if(jobRole){
       setError('');  
       console.log(jobRole, description, rating );
-
+      if(reviewId){
+        editReview(reviewId, jobRole, description, rating, labour.email)
+          .then(res=>{
+            console.log(res);
+            setReviewID(res.data.id);
+          })
+        .catch(err=>console.log(err))
+        setOpen(false);
+      }else{
       addReview(jobRole, description, rating, labour.email)
-        .then(res=>console.log(res))
+        .then(res=>{
+          console.log(res);
+          setReviewID(res.data.id);
+        })
         .catch(err=>console.log(err))
 
       setOpen(false);
+    }
     }else{
       setError("Please select the job role.")
     }

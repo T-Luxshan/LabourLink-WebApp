@@ -121,7 +121,7 @@ function App() {
               path="/review"
               element={
                 <>
-                  <NavigationBar />
+                  {/* <NavigationBar /> */}
                   <Review />
                 </>
               }
