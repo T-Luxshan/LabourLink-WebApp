@@ -1,22 +1,19 @@
-import * as React from 'react';
+import { Grid } from '@mui/material';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Slide from '@mui/material/Slide';
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import { Grid } from '@mui/material';
-import TextField from '@mui/material/TextField';
+import Slide from '@mui/material/Slide';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Rating from '@mui/material/Rating';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { addReview, editReview } from '../Service/ReviewService';
+import * as React from 'react';
+import { editUserReport, reportUser } from '../Service/ReportService';
+
 
 const defaultTheme = createTheme({
   palette: {
@@ -39,7 +36,7 @@ const Report = () => {
   const [issue, setIssue] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [error, setError] = React.useState('');
-  const [reviewId, setReviewID] = React.useState(null);
+  const [reportId, setReportID] = React.useState(null);
 
   
   const labour = {
@@ -61,28 +58,26 @@ const Report = () => {
     if(issue){
       setError('');  
       console.log(issue, description );
-      // if(reviewId){
-      //   editReview(reviewId, jobRole, description, rating, labour.email)
-      //     .then(res=>{
-      //       console.log(res);
-      //       setReviewID(res.data.id);
-      //     })
-      //   .catch(err=>console.log(err))
-      //   setOpen(false);
-      // }else{
-      // addReview(jobRole, description, rating, labour.email)
-      //   .then(res=>{
-      //     console.log(res);
-      //     setReviewID(res.data.id);
-      //   })
-      //   .catch(err=>console.log(err))
-
+      if(reportId){
+        editUserReport(reportId, issue, description, labour.email)
+          .then(res=>{
+            setReportID(res.data.id);
+            console.log(res);
+          })
+          .catch(err=>console.log(err));  
       setOpen(false);
-    
+      }else{
+        reportUser(issue, description, labour.email)
+          .then(res=>{
+            setReportID(res.data.id);
+            console.log(res);
+          })
+          .catch(err=>console.log(err));  
+        setOpen(false);
+      }
     }else{
-      setError("Please select the job role.")
-    }
-    
+      setError("Please mention the issue.")
+    }  
   };
 
   return (
