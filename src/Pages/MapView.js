@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Link , useNavigate} from 'react-router-dom';
 import {
   APIProvider,
   Map,
@@ -11,12 +10,12 @@ import {
   Grid,
   Box,
   Typography,
-  Button,
-} from "@material-ui/core";
+  } from "@material-ui/core";
 import { getAllLabourLocations } from "../Service/LocationService";
 import NavigationBar from "../Components/NavigationBar";
 import { getLabourById } from "../Service/LabourService";
-import ManIcon from '@mui/icons-material/Man';
+import ManIcon from "@mui/icons-material/Man";
+import FormDialog from "../Components/FormDialog";
 
 const MapWithLabourPositions = () => {
   const [labourPosition, setLabourPosition] = useState([]);
@@ -24,8 +23,7 @@ const MapWithLabourPositions = () => {
   const [position, setPosition] = useState({ lat: 6.7953, lng: 79.9011 });
   const [selectedUser, setSelectedUser] = useState(null);
   const [labourSelected, setLabourSelected] = useState(null);
-  const navigate = useNavigate();
-  const customerId="johndoe@example.com";
+  const customerId = "johndoe@example.com";
 
   // Get the user's location when the component mounts
   useEffect(() => {
@@ -77,16 +75,11 @@ const MapWithLabourPositions = () => {
     }
   };
 
-  const handleHireClick = () => {
-    if (labourSelected?.email) {
-      const selectedLabour=labourSelected.email;
-      const customerId="johndoe@example.com";
-      // Pass labourSelected.email to the hiring page using useNavigate
-      navigate(`/hiringpage?labourEmail=${selectedLabour}&customerId=${customerId}`);
-    } else {
-      console.error("No labour email available for hiring.");
-    }
-  };
+  // const handleHireClick = () => {
+  //   console.log("clicked");
+  //   console.log(labourSelected?.email);
+  //   setIsHireDialogOpen(true); // Set state to open the dialog
+  // };
 
   return (
     <div>
@@ -140,7 +133,7 @@ const MapWithLabourPositions = () => {
                       }}
                     >
                       {/* <span style={{ fontSize: "42px" }}>👨‍🔧</span> */}
-                      <ManIcon sx={{ fontSize: '40px' }} />
+                      <ManIcon sx={{ fontSize: "40px" }} />
                     </AdvancedMarker>
                   ))}
                 </Map>
@@ -198,25 +191,24 @@ const MapWithLabourPositions = () => {
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>
-                  {/* <Link to="/bookingpage"> */}
-                    <Button
-                      variant="contained"
-                      sx={{
-                        mt: 2,
-                        backgroundColor: "#00204A",
-                        color: "white",
-                        padding: "1rem 2rem",
-                        '&:hover': {
-                          backgroundColor: "#003366",
-                        },
-                      }}
-                      onClick={handleHireClick}
-                    >
+                    {/* <Button variant="outlined" onClick={handleHireClick}>
                       Hire
-                    </Button>
-                    {/* </Link> */}
+                    </Button> */}
+                    {/* {isHireDialogOpen && (
+                      <FormDialog
+                      labourEmail={labourSelected?.email}
+                      cutomerEmail={customerId}
+                      onClose={() => setIsHireDialogOpen(false)}
+                      />
+                    )} */}
+                    <FormDialog
+                      labourEmail={labourSelected?.email}
+                      cutomerEmail={customerId}
+                      labourName={labourSelected?.name}
+                      />
                   </Grid>
                 </Grid>
+                
               </div>
             ) : (
               <Typography>No labour selected</Typography>
