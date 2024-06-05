@@ -18,6 +18,7 @@ import { EmailProvider } from "./Service/EmailContext";
 
 import Notification from "./Pages/Notification";
 import MapView from "./Pages/MapView";
+import HiringPage from "./Pages/HiringPage"
 
 
 export const ThemeContext = createContext(null);
@@ -109,6 +110,12 @@ function App() {
               path="/hire"
               element={
                 <MapView/>
+              }
+            />
+            <Route
+              path="/hiringpage"
+              element={
+                <HiringPage/>
               }
             />
             

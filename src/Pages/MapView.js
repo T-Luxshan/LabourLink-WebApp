@@ -1,23 +1,31 @@
 import React, { useState, useEffect } from "react";
+import { Link , useNavigate} from 'react-router-dom';
 import {
   APIProvider,
   Map,
   AdvancedMarker,
   Pin,
-  InfoWindow,
 } from "@vis.gl/react-google-maps";
-import { CircularProgress, Grid, Box, Typography } from "@material-ui/core";
+import {
+  CircularProgress,
+  Grid,
+  Box,
+  Typography,
+  Button,
+} from "@material-ui/core";
 import { getAllLabourLocations } from "../Service/LocationService";
 import NavigationBar from "../Components/NavigationBar";
 import { getLabourById } from "../Service/LabourService";
+import ManIcon from '@mui/icons-material/Man';
 
 const MapWithLabourPositions = () => {
   const [labourPosition, setLabourPosition] = useState([]);
   const [zoom, setZoom] = useState(18);
   const [position, setPosition] = useState({ lat: 6.7953, lng: 79.9011 });
-  const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [labourSelected, setLabourSelected] = useState(null);
+  const navigate = useNavigate();
+  const customerId="johndoe@example.com";
 
   // Get the user's location when the component mounts
   useEffect(() => {
@@ -69,11 +77,22 @@ const MapWithLabourPositions = () => {
     }
   };
 
+  const handleHireClick = () => {
+    if (labourSelected?.email) {
+      const selectedLabour=labourSelected.email;
+      const customerId="johndoe@example.com";
+      // Pass labourSelected.email to the hiring page using useNavigate
+      navigate(`/hiringpage?labourEmail=${selectedLabour}&customerId=${customerId}`);
+    } else {
+      console.error("No labour email available for hiring.");
+    }
+  };
+
   return (
     <div>
       <NavigationBar />
       <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={5}>
+        <Grid container spacing={3}>
           <Grid
             item
             md={8}
@@ -93,7 +112,7 @@ const MapWithLabourPositions = () => {
                   container
                   alignItems="center"
                   justify="center"
-                  style={{ height: "50vh" }}
+                  style={{ height: "100vh" }}
                 >
                   <CircularProgress />
                 </Grid>
@@ -103,7 +122,8 @@ const MapWithLabourPositions = () => {
                   center={position}
                   mapId={process.env.REACT_APP_MAP_ID}
                   onZoomChanged={(newZoom) => setZoom(newZoom)}
-                  style={{ height: "50vh" }}
+                  style={{ height: "65vh" }}
+                  fullscreenControl={false}
                 >
                   <AdvancedMarker position={position}>
                     <Pin />
@@ -116,21 +136,13 @@ const MapWithLabourPositions = () => {
                       }}
                       key={location.id}
                       onClick={() => {
-                        // setOpen(true);
                         viewLabourDetails(location);
                       }}
                     >
-                      <span style={{ fontSize: "42px" }}>👨‍🔧</span>
+                      {/* <span style={{ fontSize: "42px" }}>👨‍🔧</span> */}
+                      <ManIcon sx={{ fontSize: '40px' }} />
                     </AdvancedMarker>
                   ))}
-                  {/* {open && (
-                    <InfoWindow
-                      position={position}
-                      onCloseClick={() => setOpen(false)}
-                    >
-                      <p>Your Current Location</p>
-                    </InfoWindow>
-                  )} */}
                 </Map>
               )}
             </APIProvider>
@@ -182,18 +194,29 @@ const MapWithLabourPositions = () => {
                   </Grid>
                   <Grid item xs={8}>
                     <Typography variant="body1">
-                      {labourSelected?.mobileNumber || "N/A"}
+                      {labourSelected?.about || "N/A"}
                     </Typography>
                   </Grid>
-                  {/* Add more details as required */}
+                  <Grid item xs={12}>
+                  {/* <Link to="/bookingpage"> */}
+                    <Button
+                      variant="contained"
+                      sx={{
+                        mt: 2,
+                        backgroundColor: "#00204A",
+                        color: "white",
+                        padding: "1rem 2rem",
+                        '&:hover': {
+                          backgroundColor: "#003366",
+                        },
+                      }}
+                      onClick={handleHireClick}
+                    >
+                      Hire
+                    </Button>
+                    {/* </Link> */}
+                  </Grid>
                 </Grid>
-                <Typography
-                  variant="h5"
-                  gutterBottom
-                  sx={{ marginTop: "40px" }}
-                >
-                  <strong>Reviews</strong>
-                </Typography>
               </div>
             ) : (
               <Typography>No labour selected</Typography>
@@ -211,7 +234,9 @@ const MapWithLabourPositions = () => {
               boxSizing: "border-box",
             }}
           >
-            <Typography>Lab 2</Typography>
+            <Typography variant="h5" gutterBottom sx={{ marginTop: "40px" }}>
+              <strong>Reviews</strong>
+            </Typography>
           </Grid>
         </Grid>
       </Box>
