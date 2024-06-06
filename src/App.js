@@ -18,6 +18,7 @@ import { EmailProvider } from "./Service/EmailContext";
 
 import Notification from "./Pages/Notification";
 import Review from "./Components/Review";
+import JoinAs from "./Pages/Authentication/JoinAs";
 
 
 export const ThemeContext = createContext(null);
@@ -123,6 +124,14 @@ function App() {
                 <>
                   <NavigationBar />
                   <Review />
+                </>
+              }
+            />
+            <Route
+              path="/joinas"
+              element={
+                <>
+                  <JoinAs />
                 </>
               }
             />
