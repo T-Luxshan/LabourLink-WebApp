@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from 'react-router-dom';
 import {
   APIProvider,
   Map,
@@ -11,18 +12,19 @@ import {
   Box,
   Typography,
   } from "@material-ui/core";
-import { getAllLabourLocations } from "../Service/LocationService";
+import { getLocationsByJobRole} from "../Service/LocationService";
 import NavigationBar from "../Components/NavigationBar";
 import { getLabourById } from "../Service/LabourService";
 import ManIcon from "@mui/icons-material/Man";
 import FormDialog from "../Components/FormDialog";
 
-const MapWithLabourPositions = () => {
+const MapView = () => {
   const [labourPosition, setLabourPosition] = useState([]);
   const [zoom, setZoom] = useState(18);
   const [position, setPosition] = useState({ lat: 6.7953, lng: 79.9011 });
   const [selectedUser, setSelectedUser] = useState(null);
   const [labourSelected, setLabourSelected] = useState(null);
+  const {jobRole} = useParams();
   const customerId = "johndoe@example.com";
 
   // Get the user's location when the component mounts
@@ -47,17 +49,16 @@ const MapWithLabourPositions = () => {
   useEffect(() => {
     async function fetchLabourLocations() {
       try {
-        const response = await getAllLabourLocations();
+        const response = await getLocationsByJobRole(jobRole);
         console.log("Response from API:", response);
         setLabourPosition(response.data); // Update state
       } catch (error) {
         console.log("Error fetching labour locations", error);
       }
     }
-
     console.log("Fetching labour locations...");
     fetchLabourLocations(); // Fetch data on component mount
-  }, []);
+  }, [jobRole]);
 
   const viewLabourDetails = (user) => {
     setSelectedUser(user);
@@ -100,7 +101,7 @@ const MapWithLabourPositions = () => {
           >
             <APIProvider apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
               {/* Third grid content (Map) */}
-              {labourPosition.length === 0 ? (
+              {/* {labourPosition.length === 0 ? (
                 <Grid
                   container
                   alignItems="center"
@@ -109,7 +110,7 @@ const MapWithLabourPositions = () => {
                 >
                   <CircularProgress />
                 </Grid>
-              ) : (
+              ) : ( */}
                 <Map
                   zoom={zoom}
                   center={position}
@@ -137,7 +138,7 @@ const MapWithLabourPositions = () => {
                     </AdvancedMarker>
                   ))}
                 </Map>
-              )}
+              
             </APIProvider>
           </Grid>
           <Grid
@@ -205,13 +206,14 @@ const MapWithLabourPositions = () => {
                       labourEmail={labourSelected?.email}
                       cutomerEmail={customerId}
                       labourName={labourSelected?.name}
+                      jobRole
                       />
                   </Grid>
                 </Grid>
                 
               </div>
             ) : (
-              <Typography>No labour selected</Typography>
+              <Typography>Select a {jobRole} from the Map</Typography>
             )}
           </Grid>
           <Grid
@@ -236,4 +238,4 @@ const MapWithLabourPositions = () => {
   );
 };
 
-export default MapWithLabourPositions;
+export default MapView;

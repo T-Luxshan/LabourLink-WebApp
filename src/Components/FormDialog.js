@@ -14,7 +14,7 @@ import { saveNotifications } from '../Service/NotificationService';
 import addNotification from "react-push-notification";
 import logo from '../Images/app-logo3.png'; 
 
-function FormDialog({ labourEmail, cutomerEmail , labourName }) {
+function FormDialog({ labourEmail, cutomerEmail , labourName ,jobRole}) {
   // Destructure props
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState("");
@@ -91,8 +91,8 @@ function FormDialog({ labourEmail, cutomerEmail , labourName }) {
 
   const labourHired = async () => {
     const notification = {
-      title: "Hiring Successful",
-      message: "You have successfully hired ",
+      title: `Hiring Request sent to ${labourName}`,
+      message: `You have successfully sent hiring request to ${labourName} you will be notified when he accepts you work` ,
       recipient: email, // Adjust as necessary
       createdAt: new Date().toISOString() // Add current time
     };

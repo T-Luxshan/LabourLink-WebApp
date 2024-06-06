@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Grid } from "@mui/material";
 import Container from "@mui/material/Container";
 import Card from "@mui/material/Card";
@@ -56,6 +57,7 @@ const Categories = () => {
                     </CardContent>
                   </CardActionArea>
                   <CardActions style={{ justifyContent: "flex-end" }}>
+                  <Link to={`/hire/${result.title}`}>
                     <Button
                       variant="contained"
                       size="small"
@@ -63,9 +65,11 @@ const Categories = () => {
                         fontFamily: "Montserrat",
                         backgroundColor: "#00204A",
                       }}
+                      // onClick={}
                     >
                       Hire
                     </Button>
+                    </Link>
                   </CardActions>
                 </Card>
               </Grow>
