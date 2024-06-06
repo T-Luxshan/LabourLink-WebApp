@@ -19,7 +19,6 @@ import { EmailProvider } from "./Service/EmailContext";
 import Notification from "./Pages/Notification";
 import MapView from "./Pages/MapView";
 
-
 export const ThemeContext = createContext(null);
 
 function App() {
@@ -50,7 +49,7 @@ function App() {
               path="/login"
               element={
                 <>
-                  <SignInSide />                 
+                  <SignInSide />
                 </>
               }
             />
@@ -58,7 +57,7 @@ function App() {
               path="/signup"
               element={
                 <>
-                  <SignUp /> 
+                  <SignUp />
                 </>
               }
             />
@@ -105,15 +104,11 @@ function App() {
                 </EmailProvider>
               }
             />
-            <Route
-              path="/hire/:jobRole"
-              element={
-                <MapView/>
-              }
-            />
-                      
+            <Route path="/hire/:jobRole" element={<MapView />} />
+
             <Route path="/update-account" element={<UpdateAccount />} />
             <Route path="/chat" element={<ChatApplication />} />
+            <Route path="/chat/:senderEmail/:receiverEmail" element={<ChatApplication />} />
             <Route path="/chatroom" element={<ChatRoom />} />
             <Route
               path="/notification"
