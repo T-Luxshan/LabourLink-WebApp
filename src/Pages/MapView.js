@@ -94,7 +94,7 @@ const MapView = () => {
               width: "100%",
               display: "flex",
               flexWrap: "wrap",
-              marginTop: "70px",
+              marginTop: "10px",
               boxSizing: "border-box",
               marginBottom: "10px",
             }}
@@ -148,7 +148,7 @@ const MapView = () => {
               width: "100%",
               display: "flex",
               flexWrap: "wrap",
-              marginTop: "70px",
+              marginTop: "10px",
               boxSizing: "border-box",
               marginBottom: "10px",
             }}

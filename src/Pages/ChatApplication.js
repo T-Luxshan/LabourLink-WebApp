@@ -76,24 +76,49 @@ const ChatApplication = () => {
     }
   };
 
+  // const onConnected = () => {
+  //   if (!user || !user.email) {
+  //     console.error("User information is incomplete.");
+  //     return;
+  //   }
+
+  //   stompClient.subscribe(
+  //     "/user/" + user.email + "/queue/messages",
+  //     onMessageReceived
+  //   );
+  //   stompClient.subscribe("/user/public", onMessageReceived);
+
+  //   //find and display connected users
+  //   findAndDisplayConnectedUsers();
+
+  //   // Call userJoin after establishing the connection
+  //   userJoin();
+  // };
+
   const onConnected = () => {
     if (!user || !user.email) {
-      console.error("User information is incomplete.");
-      return;
+        console.error("User information is incomplete.");
+        return;
     }
 
-    stompClient.subscribe(
-      "/user/" + user.email + "/queue/messages",
-      onMessageReceived
-    );
-    stompClient.subscribe("/user/public", onMessageReceived);
+    // Check connection state before subscribing and sending
+    if (stompClient.connected) {
+        stompClient.subscribe(
+            "/user/" + user.email + "/queue/messages",
+            onMessageReceived
+        );
+        stompClient.subscribe("/user/public", onMessageReceived);
 
-    //find and display connected users
-    findAndDisplayConnectedUsers();
+        // Call findAndDisplayConnectedUsers only after connection
+        findAndDisplayConnectedUsers();
 
-    // Call userJoin after establishing the connection
-    userJoin();
-  };
+        // Call userJoin after establishing the connection
+        userJoin();
+    } else {
+        console.log("Waiting for connection to be established...");
+    }
+};
+
 
   const userJoin = () => {
     // Ensure that user.email is present and accurate
@@ -237,8 +262,7 @@ const ChatApplication = () => {
   };
 
   return (
-    <Container sx={{ marginTop: "70px" }}>
-      <NavigationBar />
+    <Container sx={{ mt: 3 }}>
       {user.status === "ONLINE" ? (
         <Box sx={{ my: 4 }}>
           <Typography
@@ -246,24 +270,24 @@ const ChatApplication = () => {
             align="center"
             gutterBottom
             sx={{
-              color: "black",
-              // fontWeight: 'bold',
-              textTransform: "",
+              color: "#34495e",
+              fontWeight: "bold",
+              textTransform: "uppercase",
               letterSpacing: "1px",
-              marginBottom: "2px",
-              marginTop: "100px",
+              marginBottom: "20px",
+              marginTop: "5px",
             }}
           >
-            {selectedUserName ? `Chat with ${selectedUserName}` : "Start chat"}
+            {selectedUserName ? `Chat with ${selectedUserName}` : "Start Chat"}
           </Typography>
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <Box
               sx={{
-                width: { xs: "100%", md: "100%" },
+                width: { xs: "100%", md: "80%" },
                 height: { xs: "auto", md: "460px" },
                 margin: "20px",
-                border: "1px solid #ccc",
-                backgroundColor: "#fff",
+                border: "1px solid #bdc3c7",
+                backgroundColor: "#ecf0f1",
                 overflow: "hidden",
                 boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
                 borderRadius: "8px",
@@ -297,14 +321,12 @@ const ChatApplication = () => {
                     "& .MuiDrawer-paper": {
                       boxSizing: "border-box",
                       width: 240,
-                      backgroundColor: "#3498db",
+                      backgroundColor: "#34495e",
                       color: "#fff",
                     },
                   }}
                 >
-                  <Box
-                    sx={{ padding: "20px", height: "100%", overflowY: "auto" }}
-                  >
+                  <Box sx={{ padding: "20px", height: "100%", overflowY: "auto" }}>
                     <Typography variant="h6" gutterBottom>
                       Connected Users
                     </Typography>
@@ -317,19 +339,18 @@ const ChatApplication = () => {
                           sx={{
                             backgroundColor:
                               selectedUser === user.email
-                                ? "rgba(255, 0, 0, 0.2)"
+                                ? "rgba(41, 128, 185, 0.2)"
                                 : "transparent",
                             marginBottom: "5px",
                             borderRadius: "4px",
                             "&:hover": {
-                              backgroundColor: "rgba(255, 255, 255, 0.1)",
+                              backgroundColor: "rgba(41, 128, 185, 0.1)",
                             },
                           }}
                         >
                           <Avatar sx={{ marginRight: "10px" }} />
                           <ListItemText
                             primary={`${user.name}`}
-                            // primary={`${user.name} (${receivedMessagesCount[user.email] || 0})`}
                             primaryTypographyProps={{ color: "#fff" }}
                           />
                         </ListItem>
@@ -338,14 +359,14 @@ const ChatApplication = () => {
                   </Box>
                 </Drawer>
               </Box>
-
+  
               <Box
                 sx={{
                   flex: { xs: "none", md: 1 },
                   display: { xs: "none", md: "flex" },
                   flexDirection: "column",
                   padding: "20px",
-                  backgroundColor: "#3498db",
+                  backgroundColor: "#34495e",
                   color: "#fff",
                   borderTopLeftRadius: "8px",
                   borderTopRightRadius: { xs: "8px", md: 0 },
@@ -365,18 +386,17 @@ const ChatApplication = () => {
                       sx={{
                         backgroundColor:
                           selectedUser === user.email
-                            ? "rgba(255, 0, 0, 0.2)"
+                            ? "rgba(41, 128, 185, 0.2)"
                             : "transparent",
                         marginBottom: "5px",
                         borderRadius: "4px",
                         "&:hover": {
-                          backgroundColor: "rgba(255, 255, 255, 0.1)",
+                          backgroundColor: "rgba(41, 128, 185, 0.1)",
                         },
                       }}
                     >
                       <Avatar sx={{ marginRight: "10px" }} />
                       <ListItemText
-                        // primary={`${user.name} (${receivedMessagesCount[user.email] || 0})`}
                         primary={`${user.name}`}
                         primaryTypographyProps={{ color: "#fff" }}
                       />
@@ -384,7 +404,7 @@ const ChatApplication = () => {
                   ))}
                 </List>
               </Box>
-
+  
               <Box
                 sx={{
                   flex: 3,
@@ -421,7 +441,7 @@ const ChatApplication = () => {
                               ? "#3498db"
                               : "#ecf0f1",
                           color:
-                            message.senderId === user.email ? "#fff" : "#333",
+                            message.senderId === user.email ? "#fff" : "#34495e",
                           padding: "10px",
                           borderRadius: "8px",
                           maxWidth: "75%",
@@ -433,11 +453,7 @@ const ChatApplication = () => {
                     </Box>
                   ))}
                 </Box>
-                <Box
-                  component="form"
-                  sx={{ display: "flex" }}
-                  onSubmit={sendMessage}
-                >
+                <Box component="form" sx={{ display: "flex" }} onSubmit={sendMessage}>
                   <TextField
                     id="message"
                     label="Type your message..."
@@ -456,13 +472,6 @@ const ChatApplication = () => {
         </Box>
       ) : (
         <Box sx={{ my: 4, textAlign: "center" }}>
-          {/* <TextField
-            placeholder="Enter your email"
-            value={user.email}
-            onChange={handleEmail}
-            margin="normal"
-            sx={{ marginBottom: '20px' }}
-          /> */}
           <Button
             variant="contained"
             color="primary"
@@ -474,6 +483,7 @@ const ChatApplication = () => {
       )}
     </Container>
   );
+  
 };
 
 export default ChatApplication;

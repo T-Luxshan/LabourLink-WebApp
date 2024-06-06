@@ -1,84 +1,83 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Grid } from "@mui/material";
-import Container from "@mui/material/Container";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
-import Grow from "@mui/material/Grow";
-import { Button, CardActionArea, CardActions } from "@mui/material";
+import { Grid, Container, Card, CardContent, CardMedia, Typography, Grow, Button, CardActionArea, CardActions } from "@mui/material";
 import Data from "./Data.json";
 
 const Categories = () => {
   return (
-    <div>
-      <Container maxWidth="lg">
-        <Typography
-          variant="h3"
-          align="center"
-          style={{
-            marginTop: "70px",
-            fontFamily: "Montserrat",
-            color: "#00204A",
-          }}
-        >
-          Labor Categories
-        </Typography>
-        <Grid container spacing={5} style={{ marginTop: "20px" }}>
-          {Data.map((result, index) => (
-            <Grid item xs={12} md={3} sm={3} key={index}>
-              <Grow in={true} timeout={index * 300}>
-                <Card
-                  sx={{ maxWidth: 345, color: "#F97300" }}
-                  style={{
-                    padding: "10px",
-                    marginBottom: "30px",
-                    backgroundColor: "#F8F5E4",
-                  }}
-                >
-                  <CardActionArea>
-                    <CardMedia
-                      component="img"
-                      height="140"
-                      image={result.img}
-                      alt={result.title}
-                      style={{ borderRadius: "5px" }}
-                    />
-                    <CardContent>
-                      <Typography
-                        gutterBottom
-                        variant="h5"
-                        component="div"
-                        style={{ fontFamily: "Montserrat" }}
-                      >
-                        {result.title}
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                  <CardActions style={{ justifyContent: "flex-end" }}>
-                  <Link to={`/hire/${result.title}`}>
+    <Container maxWidth="lg" sx={{ mt: 3 }}>
+      <Typography
+        variant="h3"
+        align="center"
+        sx={{ mt: 4, mb: 4, fontFamily: "Montserrat", color: "#1a237e", fontWeight: "bold" }}
+      >
+        Labor Categories
+      </Typography>
+      <Grid container spacing={4}>
+        {Data.map((result, index) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+            <Grow in={true} timeout={index * 300}>
+              <Card
+                sx={{
+                  maxWidth: 345,
+                  p: 2,
+                  mb: 7,
+                  bgcolor: "#e9e9e9",
+                  color: "#1a237e",
+                  borderRadius: 4,
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                  transition: "transform 0.3s ease",
+                  "&:hover": {
+                    transform: "scale(1.05)",
+                  },
+                }}
+              >
+                <CardActionArea component={Link} to={`/hire/${result.title}`}>
+                  <CardMedia
+                    component="img"
+                    height="140"
+                    image={result.img}
+                    alt={result.title}
+                    sx={{ borderRadius: 4 }}
+                  />
+                  <CardContent>
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="div"
+                      align="center"
+                      sx={{ fontFamily: "Montserrat", fontWeight: "bold" }}
+                    >
+                      {result.title}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+                {/* <CardActions sx={{ justifyContent: "flex-end" }}>
+                  <Link to={`/hire/${result.title}`} style={{ textDecoration: 'none' }}>
                     <Button
                       variant="contained"
                       size="small"
-                      style={{
+                      sx={{
                         fontFamily: "Montserrat",
-                        backgroundColor: "#00204A",
+                        backgroundColor: "#1a237e",
+                        color: "#fff",
+                        "&:hover": {
+                          backgroundColor: "#3949ab",
+                        },
                       }}
-                      // onClick={}
                     >
                       Hire
                     </Button>
-                    </Link>
-                  </CardActions>
-                </Card>
-              </Grow>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
-    </div>
+                  </Link>
+                </CardActions> */}
+              </Card>
+            </Grow>
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
   );
 };
 
 export default Categories;
+

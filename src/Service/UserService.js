@@ -7,7 +7,7 @@ export const getUserByEmail = (email) => {
   };
 
 export const findConnectedUsers = () =>{
-    return axios.get(REST_API_BASE_URL + "/users")
+    return axios.get(REST_API_BASE_URL + "/connectedLabours")
   };
   
 

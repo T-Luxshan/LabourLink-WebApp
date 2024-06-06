@@ -107,8 +107,22 @@ function App() {
             <Route path="/hire/:jobRole" element={<MapView />} />
 
             <Route path="/update-account" element={<UpdateAccount />} />
-            <Route path="/chat" element={<ChatApplication />} />
-            <Route path="/chat/:senderEmail/:receiverEmail" element={<ChatApplication />} />
+            <Route
+              path="/chat"
+              element={
+                <>
+                  <NavigationBar />
+                  <ChatApplication />
+                </>
+              }
+            />
+            <Route
+              path="/chat/:senderEmail/:receiverEmail"
+              element={<>
+                <NavigationBar />
+                <ChatApplication />
+              </>}
+            />
             <Route path="/chatroom" element={<ChatRoom />} />
             <Route
               path="/notification"
