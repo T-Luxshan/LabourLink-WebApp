@@ -10,7 +10,7 @@ import ChatApplication from "./Pages/ChatApplication";
 import ChatRoom from "./Pages/ChatRoom2";
 
 import SignInSide from "./Pages/Authentication/SignInSide";
-import SignUp from "./Pages/Authentication/SignUp";
+import CustomerSignUp from "./Pages/Authentication/CustomerSignUp";
 import ForgotPassword from "./Pages/Authentication/ForgotPassword";
 import VerifyOTP from "./Pages/Authentication/VerifyOTP";
 import ChangePassword from "./Pages/Authentication/ChangePassword";
@@ -19,6 +19,7 @@ import { EmailProvider } from "./Service/EmailContext";
 import Notification from "./Pages/Notification";
 import Review from "./Components/Review";
 import JoinAs from "./Pages/Authentication/JoinAs";
+import LabourSignUp from "./Pages/Authentication/LabourSignUp";
 
 
 export const ThemeContext = createContext(null);
@@ -56,10 +57,18 @@ function App() {
               }
             />
             <Route
-              path="/signup"
+              path="/signup/customer"
               element={
                 <>
-                  <SignUp /> 
+                  <CustomerSignUp /> 
+                </>
+              }
+            />
+            <Route
+              path="/signup/labour"
+              element={
+                <>
+                  <LabourSignUp /> 
                 </>
               }
             />

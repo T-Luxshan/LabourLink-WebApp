@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import { useNavigate } from 'react-router-dom';
 
 const defaultTheme = createTheme({
     palette: {
@@ -55,24 +55,26 @@ const JoinAs = () => {
     const [enable, setEnable] = useState(true);
     const [selectedCustomer, setSelectedCustomer] = useState(false);
     const [selectedLabour, setSelectedLabour] = useState(false);
+    const navigate = useNavigate();
 
 
     const handleCustomer = () => {
-        setRole("CUSTOMER");
+        setRole("customer");
         setEnable(false);
         setSelectedCustomer(true);
         setSelectedLabour(false);
     }
 
     const handleLabour = () => {
-        setRole("LABOUR");
+        setRole("labour");
         setEnable(false);
         setSelectedLabour(true);
         setSelectedCustomer(false);
     }
 
     const createAccount = () => {
-        console.log(role);
+      navigate(`/signup/${role}`)
+      console.log(role);
     }
 
   return (
@@ -104,7 +106,7 @@ const JoinAs = () => {
           <Grid item xs={12} md={6}>
             <WhiteBox
                 sx={{
-                    backgroundImage: enable ? `url(${require("../../Assets/Signup5.gif")})`
+                    backgroundImage: enable ? `url(${require("../../Assets/hello.gif")})`
                       : (selectedCustomer ? `url(${require("../../Assets/hire.gif")})` : 
                       `url(${require("../../Assets/work.gif")})`),
                     backgroundRepeat: 'no-repeat',

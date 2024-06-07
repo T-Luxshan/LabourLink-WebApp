@@ -55,7 +55,7 @@ const schema = yup.object().shape({
   address: yup.string().required("Address is required"),
 });
 
-const SignUp = () => {
+const CustomerSignUp = () => {
   const [logError, setLogError] = useState('');
   const navigate = useNavigate();
   const { handleSubmit, control, formState: { errors } } = useForm({
@@ -278,4 +278,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default CustomerSignUp;
