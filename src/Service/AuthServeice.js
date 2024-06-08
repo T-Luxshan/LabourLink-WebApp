@@ -43,6 +43,11 @@ export const registerCustomer = (name, email, password, mobileNumber, address) =
         password, repeatPassword
       });
     };
+
+    // API to check whether a NIC already exist in the DB or not.
+    export const isNICExist = (nic) => {
+      return axios.get(`${REST_API_BASE_URL_AUTH}/nicExist/${nic}`)
+    }
   
 
   // THIS PART RELATED TO LABOUR AUTHENTICATION.
