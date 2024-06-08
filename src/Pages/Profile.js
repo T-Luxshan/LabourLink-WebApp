@@ -52,7 +52,7 @@ function Profile() {
           aria-label="Vertical tabs example"
           sx={{
             width: isSmallScreen ? "100%" : "auto",
-            marginBottom: "20px",
+            marginBottom: "400px",
             minWidth: "250px", // Adjust width here
           }}
         >

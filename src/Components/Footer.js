@@ -13,16 +13,6 @@ import AppStore from "../Assets/AppStore.svg";
 import PlayStore from "../Assets/PlayStore.svg";
 
 export default function Footer() {
-  const listItemButtonStyle = {
-    display: "flex",
-    alignItems: "center",
-    gap: "8px", // Adjust spacing between icon and text
-    backgroundColor: "transparent", // Remove button background color
-    border: "none", // Remove button border
-    cursor: "pointer", // Change cursor to pointer on hover
-    color: "#ffffff", // White color for icon and text
-  };
-
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 600);
 
   useEffect(() => {
@@ -35,139 +25,136 @@ export default function Footer() {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []); // Empty dependency array ensures that this effect runs only once after component mount
+  }, []);
 
   return (
     <footer
-      style={{ backgroundColor: "#00204A", color: "#ffffff", padding: "1px" }}
+      style={{
+        backgroundColor: "#00204A",
+        color: "#ffffff",
+        padding: "20px 10px",
+      }}
     >
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: isSmallScreen ? "1fr" : "1fr 1fr 1fr 1fr",
-          gap: "1px",
+          gridTemplateColumns: isSmallScreen ? "1fr" : "repeat(4, 1fr)",
+          gap: "20px",
         }}
       >
         <List>
+          <ListSubheader
+            style={{
+              fontWeight: "bold",
+              fontSize: "1.5rem",
+              color: "#F97300",
+              backgroundColor: "transparent",
+              marginBottom: "10px",
+            }}
+          >
+            Contact Us
+          </ListSubheader>
           <ListItem>
-            <ListSubheader
-              style={{
-                fontWeight: "bold",
-                fontSize: "1.2rem",
-                textAlign: "center",
-                color: "#F97300",
-                backgroundColor: "transparent", // Set background color to transparent
-              }}
-            >
-              Contact Us
-            </ListSubheader>
-          </ListItem>
-          <ListItem style={listItemButtonStyle}>
-            <ListItemButton>
+            <ListItemButton style={{ color: "#ffffff" }}>
               <PhoneIcon />
-              <Box sx={{ marginBottom: 4, marginRight: 2 }} />
-              {/* Add spacing */}
-              +94 011 123 4567
+              <Box sx={{ ml: 1 }}>+94 011 123 4567</Box>
             </ListItemButton>
           </ListItem>
-          <ListItem style={listItemButtonStyle}>
-            <ListItemButton>
+          <ListItem>
+            <ListItemButton style={{ color: "#ffffff" }}>
               <EmailIcon />
-              <Box sx={{ marginBottom: 4, marginRight: 2 }} />
-              {/* Add spacing */}
-              samplemail@gmail.com
+              <Box sx={{ ml: 1 }}>samplemail@gmail.com</Box>
             </ListItemButton>
           </ListItem>
         </List>
         <List>
+          <ListSubheader
+            style={{
+              fontWeight: "bold",
+              fontSize: "1.5rem",
+              color: "#F97300",
+              backgroundColor: "transparent",
+              marginBottom: "10px",
+            }}
+          >
+            Social Media
+          </ListSubheader>
           <ListItem>
-            <ListSubheader
-              style={{
-                fontWeight: "bold",
-                fontSize: "1.2rem",
-                textAlign: "center",
-                color: "#F97300",
-                backgroundColor: "transparent", // Set background color to transparent
-              }}
-            >
-              Social Media
-            </ListSubheader>
-          </ListItem>
-          <ListItem style={listItemButtonStyle}>
-            <ListItemButton>
+            <ListItemButton style={{ color: "#ffffff" }}>
               <FacebookIcon />
-              <Box sx={{ marginBottom: 4, marginRight: 2 }} />
-              {/* Add spacing */}
-              Labor Link
+              <Box sx={{ ml: 1 }}>Labor Link</Box>
             </ListItemButton>
           </ListItem>
-          <ListItem style={listItemButtonStyle}>
-            <ListItemButton>
+          <ListItem>
+            <ListItemButton style={{ color: "#ffffff" }}>
               <InstagramIcon />
-              <Box sx={{ marginBottom: 4, marginRight: 2 }} />
-              {/* Add spacing */}
-              @labour_link
+              <Box sx={{ ml: 1 }}>@labour_link</Box>
             </ListItemButton>
           </ListItem>
         </List>
-
         <List>
+          <ListSubheader
+            style={{
+              fontWeight: "bold",
+              fontSize: "1.5rem",
+              color: "#F97300",
+              backgroundColor: "transparent",
+              marginBottom: "10px",
+            }}
+          >
+            Sitemap
+          </ListSubheader>
           <ListItem>
-            <ListSubheader
-              style={{
-                fontWeight: "bold",
-                fontSize: "1.2rem",
-                textAlign: "center",
-                color: "#F97300",
-                backgroundColor: "transparent", // Set background color to transparent
-              }}
-            >
-              Sitemap
-            </ListSubheader>
+            <ListItemButton style={{ color: "#ffffff" }}>Services</ListItemButton>
           </ListItem>
           <ListItem>
-            <ListItemButton>Services</ListItemButton>
+            <ListItemButton style={{ color: "#ffffff" }}>Blog</ListItemButton>
           </ListItem>
           <ListItem>
-            <ListItemButton>Blog</ListItemButton>
-          </ListItem>
-          <ListItem>
-            <ListItemButton>About</ListItemButton>
+            <ListItemButton style={{ color: "#ffffff" }}>About</ListItemButton>
           </ListItem>
         </List>
         <List>
-          <ListItem>
-            <ListSubheader
-              style={{
-                fontWeight: "bold",
-                fontSize: "1.2rem",
-                textAlign: "center",
-                color: "#F97300",
-                backgroundColor: "transparent", // Set background color to transparent
-              }}
-            >
-              Products
-            </ListSubheader>
-          </ListItem>
-          <ListItem sx={{ width: "200px", height: "auto" }}>
+          <ListSubheader
+            style={{
+              fontWeight: "bold",
+              fontSize: "1.5rem",
+              color: "#F97300",
+              backgroundColor: "transparent",
+              marginBottom: "10px",
+            }}
+          >
+            Products
+          </ListSubheader>
+          <ListItem style={{ justifyContent: "center" }}>
             <ListItemButton>
               <img
                 src={AppStore}
                 alt="App Store"
-                style={{ width: "100%", height: "100%" }}
+                style={{ width: "150px", height: "auto" }}
               />
             </ListItemButton>
           </ListItem>
-          <ListItem sx={{ width: "200px", height: "auto" }}>
+          <ListItem style={{ justifyContent: "center" }}>
             <ListItemButton>
               <img
                 src={PlayStore}
                 alt="Play Store"
-                style={{ width: "100%", height: "100%" }}
+                style={{ width: "150px", height: "auto" }}
               />
             </ListItemButton>
           </ListItem>
         </List>
+      </div>
+      <div
+        style={{
+          textAlign: "center",
+          marginTop: "20px",
+          borderTop: "1px solid #F97300",
+          paddingTop: "10px",
+        }}
+      >
+        &copy; {new Date().getFullYear()} Labor Link. All rights reserved.
       </div>
     </footer>
   );

@@ -7,17 +7,15 @@ import Footer from "./Components/Footer";
 import Profile from "./Pages/Profile";
 import UpdateAccount from "./Components/UpdateAccount";
 import ChatApplication from "./Pages/ChatApplication";
-import ChatRoom from "./Pages/ChatRoom2";
-
 import SignInSide from "./Pages/Authentication/SignInSide";
 import SignUp from "./Pages/Authentication/SignUp";
 import ForgotPassword from "./Pages/Authentication/ForgotPassword";
 import VerifyOTP from "./Pages/Authentication/VerifyOTP";
 import ChangePassword from "./Pages/Authentication/ChangePassword";
 import { EmailProvider } from "./Service/EmailContext";
-
 import Notification from "./Pages/Notification";
-
+import MapView from "./Pages/MapView";
+import HiredHistory from "./Pages/HiredHistory";
 
 export const ThemeContext = createContext(null);
 
@@ -49,7 +47,7 @@ function App() {
               path="/login"
               element={
                 <>
-                  <SignInSide />                 
+                  <SignInSide />
                 </>
               }
             />
@@ -57,7 +55,7 @@ function App() {
               path="/signup"
               element={
                 <>
-                  <SignUp /> 
+                  <SignUp />
                 </>
               }
             />
@@ -77,6 +75,7 @@ function App() {
                 <>
                   <NavigationBar />
                   <Profile />
+                  <Footer />
                 </>
               }
             />
@@ -104,15 +103,55 @@ function App() {
                 </EmailProvider>
               }
             />
+            <Route
+              path="/hire/:jobRole"
+              element={
+                <>
+                  <NavigationBar />
+                  <MapView />
+                  <Footer />
+                </>
+              }
+            />
+
             <Route path="/update-account" element={<UpdateAccount />} />
-            <Route path="/chat" element={<ChatApplication />} />
-            <Route path="/chatroom" element={<ChatRoom />} />
+            <Route
+              path="/chat"
+              element={
+                <>
+                  <NavigationBar />
+                  <ChatApplication />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/chat/:senderEmail/:receiverEmail"
+              element={
+                <>
+                  <NavigationBar />
+                  <ChatApplication />
+                  <Footer />
+                </>
+              }
+            />
             <Route
               path="/notification"
               element={
                 <>
                   <NavigationBar />
                   <Notification />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/history"
+              element={
+                <>
+                  <NavigationBar />
+                  <HiredHistory />
+                  <Footer />
                 </>
               }
             />

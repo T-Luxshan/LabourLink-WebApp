@@ -35,7 +35,7 @@ const Home = () => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <NavigationBar />
+      {/* <NavigationBar /> */}
       <Paper
         elevation={0}
         sx={{
