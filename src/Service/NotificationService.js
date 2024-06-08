@@ -1,18 +1,18 @@
-import axios from "axios";
+import axiosAuthInstance from "./AuthServeice";
 
 export const findNotifications = (email) => {
-  return axios.get(`http://localhost:8080/api/notifications/user/${email}`);
+  return axiosAuthInstance.get(`http://localhost:8080/api/notifications/user/${email}`);
 };
 
 
 export const saveNotifications = (notification) => {
-    return axios.post(`http://localhost:8080/api/notifications/send`, notification);
+    return axiosAuthInstance.post(`http://localhost:8080/api/notifications/send`, notification);
 };
 
 export const updateNotificationReadStatus = (id, read) => {
-  return axios.patch(`http://localhost:8080/api/notifications/${id}/read`, read);
+  return axiosAuthInstance.patch(`http://localhost:8080/api/notifications/${id}/read`, read);
 };
 
 export const deleteNotification = (id) => {
-  return axios.delete(`http://localhost:8080/api/notifications/${id}`);
+  return axiosAuthInstance.delete(`http://localhost:8080/api/notifications/${id}`);
 };

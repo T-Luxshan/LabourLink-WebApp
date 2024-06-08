@@ -262,7 +262,7 @@ const ChatApplication = () => {
   };
 
   return (
-    <Container sx={{ mt: 3 }}>
+    <Container sx={{ mt: 10 }}>
       {user.status === "ONLINE" ? (
         <Box sx={{ my: 4 }}>
           <Typography

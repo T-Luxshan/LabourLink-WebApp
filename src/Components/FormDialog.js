@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import {
   Dialog,
@@ -18,13 +19,14 @@ import logo from "../Images/app-logo3.png";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import HowToRegRoundedIcon from "@mui/icons-material/HowToRegRounded";
 
-function FormDialog({ labourEmail, cutomerEmail, labourName, jobRole }) {
+function FormDialog({ labourEmail, cutomerEmail, labourName }) {
   // Destructure props
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [bookingStage, setBookingStage] = useState("PENDING");
+  const { jobRole } = useParams();
   const [booking, setBooking] = useState({
     labourId: "",
     customerId: "",
@@ -32,9 +34,11 @@ function FormDialog({ labourEmail, cutomerEmail, labourName, jobRole }) {
     startTime: "",
     bookingStage: "PENDING",
     jobDescription: "",
+    jobRole:`${jobRole}`
   });
   const email = cutomerEmail;
   const navigate = useNavigate();
+  
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -91,6 +95,7 @@ function FormDialog({ labourEmail, cutomerEmail, labourName, jobRole }) {
       // Handle successful booking response
       console.log("Booking successful:", response.data); // Example: access response data
       handleClose(); // Close the dialog (assuming handleClose exists)
+      labourHired();
     } catch (error) {
       console.error("Error saving booking", error);
     }
@@ -199,7 +204,7 @@ function FormDialog({ labourEmail, cutomerEmail, labourName, jobRole }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit" onClick={labourHired}>
+          <Button type="submit" >
             Submit
           </Button>
         </DialogActions>

@@ -5,7 +5,7 @@ import Data from "./Data.json";
 
 const Categories = () => {
   return (
-    <Container maxWidth="lg" sx={{ mt: 3 }}>
+    <Container maxWidth="lg" sx={{ mt: 10 }}>
       <Typography
         variant="h3"
         align="center"
