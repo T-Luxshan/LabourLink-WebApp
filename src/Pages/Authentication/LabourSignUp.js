@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Avatar from '@mui/material/Avatar';
@@ -18,6 +18,7 @@ import { registerCustomer } from '../../Service/AuthServeice';
 import { useNavigate } from 'react-router-dom';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
+import UploadDocument from '../../Components/UploadDocument';
 
 const defaultTheme = createTheme({
   palette: {
@@ -68,28 +69,32 @@ const schema = yup.object().shape({
     .required("Mobile number is required"),
   nic: yup
     .string()
-    .matches(/^[0-9]{12}$|^[0-9]{9}[v|V]$/, 'Pleace enter valid NIC number')
+    .matches(/^[0-9]{12}$|^[0-9]{9}[v|V]$/, 'Please enter a valid NIC number')
     .required('Your NIC number is required')
 });
 
 const LabourSignUp = () => {
   const [logError, setLogError] = useState('');
   const [fileURI, setFileURI] = useState(null);
+  const [nicError, setNicError] = useState('');
   const navigate = useNavigate();
-  const { handleSubmit, control, formState: { errors } } = useForm({
+  const { handleSubmit, control, formState: { errors }, setError, clearErrors } = useForm({
     resolver: yupResolver(schema),
   });
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const uri = URL.createObjectURL(file);
-      setFileURI(uri);
-      // You can also use the file object directly for further processing
-      console.log('File URI:', uri);
+  const handleFileURI = (fileUri) => {
+    setFileURI(fileUri);
+  }
+
+  const validateNIC = (value) => {
+    if (!/^[0-9]{12}$|^[0-9]{9}[v|V]$/.test(value)) {
+      setNicError('Please enter a valid NIC number');
+      setError('nic', { message: 'Please enter a valid NIC number' });
+    } else {
+      setNicError('');
+      clearErrors('nic');
     }
   };
-
 
   const onSubmit = async (data) => {
     console.log(data);
@@ -132,7 +137,6 @@ const LabourSignUp = () => {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-            //   backgroundColor: 'white',
             backgroundColor: 'rgba(0, 0, 0, 0.001)'
             }}
           >
@@ -195,7 +199,6 @@ const LabourSignUp = () => {
                     id="email"
                     label="Email Address"
                     autoComplete="email"
-                    // autoFocus
                     error={!!errors.email}
                     helperText={errors.email ? errors.email.message : ''}
                     sx={{ mb: 0 }}
@@ -259,7 +262,6 @@ const LabourSignUp = () => {
                     id="number"
                     label="Mobile Number"
                     autoComplete="number"
-                    // autoFocus
                     error={!!errors.mobileNumber}
                     helperText={errors.mobileNumber ? errors.mobileNumber.message : ''}
                     sx={{ mb: 0 }}
@@ -279,24 +281,19 @@ const LabourSignUp = () => {
                     id="nic"
                     label="NIC"
                     autoComplete="nic"
-                    // autoFocus
-                    error={!!errors.nic}
-                    helperText={errors.nic ? errors.nic.message : ''}
+                    onChange={(e) => {
+                      field.onChange(e); // Update field value
+                      validateNIC(e.target.value); // Validate NIC
+                    }}
+                    error={!!errors.nic || !!nicError}
+                    helperText={errors.nic ? errors.nic.message : nicError}
                     sx={{ mb: 0 }}
                   />
                 )}
               />
-
-              <Button
-                    component="label"
-                    // role={undefined} 
-                    variant="contained"
-                    tabIndex={-1}
-                    startIcon={<CloudUploadIcon />}
-                  >
-                  Upload file
-                  <VisuallyHiddenInput type="file" onChange={handleFileChange}/>
-              </Button>
+              <Box sx={{mt:2, ml:2}}>
+                <UploadDocument sx={{mt:25}} nic={useWatch({ control, name: "nic" })} onFileUpload={handleFileURI} />
+              </Box>
                   
               <Button
                 type="submit"
