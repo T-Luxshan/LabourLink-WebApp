@@ -5,11 +5,9 @@ import {
   Paper,
   Typography,
   Button,
-  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import { FiArrowRight } from "react-icons/fi";
-import NavigationBar from "../Components/NavigationBar";
 import BannerBackground from "../Assets/home-banner-background.png";
 import LaborBanner from "../Assets/Labor-Banner.png";
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5";

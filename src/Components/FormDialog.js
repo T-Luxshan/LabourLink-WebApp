@@ -151,7 +151,7 @@ function FormDialog({ labourEmail, cutomerEmail, labourName }) {
         <Button
           variant="contained"
           onClick={() => {
-            navigate(`/chat/${cutomerEmail}/${labourEmail}`);
+            navigate(`/chat/${labourEmail}`);
             {updateUserStatusToDB(labourEmail)}
           }}
         >

@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { over } from "stompjs";
 import SockJS from "sockjs-client";
-import NavigationBar from "../Components/NavigationBar";
 import {
   Container,
   Typography,
@@ -26,10 +25,11 @@ import {
 var stompClient = null;
 
 const ChatApplication = () => {
-  const { senderEmail, receiverEmail } = useParams();
+  const[ senderEmail,SetSenderEmail] =  useState(localStorage.getItem('userEmail'));
+  const { receiverEmail } = useParams();
   const [user, setUser] = useState({
-    email: senderEmail || "johndoe@example.com",
-    receiverEmail: "",
+    email: senderEmail ,
+    receiverEmail: receiverEmail || "",
     status: "OFFLINE",
     message: "",
   });
@@ -44,9 +44,14 @@ const ChatApplication = () => {
   const [selectedUserName, setSelectedUserName] = useState();
 
   const chatAreaRef = useRef(null); // Create a reference to the chat area
-
+  const navigate=useNavigate();
+  
   useEffect(() => {
-    console.log(user);
+    if(senderEmail !== null){
+      console.log(user);
+    }else{
+      navigate('/login');
+    }
   }, [user]);
 
   //Getting User details with email
@@ -60,6 +65,7 @@ const ChatApplication = () => {
       }
     };
     fetchUserData();
+    registerUser(user);
   }, [user.email]); // Use `email` as the dependency here when email changes refreshes
 
   useEffect(() => {
@@ -76,24 +82,6 @@ const ChatApplication = () => {
     }
   };
 
-  // const onConnected = () => {
-  //   if (!user || !user.email) {
-  //     console.error("User information is incomplete.");
-  //     return;
-  //   }
-
-  //   stompClient.subscribe(
-  //     "/user/" + user.email + "/queue/messages",
-  //     onMessageReceived
-  //   );
-  //   stompClient.subscribe("/user/public", onMessageReceived);
-
-  //   //find and display connected users
-  //   findAndDisplayConnectedUsers();
-
-  //   // Call userJoin after establishing the connection
-  //   userJoin();
-  // };
 
   const onConnected = () => {
     if (!user || !user.email) {
@@ -185,15 +173,6 @@ const ChatApplication = () => {
   };
 
   useEffect(() => {
-    // Assuming `initialUser` is the user data you get when the component mounts
-    const initialUser = { name: "John Doe" }; // Replace with actual user data
-
-    if (initialUser) {
-      registerUser(initialUser);
-    }
-  }, []); // Empty dependency array ensures this runs only on mount
-
-  useEffect(() => {
     if (selectedUser) {
       handleUserClick(selectedUser);
     }
@@ -236,10 +215,6 @@ const ChatApplication = () => {
     }
   }, [messages]);
 
-  // const handleEmail = (event) => {
-  //   const { value } = event.target;
-  //   setUser({ ...user, email: value });
-  // };
 
   const updateUserStatusToDB = async (user) => {
     console.log(user);

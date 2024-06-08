@@ -126,7 +126,7 @@ function App() {
               }
             />
             <Route
-              path="/chat/:senderEmail/:receiverEmail"
+              path="/chat/:receiverEmail"
               element={
                 <>
                   <NavigationBar />

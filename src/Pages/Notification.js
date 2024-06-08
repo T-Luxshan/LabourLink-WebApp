@@ -22,22 +22,21 @@ import {
   updateNotificationReadStatus,
   deleteNotification,
 } from "../Service/NotificationService";
+import { getUserByToken } from "../Service/UserService";
 
 function Notification() {
-  const email = "johndoe@example.com";
+  const [email, setEmail] = useState(localStorage.getItem('userEmail'));
   const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
 
-  const count = notifications.length;
-  const readCount = notifications.filter(notification => notification.read).length;
-
-  console.log(count);
-  console.log(readCount);
-
-
   useEffect(() => {
-    findNotificationMessages(email);
-  }, [notifications]);
+    if(email !== null){
+      findNotificationMessages(email);
+    }else{
+      navigate('/login');
+    }
+  }, [email]);
+
 
   async function findNotificationMessages(email) {
     try {
@@ -51,6 +50,10 @@ function Notification() {
       console.log("Error fetching notifications ", error);
     }
   }
+
+  useEffect(() => {
+    findNotificationMessages(email);
+  }, [notifications]);
 
   const formatTime = (timeString) => {
     const date = new Date(timeString);
