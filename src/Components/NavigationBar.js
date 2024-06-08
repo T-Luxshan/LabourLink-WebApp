@@ -17,7 +17,7 @@ import {
   IconButton,
   Stack,
   Button,
-  Badge
+  Badge,
 } from "@mui/material";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -28,9 +28,10 @@ import { useNavigate } from "react-router-dom";
 import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
 import HistoryRoundedIcon from "@mui/icons-material/HistoryRounded";
 import { findNotifications } from "../Service/NotificationService";
+import { LogoutUser } from "../Service/AuthServeice";
 
 const NavigationBar = () => {
-  const email = "johndoe@example.com";
+  const [email, setEmail] = useState(localStorage.getItem("userEmail"));
   const [notifications, setNotifications] = useState([]);
   const [value, setValue] = useState(0);
   const theme = useTheme();
@@ -64,9 +65,18 @@ const NavigationBar = () => {
   }, [notifications]);
 
   const count = notifications.length;
-  const readCount = notifications.filter(notification => notification.read).length;
+  const readCount = notifications.filter(
+    (notification) => notification.read
+  ).length;
   const unreadCount = count - readCount;
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("userEmail");
+
+    navigate("/login");
+  };
 
   return (
     <>
@@ -124,7 +134,7 @@ const NavigationBar = () => {
               <Tab
                 label="Chat"
                 component={Link}
-                to="/chat"
+                to={`/chat`}
                 sx={{
                   color: value === 2 ? "#F97300" : "white",
                   textTransform: "none",
@@ -154,7 +164,11 @@ const NavigationBar = () => {
                 }}
                 icon={
                   <>
-                    <Badge color="secondary" badgeContent={unreadCount} max={99}>
+                    <Badge
+                      color="secondary"
+                      badgeContent={unreadCount}
+                      max={99}
+                    >
                       <NotificationsActiveIcon />
                     </Badge>
                   </>
@@ -173,22 +187,34 @@ const NavigationBar = () => {
               />
             </Tabs>
           )}
-          <Stack spacing={2} direction="row">
-            <Button
-              sx={{ color: "white" }}
-              variant="contained"
-              onClick={() => navigate("/login")}
-            >
-              Log In
-            </Button>
-            <Button
-              sx={{ color: "white" }}
-              variant="outlined"
-              onClick={() => navigate("/signup")}
-            >
-              Sign Up
-            </Button>
-          </Stack>
+          <>
+            {email !== null ? (
+              <Button
+                sx={{ color: "white" }}
+                variant="contained"
+                onClick={handleLogout}
+              >
+                Log out
+              </Button>
+            ) : (
+              <Stack spacing={2} direction="row">
+                <Button
+                  sx={{ color: "white" }}
+                  variant="contained"
+                  onClick={() => navigate("/login")}
+                >
+                  Log In
+                </Button>
+                <Button
+                  sx={{ color: "white" }}
+                  variant="outlined"
+                  onClick={() => navigate("/signup")}
+                >
+                  Sign Up
+                </Button>
+              </Stack>
+            )}
+          </>
         </Toolbar>
       </AppBar>
       <Drawer anchor="left" open={openDrawer} onClose={handleDrawerToggle}>

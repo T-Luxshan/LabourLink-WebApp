@@ -115,15 +115,15 @@ axiosAuthInstance.interceptors.request.use(
 
 export default axiosAuthInstance;
 
-//  logout the user from the application.
-// export const logoutUser = () => {
+//logout the user from the application.
+export const LogoutUser = () => {
   
-//   const navigate = useNavigate();
+  const navigate = useNavigate();
 
-//   localStorage.removeItem('token');
-//   localStorage.removeItem('refreshToken');
+  localStorage.removeItem('token');
+  localStorage.removeItem('refreshToken');
+  localStorage.removeItem('userEmail');
 
-//   navigate('/login');
+  navigate('/login');
 
-// }
-
+}

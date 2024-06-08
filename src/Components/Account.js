@@ -10,33 +10,35 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { getCustomersByEmail } from "../Service/CustomerService";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
+import { getUserByToken } from "../Service/UserService";
 
 const Account = () => {
   const [customer, setCustomer] = useState({});
-  const navigate = useNavigate(); // useNavigate hook for navigation
+  const [email, setEmail] = useState(localStorage.getItem('userEmail'));
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const email = "johndoe@example.com";
-    const fetchCustomerData = async () => {
-      try {
-        const response = await getCustomersByEmail(email);
-        setCustomer(response.data);
-      } catch (error) {
-        console.error("Error fetching customer data:", error);
-        throw error;
-      }
-    };
+  useEffect(()=>{
+    fetchCustomerData(email);
+  },[email])
 
-    fetchCustomerData();
-  }, []);
+  async function fetchCustomerData(email) {
+    try {
+      console.log("Fetching customer data for email:", email);
+      const response = await getCustomersByEmail(email);
+      console.log("Customer data fetched:", response.data);
+      setCustomer(response.data);
+    } catch (error) {
+      navigate("/login");
+      console.error("Error fetching customer data:", error);
+    }
+  }
 
-  // Function to handle the edit button click
   const handleEditClick = () => {
     navigate("/update-account", {
       state: {
         customer,
       },
-    }); // Navigate to the UpdateAccount component
+    });
   };
 
   return (
@@ -55,7 +57,11 @@ const Account = () => {
           Labour Details
         </Typography>
       </Box>
-      <Paper elevation={3} style={{ padding: "30px", borderRadius: "5px" }} backgroundColor='#EEEEEE' >
+      <Paper
+        elevation={3}
+        style={{ padding: "30px", borderRadius: "5px" }}
+        backgroundColor="#EEEEEE"
+      >
         <Box textAlign="center" mb={3}>
           <Avatar
             style={{
@@ -70,7 +76,12 @@ const Account = () => {
         </Box>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
-            <Typography variant="body1" color="textSecondary" fontWeight="bold" marginLeft={5}>
+            <Typography
+              variant="body1"
+              color="textSecondary"
+              fontWeight="bold"
+              marginLeft={5}
+            >
               Name
             </Typography>
           </Grid>
@@ -78,7 +89,12 @@ const Account = () => {
             <Typography variant="body1">{customer.name}</Typography>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Typography variant="body1" color="textSecondary" fontWeight="bold" marginLeft={5}>
+            <Typography
+              variant="body1"
+              color="textSecondary"
+              fontWeight="bold"
+              marginLeft={5}
+            >
               Email
             </Typography>
           </Grid>
@@ -86,7 +102,12 @@ const Account = () => {
             <Typography variant="body1">{customer.email}</Typography>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Typography variant="body1" color="textSecondary" fontWeight="bold" marginLeft={5}>
+            <Typography
+              variant="body1"
+              color="textSecondary"
+              fontWeight="bold"
+              marginLeft={5}
+            >
               Mobile Number
             </Typography>
           </Grid>
@@ -94,7 +115,12 @@ const Account = () => {
             <Typography variant="body1">{customer.mobileNumber}</Typography>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Typography variant="body1" color="textSecondary" fontWeight="bold" marginLeft={5}>
+            <Typography
+              variant="body1"
+              color="textSecondary"
+              fontWeight="bold"
+              marginLeft={5}
+            >
               Address
             </Typography>
           </Grid>

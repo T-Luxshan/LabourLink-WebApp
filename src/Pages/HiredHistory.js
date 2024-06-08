@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -23,7 +24,8 @@ export default function HiredHistory() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [bookingHistory, setBookingHistory] = useState([]);
-  const email = "johndoe@example.com";
+  const email = localStorage.getItem('userEmail');
+  const navigate=useNavigate();
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -35,7 +37,11 @@ export default function HiredHistory() {
   };
 
   useEffect(() => {
-    fetchBookingHistory(email);
+    if(email !== null){
+      fetchBookingHistory(email);
+    }else{
+      navigate('/login');
+    }
   }, [email]);
 
   async function fetchBookingHistory(email) {
@@ -52,7 +58,7 @@ export default function HiredHistory() {
   }
 
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden", mt: 10, mb: 0 }}>
+    <Paper sx={{ width: "100%", overflow: "hidden", mt: 10, mb: 60 }}>
       <TableContainer sx={{ maxHeight: 550 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>

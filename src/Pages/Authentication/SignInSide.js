@@ -46,6 +46,8 @@ const SignInSide = () => {
 
       localStorage.setItem("token", response.data.accessToken);
       localStorage.setItem("refreshToken", response.data.refreshToken);
+      localStorage.setItem("userEmail", data.get('email'));
+      
 
       console.log(response);
       navigate('/');

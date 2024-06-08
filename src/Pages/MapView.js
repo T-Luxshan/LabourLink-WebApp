@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   APIProvider,
   Map,
@@ -21,7 +21,8 @@ const MapView = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [labourSelected, setLabourSelected] = useState(null);
   const { jobRole } = useParams();
-  const customerId = "johndoe@example.com";
+  const customerId = localStorage.getItem('userEmail');
+  const navigate=useNavigate();
 
   const job=jobRole;
 
@@ -45,6 +46,7 @@ const MapView = () => {
   }, []);
 
   useEffect(() => {
+    if(customerId !== null){
     async function fetchLabourLocations() {
       try {
         const response = await getLocationsByJobRole(jobRole);
@@ -56,6 +58,9 @@ const MapView = () => {
     }
     console.log("Fetching labour locations...");
     fetchLabourLocations(); // Fetch data on component mount
+  }else{
+    navigate("/login");
+  }
   }, [jobRole]);
 
   const viewLabourDetails = (user) => {
