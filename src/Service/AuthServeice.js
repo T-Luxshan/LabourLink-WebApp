@@ -52,25 +52,24 @@ export const registerCustomer = (name, email, password, mobileNumber, address) =
 
   // THIS PART RELATED TO LABOUR AUTHENTICATION.
 
-    // API for register labour
-// export const registerLabour = (name, email, password, mobileNumber, nic) => {
-//   return axios.post(`${REST_API_BASE_URL_AUTH}/register/labour`, {
-//       name, email, password, mobileNumber, nic
-//   });
-// };
-
+  // API for register labour
+  export const registerLabour = (name, email, password, mobileNumber, nic, documentUri, jobRole) => {
+    return axios.post(`${REST_API_BASE_URL_AUTH}/register/labour`, {
+        name, email, password, mobileNumber, nic, documentUri, jobRole
+    });
+  };
 
   // API for get user role 
-//  export const getUserRole = (email) => {
-//    return axios.get(`${REST_API_BASE_URL_AUTH}/getRole/${email}`)
-//  }
+ export const getUserRole = (email) => {
+   return axios.get(`${REST_API_BASE_URL_AUTH}/getRole/${email}`)
+ }
 
-   // API for login labour
-//    export const loginLabour = (role, email, password) => {
-//     return axios.post(`${REST_API_BASE_URL_AUTH}/login/labour`, {
-//         role, email, password
-//     });
-//   };
+  //  API for login labour
+   export const loginLabour = (role, email, password) => {
+    return axios.post(`${REST_API_BASE_URL_AUTH}/login/labour`, {
+        role, email, password
+    });
+  };
 
 
 const axiosAuthInstance = axios.create({

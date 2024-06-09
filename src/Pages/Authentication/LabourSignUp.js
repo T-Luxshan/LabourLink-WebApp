@@ -14,11 +14,12 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { registerCustomer } from '../../Service/AuthServeice';
+import { registerLabour } from '../../Service/AuthServeice';
 import { useNavigate } from 'react-router-dom';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
 import UploadDocument from '../../Components/UploadDocument';
+import JobRole from '../../Components/JobRole';
 
 const defaultTheme = createTheme({
   palette: {
@@ -77,6 +78,7 @@ const LabourSignUp = () => {
   const [logError, setLogError] = useState('');
   const [fileURI, setFileURI] = useState(null);
   const [nicError, setNicError] = useState('');
+  const [jobList, setJoblist] = useState([]);
   const navigate = useNavigate();
   const { handleSubmit, control, formState: { errors }, setError, clearErrors } = useForm({
     resolver: yupResolver(schema),
@@ -84,6 +86,10 @@ const LabourSignUp = () => {
 
   const handleFileURI = (fileUri) => {
     setFileURI(fileUri);
+  }
+
+  const handleJobList = (jobList) => {
+    setJoblist(jobList);
   }
 
   const validateNIC = (value) => {
@@ -99,10 +105,12 @@ const LabourSignUp = () => {
   const onSubmit = async (data) => {
     console.log(data);
     try {
-      // let response = await registerCustomer(data.name, data.email, data.password ,data.mobileNumber, data.nic); 
-      // localStorage.setItem("token", response.data.accessToken);
-      // localStorage.setItem("refreshToken", response.data.refreshToken);
-      // console.log(response);
+      // name, email, password, mobileNumber, nic, documentUri, jobRole
+      let lowercaseEmail = data.email.toLowerCase();
+      let response = await registerLabour(data.name, lowercaseEmail, data.password ,data.mobileNumber, data.nic, fileURI, jobList); 
+      localStorage.setItem("token", response.data.accessToken);
+      localStorage.setItem("refreshToken", response.data.refreshToken);
+      console.log(response);
       navigate('/');
       setLogError("");
     } catch (e) {
@@ -292,7 +300,10 @@ const LabourSignUp = () => {
                 )}
               />
               <Box sx={{mt:2, ml:2}}>
-                <UploadDocument sx={{mt:25}} nic={useWatch({ control, name: "nic" })} onFileUpload={handleFileURI} />
+                <JobRole onJobListChange={handleJobList}/>
+              </Box >
+              <Box sx={{mt:2, ml:2}}>
+                <UploadDocument nic={useWatch({ control, name: "nic" })} onFileUpload={handleFileURI} />
               </Box>
                   
               <Button
