@@ -13,8 +13,8 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { loginCustomer } from '../../Service/AuthServeice';
-import { useNavigate } from 'react-router-dom';
+import { getUserRole, login } from '../../Service/AuthServeice';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const defaultTheme = createTheme({
   palette: {
@@ -42,13 +42,36 @@ const SignInSide = () => {
       password: data.get('password'),
     });
     try{
-      let response = await loginCustomer("CUSTOMER", data.get('email'), data.get('password')); 
+      let lowercaseEmail = data.get('email').toLowerCase();
+      getUserRole(lowercaseEmail)
+        .then(res=>{
+          console.log(res.data)
+          login(res.data.role, lowercaseEmail, data.get('password'))
+            .then(response=> {
+              localStorage.setItem("token", response.data.accessToken);
+              localStorage.setItem("refreshToken", response.data.refreshToken);
+              console.log(response);
+            })
+            .catch(error=> {
+              console.log(error)
+              setLogError("Invalid login, please try again");
+            }); 
+          if(res.data.role == 'CUSTOMER' || res.data.verified)
+            navigate('/');
+          else
+            navigate('/wait');
+        })
+        .catch(err=>{
+          console.log(err);
+          setLogError("Invalid login, please try again");
+        })
+      // let response = await loginCustomer("CUSTOMER", data.get('email'), data.get('password')); 
 
-      localStorage.setItem("token", response.data.accessToken);
-      localStorage.setItem("refreshToken", response.data.refreshToken);
+      // localStorage.setItem("token", response.data.accessToken);
+      // localStorage.setItem("refreshToken", response.data.refreshToken);
 
-      console.log(response);
-      navigate('/');
+      // console.log(response);
+      // navigate('/');
             
       setLogError("");
     } catch (e){

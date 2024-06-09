@@ -111,7 +111,7 @@ const LabourSignUp = () => {
       localStorage.setItem("token", response.data.accessToken);
       localStorage.setItem("refreshToken", response.data.refreshToken);
       console.log(response);
-      navigate('/');
+      navigate('/wait');
       setLogError("");
     } catch (e) {
       setLogError("An account with this email or mobile number already exist");
