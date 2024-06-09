@@ -20,6 +20,8 @@ import Review from "./Components/Review";
 import JoinAs from "./Pages/Authentication/JoinAs";
 import LabourSignUp from "./Pages/Authentication/LabourSignUp";
 import WaitingPage from "./Pages/Authentication/WaitingPage";
+import LabourProfile from "./Pages/Labour/LabourProfile";
+import NavigationBarLabour from "./Components/NavigationBarLabour";
 
 
 export const ThemeContext = createContext(null);
@@ -191,6 +193,17 @@ function App() {
               element={
                 <>
                   <WaitingPage />
+                </>
+              }
+            />
+            {/* Labour pages */}
+            <Route
+              path="/profile/labour"
+              element={
+                <>
+                  <NavigationBarLabour/>
+                  <LabourProfile />
+
                 </>
               }
             />
