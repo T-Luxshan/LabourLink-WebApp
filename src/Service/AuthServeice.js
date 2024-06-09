@@ -15,9 +15,16 @@ export const registerCustomer = (name, email, password, mobileNumber, address) =
   };
 
 
+  // // API for login customer
+  // export const loginCustomer = (role, email, password) => {
+  //   return axios.post(`${REST_API_BASE_URL_AUTH}/login/customer`, {
+  //       role, email, password
+  //   });
+  // };
+
   // API for login customer
-  export const loginCustomer = (role, email, password) => {
-    return axios.post(`${REST_API_BASE_URL_AUTH}/login/customer`, {
+  export const login = (role, email, password) => {
+    return axios.post(`${REST_API_BASE_URL_AUTH}/login/${role.toLowerCase()}`, {
         role, email, password
     });
   };
@@ -61,7 +68,7 @@ export const registerCustomer = (name, email, password, mobileNumber, address) =
 
   // API for get user role 
  export const getUserRole = (email) => {
-   return axios.get(`${REST_API_BASE_URL_AUTH}/getRole/${email}`)
+   return axios.get(`${REST_API_BASE_URL_AUTH}/getUserRole/${email}`)
  }
 
   //  API for login labour
