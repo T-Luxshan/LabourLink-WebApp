@@ -20,6 +20,7 @@ import Notification from "./Pages/Notification";
 import Review from "./Components/Review";
 import JoinAs from "./Pages/Authentication/JoinAs";
 import LabourSignUp from "./Pages/Authentication/LabourSignUp";
+import WaitingPage from "./Pages/Authentication/WaitingPage";
 
 
 export const ThemeContext = createContext(null);
@@ -141,6 +142,14 @@ function App() {
               element={
                 <>
                   <JoinAs />
+                </>
+              }
+            />
+            <Route
+              path="/wait"
+              element={
+                <>
+                  <WaitingPage />
                 </>
               }
             />
