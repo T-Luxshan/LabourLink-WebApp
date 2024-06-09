@@ -209,7 +209,7 @@ const NavigationBar = () => {
                 <Button
                   sx={{ color: "white" }}
                   variant="outlined"
-                  onClick={() => navigate("/joinas'")}
+                  onClick={() => navigate("/joinas")}
                 >
                   Sign Up
                 </Button>
