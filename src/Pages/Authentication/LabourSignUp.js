@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Avatar from '@mui/material/Avatar';
@@ -14,8 +14,12 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { registerCustomer } from '../../Service/AuthServeice';
+import { registerLabour } from '../../Service/AuthServeice';
 import { useNavigate } from 'react-router-dom';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { styled } from '@mui/material/styles';
+import UploadDocument from '../../Components/UploadDocument';
+import JobRole from '../../Components/JobRole';
 
 const defaultTheme = createTheme({
   palette: {
@@ -26,6 +30,18 @@ const defaultTheme = createTheme({
       main: '#EAE9E7', 
     },
   },
+});
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
 });
 
 const schema = yup.object().shape({
@@ -52,24 +68,50 @@ const schema = yup.object().shape({
     .string()
     .matches(/^[0-9]{10}$/, "Please enter a valid mobile number")
     .required("Mobile number is required"),
-  address: yup.string().required("Address is required"),
+  nic: yup
+    .string()
+    .matches(/^[0-9]{12}$|^[0-9]{9}[v|V]$/, 'Please enter a valid NIC number')
+    .required('Your NIC number is required')
 });
 
-const SignUp = () => {
+const LabourSignUp = () => {
   const [logError, setLogError] = useState('');
+  const [fileURI, setFileURI] = useState(null);
+  const [nicError, setNicError] = useState('');
+  const [jobList, setJoblist] = useState([]);
   const navigate = useNavigate();
-  const { handleSubmit, control, formState: { errors } } = useForm({
+  const { handleSubmit, control, formState: { errors }, setError, clearErrors } = useForm({
     resolver: yupResolver(schema),
   });
+
+  const handleFileURI = (fileUri) => {
+    setFileURI(fileUri);
+  }
+
+  const handleJobList = (jobList) => {
+    setJoblist(jobList);
+  }
+
+  const validateNIC = (value) => {
+    if (!/^[0-9]{12}$|^[0-9]{9}[v|V]$/.test(value)) {
+      setNicError('Please enter a valid NIC number');
+      setError('nic', { message: 'Please enter a valid NIC number' });
+    } else {
+      setNicError('');
+      clearErrors('nic');
+    }
+  };
 
   const onSubmit = async (data) => {
     console.log(data);
     try {
-      let response = await registerCustomer(data.name, data.email, data.password ,data.mobileNumber, data.address); 
+      // name, email, password, mobileNumber, nic, documentUri, jobRole
+      let lowercaseEmail = data.email.toLowerCase();
+      let response = await registerLabour(data.name, lowercaseEmail, data.password ,data.mobileNumber, data.nic, fileURI, jobList); 
       localStorage.setItem("token", response.data.accessToken);
       localStorage.setItem("refreshToken", response.data.refreshToken);
       console.log(response);
-      navigate('/');
+      navigate('/wait');
       setLogError("");
     } catch (e) {
       setLogError("An account with this email or mobile number already exist");
@@ -103,7 +145,6 @@ const SignUp = () => {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-            //   backgroundColor: 'white',
             backgroundColor: 'rgba(0, 0, 0, 0.001)'
             }}
           >
@@ -166,7 +207,6 @@ const SignUp = () => {
                     id="email"
                     label="Email Address"
                     autoComplete="email"
-                    // autoFocus
                     error={!!errors.email}
                     helperText={errors.email ? errors.email.message : ''}
                     sx={{ mb: 0 }}
@@ -230,7 +270,6 @@ const SignUp = () => {
                     id="number"
                     label="Mobile Number"
                     autoComplete="number"
-                    // autoFocus
                     error={!!errors.mobileNumber}
                     helperText={errors.mobileNumber ? errors.mobileNumber.message : ''}
                     sx={{ mb: 0 }}
@@ -238,7 +277,7 @@ const SignUp = () => {
                 )}
               />
               <Controller
-                name="address"
+                name="nic"
                 control={control}
                 defaultValue=""
                 render={({ field }) => (
@@ -247,16 +286,26 @@ const SignUp = () => {
                     margin="normal"
                     required
                     fullWidth
-                    id="address"
-                    label="Address"
-                    autoComplete="address"
-                    // autoFocus
-                    error={!!errors.address}
-                    helperText={errors.address ? errors.address.message : ''}
+                    id="nic"
+                    label="NIC"
+                    autoComplete="nic"
+                    onChange={(e) => {
+                      field.onChange(e); // Update field value
+                      validateNIC(e.target.value); // Validate NIC
+                    }}
+                    error={!!errors.nic || !!nicError}
+                    helperText={errors.nic ? errors.nic.message : nicError}
                     sx={{ mb: 0 }}
                   />
                 )}
               />
+              <Box sx={{mt:2, ml:2}}>
+                <JobRole onJobListChange={handleJobList}/>
+              </Box >
+              <Box sx={{mt:2, ml:2}}>
+                <UploadDocument nic={useWatch({ control, name: "nic" })} onFileUpload={handleFileURI} />
+              </Box>
+                  
               <Button
                 type="submit"
                 fullWidth
@@ -278,4 +327,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default LabourSignUp;

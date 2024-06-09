@@ -187,6 +187,7 @@ const NavigationBar = () => {
               />
             </Tabs>
           )}
+
           <>
             {email !== null ? (
               <Button
@@ -208,13 +209,14 @@ const NavigationBar = () => {
                 <Button
                   sx={{ color: "white" }}
                   variant="outlined"
-                  onClick={() => navigate("/signup")}
+                  onClick={() => navigate("/joinas'")}
                 >
                   Sign Up
                 </Button>
               </Stack>
             )}
           </>
+
         </Toolbar>
       </AppBar>
       <Drawer anchor="left" open={openDrawer} onClose={handleDrawerToggle}>
