@@ -142,7 +142,7 @@ const NavigationBarLabour = () => {
                 }}
                 icon={<ChatRoundedIcon />}
               />
-              <Tab
+              {/* <Tab
                 label="History"
                 component={Link}
                 to="/history"
@@ -152,7 +152,7 @@ const NavigationBarLabour = () => {
                   fontFamily: "Montserrat",
                 }}
                 icon={<HistoryRoundedIcon />}
-              />
+              /> */}
               <Tab
                 label="Notification"
                 component={Link}
