@@ -22,6 +22,7 @@ import LabourSignUp from "./Pages/Authentication/LabourSignUp";
 import WaitingPage from "./Pages/Authentication/WaitingPage";
 import LabourProfile from "./Pages/Labour/LabourProfile";
 import NavigationBarLabour from "./Components/NavigationBarLabour";
+import Report from "./Components/Report";
 
 
 export const ThemeContext = createContext(null);
@@ -175,8 +176,17 @@ function App() {
               path="/review"
               element={
                 <>
-                  <NavigationBar />
+                  {/* <NavigationBar /> */}
                   <Review />
+                </>
+              }
+            />
+            <Route
+              path="/report"
+              element={
+                <>
+                  {/* <NavigationBar /> */}
+                  <Report />
                 </>
               }
             />
