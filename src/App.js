@@ -23,6 +23,7 @@ import WaitingPage from "./Pages/Authentication/WaitingPage";
 import LabourProfile from "./Pages/Labour/LabourProfile";
 import NavigationBarLabour from "./Components/NavigationBarLabour";
 import Report from "./Components/Report";
+import NewAppointments from "./Pages/Labour/NewAppointments";
 
 
 export const ThemeContext = createContext(null);
@@ -213,6 +214,16 @@ function App() {
                 <>
                   <NavigationBarLabour/>
                   <LabourProfile />
+
+                </>
+              }
+            />
+            <Route
+              path="/profile/labour/newappointments"
+              element={
+                <>
+                  <NavigationBarLabour/>
+                  <NewAppointments />
 
                 </>
               }

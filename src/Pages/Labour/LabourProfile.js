@@ -9,7 +9,6 @@ import Avatar from '@mui/material/Avatar';
 import Rating from '@mui/material/Rating';
 import CallIcon from '@mui/icons-material/Call';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
-import Button from '@mui/material/Button';
 import Report from '../../Components/Report';
 
 // Import the reviews JSON data
@@ -65,7 +64,7 @@ const LabourProfile = () => {
     setExperience(20);
     setAvgRating(4.8);
     setName('Luxshan Thuraisingam');
-    setReviews(reviewsData); // Set reviews from the imported JSON data
+    setReviews(reviewsData); 
   }, []);
 
   const handleReviewClick = (review) => {
@@ -180,21 +179,23 @@ const LabourProfile = () => {
                 <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1A237E', mb: 3, mt: '20px' }}>
                   My Reviews
                 </Typography>
-                {reviews.map((review, index) => (
-                  <Box key={index} sx={{ pt: 2, pr: 2, pl: 2, boxShadow: 1, borderRadius: 4, mb: 2, display: 'flex', flexDirection: 'column' }} onClick={() => handleReviewClick(review)}>
-                    <Typography sx={{ fontWeight: 'bold', mb:2 }}>{review.customerName}</Typography>
-                    <Rating name="half-rating-read" value={review.rating} precision={0.5} readOnly />
-                    <Typography sx={{ color:'grey' }}>Job role : {review.jobRole}</Typography>
-                    <Typography>{review.description}</Typography>
-                    <Report/>
-                    {/* <Button variant="text" color="primary" 
-                      sx={{ fontSize: '12px', textTransform: 'none', ml: 'auto' }}
-                      onClick={() => handleReviewClick(review)}
-                      >
-                      Report
-                    </Button> */}
-                  </Box>
-                ))}
+                {reviews.length === 0 ? (
+                  <Typography sx={{ textAlign: 'center', color: 'grey' }}>
+                    There are no reviews yet
+                  </Typography>
+                ) : (
+                  reviews.map((review, index) => (
+                    <Box key={index} sx={{ pt: 2, pr: 2, pl: 2, boxShadow: 1, borderRadius: 4, mb: 2, display: 'flex', flexDirection: 'column' }} onClick={() => handleReviewClick(review)}>
+                      <Typography sx={{ fontWeight: 'bold', mb: 2 }}>{review.customerName}</Typography>
+                      <Rating name="half-rating-read" value={review.rating} precision={0.5} readOnly />
+                      <Typography sx={{ color: 'grey' }}>Job role : {review.jobRole}</Typography>
+                      <Typography>{review.description}</Typography>
+                      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
+                        <Report />
+                      </Box>
+                    </Box>
+                  ))
+                )}
               </Box>
             </SubBox>
           </Grid>
