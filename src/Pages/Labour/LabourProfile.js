@@ -11,8 +11,10 @@ import CallIcon from '@mui/icons-material/Call';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import Report from '../../Components/Report';
 
+
 // Import the reviews JSON data
 import reviewsData from './MyReviews.json';
+import AboutMeModel from '../../Components/AboutMeModel';
 
 const defaultTheme = createTheme({
   palette: {
@@ -55,6 +57,7 @@ const LabourProfile = () => {
   const [avgRating, setAvgRating] = useState('');
   const [name, setName] = useState('');
   const [reviews, setReviews] = useState([]);
+  const [aboutMe, setAboutMe] = useState('');
 
   let availableJobRoles = ["Painter", "Driver"];
 
@@ -65,11 +68,16 @@ const LabourProfile = () => {
     setAvgRating(4.8);
     setName('Luxshan Thuraisingam');
     setReviews(reviewsData); 
+    setAboutMe(" Experienced Driver with over two decades of dedicated service since the year 2000.Possessing a strong track record of safe driving, punctuality, and excellent knowledge of local and regional routes.")
   }, []);
 
   const handleReviewClick = (review) => {
     console.log(review);
   };
+
+  const handleAboutMe = (abtME) =>{
+    setAboutMe(abtME);
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -114,14 +122,23 @@ const LabourProfile = () => {
                 mb: 2,
                 backgroundColor: 'white', pt: 2, pl: 3, pr: 3, borderRadius: 4,
               }}>
-                <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#FE9E0D', mb: '5px', mt: '20px' }}>
+                <Box sx={{display:'flex', flexDirection:'row', mb: '5px', mt: '20px' }}>
+                <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#FE9E0D'}}>
                   About me
+                  
                 </Typography>
-                <Typography sx={{ fontWeight: '500', color: 'black', mb: '5px' }}>
-                  Experienced Driver with over two decades of dedicated service since the year 2000.
-                  Possessing a strong track record of safe driving, punctuality, and excellent knowledge of
-                  local and regional routes.
+                <AboutMeModel aboutMe={aboutMe} onAboutMeChange={handleAboutMe}/>
+                </Box>
+                {aboutMe ? 
+                  <Typography sx={{ fontWeight: '500', color: 'black', mb: '5px' }}>
+                  {aboutMe}
+                  </Typography>
+                :
+                <Typography sx={{ fontWeight: '500', color: 'grey', mb: '5px' }}>
+                   Say something about yourself, So customer will know about you.
                 </Typography>
+                }
+                
 
                 <Typography sx={{ fontWeight: 'bold', color: '#FE9E0D', mt: '20px' }}>
                   Contact details
