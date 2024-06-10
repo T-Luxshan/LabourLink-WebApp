@@ -85,18 +85,18 @@ const Report = () => {
     <Grid container component="main" item xs={false} sm={4} md={6} >
     {issue ?
       (
-      <Button variant="outlined" onClick={handleClickOpen}>
+      <Button variant="text" onClick={handleClickOpen} sx={{fontSize: '12px', textTransform: 'none', ml: 0}}>
         Edit Report
       </Button>
       )
       :
-      ( <Button variant="outlined" onClick={handleClickOpen}>
-          Add Report
+      ( <Button variant="text" onClick={handleClickOpen} sx={{fontSize: '12px', textTransform: 'none', ml: 0}}>
+          Report
         </Button>
       )
       }
                                     {/* Need to check the styling when we merge  */}
-      <Grid item xs={12} sm={8} md={5} elevation={2} sx={{ height: '5vh', mt: '150px',  }}> 
+      <Grid item xs={12} sm={8} md={5} elevation={2} sx={{ height: '0vh', mt: '0px',  }}> 
         <Dialog
           open={open}
           TransitionComponent={Transition}

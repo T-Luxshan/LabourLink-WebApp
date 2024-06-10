@@ -10,6 +10,7 @@ import Rating from '@mui/material/Rating';
 import CallIcon from '@mui/icons-material/Call';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import Button from '@mui/material/Button';
+import Report from '../../Components/Report';
 
 // Import the reviews JSON data
 import reviewsData from './MyReviews.json';
@@ -185,12 +186,13 @@ const LabourProfile = () => {
                     <Rating name="half-rating-read" value={review.rating} precision={0.5} readOnly />
                     <Typography sx={{ color:'grey' }}>Job role : {review.jobRole}</Typography>
                     <Typography>{review.description}</Typography>
-                    <Button variant="text" color="primary" 
+                    <Report/>
+                    {/* <Button variant="text" color="primary" 
                       sx={{ fontSize: '12px', textTransform: 'none', ml: 'auto' }}
                       onClick={() => handleReviewClick(review)}
                       >
                       Report
-                    </Button>
+                    </Button> */}
                   </Box>
                 ))}
               </Box>
