@@ -112,7 +112,7 @@ const NavigationBarLabour = () => {
               <Tab
                 label="Home"
                 component={Link}
-                to="/"
+                to="/profile/labour"
                 sx={{
                   color: value === 0 ? "#F97300" : "white",
                   textTransform: "none",
@@ -121,9 +121,9 @@ const NavigationBarLabour = () => {
                 icon={<HomeIcon />}
               />
               <Tab
-                label="Hire Labor"
+                label="Appointments"
                 component={Link}
-                to="/labourcategories"
+                to="/profile/labour/newappointments"
                 sx={{
                   color: value === 1 ? "#F97300" : "white",
                   textTransform: "none",
