@@ -1,60 +1,57 @@
-import React, { useState, useEffect } from 'react';
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import CssBaseline from '@mui/material/CssBaseline';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Avatar from '@mui/material/Avatar';
-import Rating from '@mui/material/Rating';
-import Button from '@mui/material/Button';
-import Report from '../../Components/Report';
-
-// Import the reviews JSON data
-import reviewsData from './MyReviews.json';
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import Grid from "@mui/material/Grid";
+import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import React, { useEffect, useState } from "react";
+import appointmentData from "./Appointments.json";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import WorkIcon from '@mui/icons-material/Work';
 
 const defaultTheme = createTheme({
   palette: {
     primary: {
-      main: '#FE9E0D',
+      main: "#FE9E0D",
     },
     secondary: {
-      main: '#00204A',
+      main: "#00204A",
     },
   },
 });
 
 const FullHeightBox = styled(Box)({
   margin: 0,
-  backgroundColor: '#F4F3EF',
+  backgroundColor: "#F4F3EF",
 });
 
 const MainBox = styled(Box)({
-  minHeight: '100vh',
+  minHeight: "100vh",
   marginTop: 80,
   marginLeft: 60,
-  backgroundColor: '#F4F3EF',
-  paddingTop: '20px',
+  backgroundColor: "#F4F3EF",
+  paddingTop: "20px",
   borderRadius: 20,
 });
 
 const SubBox = styled(Box)({
-  minHeight: '50vh',
+  minHeight: "50vh",
   marginTop: 80,
   marginRight: 50,
-  backgroundColor: '#F4F3EF',
-  padding: '20px',
+  backgroundColor: "#F4F3EF",
+  padding: "20px",
   borderRadius: 20,
 });
 
 const NewAppointments = () => {
   const [jobRole, setJobRole] = useState([]);
-  const [service, setService] = useState('');
-  const [experience, setExperience] = useState('');
-  const [avgRating, setAvgRating] = useState('');
-  const [name, setName] = useState('');
-  const [reviews, setReviews] = useState([]);
-  const [appointment, setAppointment] = useState([]);
+  const [service, setService] = useState("");
+  const [experience, setExperience] = useState("");
+  const [avgRating, setAvgRating] = useState("");
+  const [name, setName] = useState("");
+  const [appointments, setAppointments] = useState([]);
+  const [currentAppointment, setCurrentAppointment] = useState(null);
 
   let availableJobRoles = ["Painter", "Driver"];
 
@@ -63,12 +60,15 @@ const NewAppointments = () => {
     setService(120);
     setExperience(20);
     setAvgRating(4.8);
-    setName('Luxshan Thuraisingam');
-    setReviews(reviewsData); // Set reviews from the imported JSON data
+    setName("Luxshan Thuraisingam");
+    setAppointments(appointmentData); // Set reviews from the imported JSON data
+    if (appointmentData.length > 0) {
+      setCurrentAppointment(appointmentData[0]);
+    }
   }, []);
 
-  const handleReviewClick = (review) => {
-    console.log(review);
+  const handleViewClick = (appointment) => {
+    setCurrentAppointment(appointment);
   };
 
   return (
@@ -78,27 +78,58 @@ const NewAppointments = () => {
         <Grid container spacing={0}>
           <Grid item xs={12} md={8}>
             <MainBox>
-              <Box sx={{
-                mb: 2,
-                backgroundColor: 'white', p: 2, borderRadius: 4,
-                
-              }}>
-                <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'black', mb: '5px', mt: '20px' }}>
+              <Box
+                sx={{
+                  mb: 2,
+                  backgroundColor: "white",
+                  p: 2,
+                  borderRadius: 4,
+                }}
+              >
+                <Typography
+                  variant="h4"
+                  sx={{
+                    fontWeight: "bold",
+                    color: "black",
+                    mb: "5px",
+                    mt: "20px",
+                  }}
+                >
                   Appointment requests
                 </Typography>
-                <Box sx={{ marginTop: '20px' }}>
-                  {appointment.length === 0 ? (
-                    <Typography sx={{ textAlign: 'center', color: 'grey' }}>
+                <Box sx={{ marginTop: "20px" }}>
+                  {currentAppointment ? (
+                    <Box sx={{m:4}}>
+                      <Typography variant="h6" sx={{color:'#FE9E0D', fontWeight:'bold', mb:2}}>
+                        Schedule details
+                      </Typography>
+                      <Typography sx={{mb:2}}>
+                        <CalendarMonthIcon fontSize="small" /> {currentAppointment.date}
+                      </Typography>
+                      <Typography sx={{mb:2}}>
+                        <AccessTimeIcon fontSize="small" /> {currentAppointment.startTime}
+                      </Typography>
+                      <Typography sx={{mb:2}}>
+                        <WorkIcon fontSize="small" /> {currentAppointment.jobRole}
+                      </Typography>
+
+                      <Typography sx={{fontWeight:'bold', mb:2}}>
+                       Client name : {currentAppointment.customerName}
+                      </Typography>
+                      
+                      <Typography sx={{mb:2}}>
+                        Description: {currentAppointment.jobDescription}
+                      </Typography>
+                      <Box sx={{display:'flex', justifyContent: 'right', gap: '50px', }}>
+                        <Button variant="contained" color="secondary"> Accept </Button>
+                        <Button variant="contained" color="secondary"> Reject </Button>
+                      </Box>
+                      
+                    </Box>
+                  ) : (
+                    <Typography sx={{ textAlign: "center", color: "grey" }}>
                       There are no pending requests
                     </Typography>
-                  ) : (
-                    // Map through appointments here if there are any
-                    appointment.map((appt, index) => (
-                      <Typography key={index}>
-                        {/* Display appointment details here */}
-                        {appt.detail}
-                      </Typography>
-                    ))
                   )}
                 </Box>
               </Box>
@@ -106,21 +137,64 @@ const NewAppointments = () => {
           </Grid>
           <Grid item xs={12} md={4}>
             <SubBox>
-              <Box sx={{ backgroundColor: 'white', p: 2, borderRadius: 4 }}>
-                <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1A237E', mb: 3, mt: '20px' }}>
-                  My Reviews
+              <Box sx={{ backgroundColor: "white", p: 2, borderRadius: 4 }}>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontWeight: "bold",
+                    color: "#1A237E",
+                    mb: 3,
+                    mt: "20px",
+                  }}
+                >
+                  Pending requests
                 </Typography>
-                {reviews.map((review, index) => (
-                  <Box key={index} sx={{ pt: 2, pr: 2, pl: 2, boxShadow: 1, borderRadius: 4, mb: 2, display: 'flex', flexDirection: 'column' }} onClick={() => handleReviewClick(review)}>
-                    <Typography sx={{ fontWeight: 'bold', mb: 2 }}>{review.customerName}</Typography>
-                    <Rating name="half-rating-read" value={review.rating} precision={0.5} readOnly />
-                    <Typography sx={{ color: 'grey' }}>Job role : {review.jobRole}</Typography>
-                    <Typography>{review.description}</Typography>
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-                      <Report />
+                {appointments.length === 0 ? (
+                  <Typography sx={{ textAlign: "center", color: "grey" }}>
+                    There are no pending requests
+                  </Typography>
+                ) : (
+                  appointments.map((appointment, index) => (
+                    <Box
+                      key={index}
+                      sx={{
+                        pt: 2,
+                        pr: 2,
+                        pl: 2,
+                        boxShadow: 1,
+                        borderRadius: 4,
+                        mb: 2,
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <Typography sx={{ fontWeight: "bold", mb: 0 }}>
+                        {appointment.customerName}
+                      </Typography>
+                      <Typography sx={{ color: "grey" }}>
+                        I Need a {appointment.jobRole} on {appointment.date}
+                      </Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "flex-end",
+                          mt: 0,
+                        }}
+                      >
+                        <Button
+                          onClick={() => handleViewClick(appointment)}
+                          sx={{
+                            fontSize: "12px",
+                            textTransform: "none",
+                            ml: "auto",
+                          }}
+                        >
+                          View
+                        </Button>
+                      </Box>
                     </Box>
-                  </Box>
-                ))}
+                  ))
+                )}
               </Box>
             </SubBox>
           </Grid>
@@ -128,6 +202,6 @@ const NewAppointments = () => {
       </FullHeightBox>
     </ThemeProvider>
   );
-}
+};
 
 export default NewAppointments;
