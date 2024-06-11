@@ -3,16 +3,16 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 
-import user from "../Components/User.json"; 
+import user from "../../Components/User.json"; 
 import TabPanel from "@mui/lab/TabPanel";
 import TabContext from "@mui/lab/TabContext";
 import { useMediaQuery } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SettingsIcon from "@mui/icons-material/Settings";
 import InfoIcon from "@mui/icons-material/Info";
-import About from "../Components/About";
-import Settings from "../Components/SettingsInProfile";
-import AccountLabour from "../Components/AccountLabour";
+import About from "../../Components/About";
+import Settings from "../../Components/SettingsInProfile";
+import AccountLabour from "../../Components/AccountLabour";
 
 function LabourProfile() {
   const isSmallScreen = useMediaQuery("(max-width:600px)");
