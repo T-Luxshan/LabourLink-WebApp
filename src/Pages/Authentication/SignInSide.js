@@ -46,17 +46,20 @@ const SignInSide = () => {
       getUserRole(lowercaseEmail)
         .then(res=>{
           console.log(res.data)
-          alert(res.data.role);
           login(res.data.role, lowercaseEmail, data.get('password'))
             .then(response=> {
               localStorage.setItem("token", response.data.accessToken);
               localStorage.setItem("refreshToken", response.data.refreshToken);
               localStorage.setItem("userEmail", lowercaseEmail);
               console.log(response);
-              if(res.data.role == 'CUSTOMER' || res.data.verified){
+              if(res.data.role == 'CUSTOMER'){
                 navigate('/');
-              }else{
-                navigate('/wait');
+              }else {
+                if(res.data.verified) {
+                  navigate('/home/labour');
+                } else {
+                  navigate('/wait');
+                }
               }
             })
             .catch(error=> {
