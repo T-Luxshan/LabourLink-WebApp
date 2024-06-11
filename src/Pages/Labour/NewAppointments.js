@@ -23,14 +23,14 @@ const defaultTheme = createTheme({
 
 const FullHeightBox = styled(Box)({
   margin: 0,
-  backgroundColor: "#F4F3EF",
+  backgroundColor: "#F6F9FD",
 });
 
 const MainBox = styled(Box)({
   minHeight: "100vh",
   marginTop: 80,
   marginLeft: 60,
-  backgroundColor: "#F4F3EF",
+  backgroundColor: "#F6F9FD",
   paddingTop: "20px",
   borderRadius: 20,
 });
@@ -39,7 +39,7 @@ const SubBox = styled(Box)({
   minHeight: "50vh",
   marginTop: 80,
   marginRight: 50,
-  backgroundColor: "#F4F3EF",
+  backgroundColor: "#F6F9FD",
   padding: "20px",
   borderRadius: 20,
 });
@@ -166,6 +166,7 @@ const NewAppointments = () => {
                         mb: 2,
                         display: "flex",
                         flexDirection: "column",
+                        backgroundColor:'#F6F9FD'
                       }}
                     >
                       <Typography sx={{ fontWeight: "bold", mb: 0 }}>
