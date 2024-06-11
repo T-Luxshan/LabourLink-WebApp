@@ -1,20 +1,43 @@
-import { Grid } from '@mui/material';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import FormControl from '@mui/material/FormControl';
-import Slide from '@mui/material/Slide';
+import React, { useState } from 'react';
+import {
+  Grid,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  FormControl,
+  Slide,
+  TextField,
+  IconButton,
+  OutlinedInput,
+  InputLabel,
+  MenuItem,
+  ListItemText,
+  Select,
+  Checkbox,
+} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import * as React from 'react';
-import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+const languages = [
+  'Tamil',
+  'Sinhala',
+  'English',
+];
 
 const defaultTheme = createTheme({
   palette: {
@@ -24,7 +47,6 @@ const defaultTheme = createTheme({
     secondary: {
       main: '#EAE9E7', 
     },
-    
   },
 });
 
@@ -32,18 +54,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="right" ref={ref} {...props} />;
 });
 
-const AboutMeModel = ({AboutMe, onAboutMeChange}) => {
-  const [open, setOpen] = React.useState(false);
-  const [issue, setIssue] = React.useState('');
-  const [aboutMe, setAboutMe] = React.useState(AboutMe);
-  const [error, setError] = React.useState('');
-  const [profileId, setProfileId] = React.useState(null);
-
+const AboutMeModel = ({ AboutMe, onAboutMeChange, onLanguageChange }) => {
+  const [open, setOpen] = useState(false);
+  const [aboutMe, setAboutMe] = useState(AboutMe);
+  const [language, setLanguage] = useState([]);
   
-  const labour = {
-            "name":"Luxshan",
-            "email": "lucky@gmail.com"
-          }
 
   const handleAboutMeChange = (event) => {
     setAboutMe(event.target.value);
@@ -54,59 +69,90 @@ const AboutMeModel = ({AboutMe, onAboutMeChange}) => {
   const handleCancel = () => setOpen(false);
 
   const handleSave = () => {
-    // implement backend code.
-      
+    // Implement backend save code here.
+    if(aboutMe != '' && language.length != 0) // set errors
+      setOpen(false); // Close dialog after save
+  };
+
+  const handleLanguageChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setLanguage(
+      typeof value === 'string' ? value.split(',') : value,
+    );
+    onLanguageChange(
+      typeof value === 'string' ? value.split(',') : value,
+    );
+
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}> 
-    <Grid container component="main" item xs={false} sm={4} md={6} >
-    
-      {/* // <Button variant="text" onClick={handleClickOpen} sx={{fontSize: '12px', textTransform: 'none', ml: 0}}>
-      //   Edit Report
-      // </Button> */}
-      <IconButton aria-label="edit" onClick={handleClickOpen}>
-        <EditIcon fontSize='small'/>
-      </IconButton>
-     
-                                    {/* Need to check the styling when we merge  */}
-      <Grid item xs={12} sm={8} md={5} elevation={2} sx={{ height: '0vh', mt: '0px',  }}> 
-        <Dialog
-          open={open}
-          TransitionComponent={Transition}
-          keepMounted
-          onClose={handleCancel}
-          aria-describedby="alert-dialog-slide-aboutMe"
-          sx={{backgroundPosition: 'center',}}
-        >
-          <DialogTitle>About Me</DialogTitle>
-          <DialogContent>
-          
-            <DialogContentText id="alert-dialog-slide-aboutMe">
-              Say something about yourself, So customer will know about you.
-            </DialogContentText>
-            <Box sx={{ minWidth: 120, my:1}}>
-              <FormControl fullWidth> 
-                <TextField
-                  label="About Me"
-                  variant="outlined"
-                  value={aboutMe}
-                  onChange={handleAboutMeChange}
-                  multiline
-                  rows={2}
-                  placeholder="Say something about you"
-                  sx={{ mt: 2 }}
-                />
-              </FormControl>
-            </Box>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCancel}>Cancel</Button>
-            <Button onClick={handleSave}>Save</Button>
-          </DialogActions>
-        </Dialog>
+    <ThemeProvider theme={defaultTheme}>
+      <Grid container component="main" item xs={false} sm={4} md={6}>
+        <IconButton aria-label="edit" onClick={handleClickOpen}>
+          <EditIcon fontSize='small'/>
+        </IconButton>
+
+        <Grid item xs={12} sm={8} md={5} elevation={2} sx={{ height: '0vh', mt: '0px' }}> 
+          <Dialog
+            open={open}
+            TransitionComponent={Transition}
+            keepMounted
+            onClose={handleCancel}
+            aria-describedby="alert-dialog-slide-aboutMe"
+            sx={{ backgroundPosition: 'center' }}
+          >
+            <DialogTitle>About Me</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-slide-aboutMe">
+                Say something about yourself, so customers will know about you.
+              </DialogContentText>
+              <Box sx={{ minWidth: 120, my: 1 }}>
+                <FormControl fullWidth> 
+                  <TextField
+                    label="About Me"
+                    variant="outlined"
+                    value={aboutMe}
+                    onChange={handleAboutMeChange}
+                    multiline
+                    rows={2}
+                    required
+                    placeholder="Say something about yourself"
+                    sx={{ mt: 2 }}
+                  />
+
+                  <FormControl fullWidth sx={{ mt: 2 }}>
+                    <InputLabel id="language-select-label">Languages</InputLabel>
+                    <Select
+                      labelId="language-select-label"
+                      id="language-select"
+                      multiple
+                      value={language}
+                      required
+                      onChange={handleLanguageChange}
+                      input={<OutlinedInput label="Languages" />}
+                      renderValue={(selected) => selected.join(', ')}
+                      MenuProps={MenuProps}
+                    >
+                      {languages.map((lang) => (
+                        <MenuItem key={lang} value={lang}>
+                          <Checkbox checked={language.indexOf(lang) > -1} />
+                          <ListItemText primary={lang} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </FormControl>
+              </Box>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCancel}>Cancel</Button>
+              <Button onClick={handleSave}>Save</Button>
+            </DialogActions>
+          </Dialog>
+        </Grid>
       </Grid>
-    </Grid>
     </ThemeProvider>
   );
 };
