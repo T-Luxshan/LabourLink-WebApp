@@ -22,10 +22,9 @@ import {
   updateNotificationReadStatus,
   deleteNotification,
 } from "../Service/NotificationService";
-import { getUserByToken } from "../Service/UserService";
 
 function Notification() {
-  const [email, setEmail] = useState(localStorage.getItem('userEmail'));
+  const email = (localStorage.getItem('userEmail'));
   const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
 
@@ -60,53 +59,53 @@ function Notification() {
     return date.toLocaleString();
   };
 
-  const clickToNotify = async () => {
-    const notification = {
-      title: "First Notification",
-      message: "This is the first notification testing",
-      recipient: email,
-      createdAt: new Date().toISOString(), // Add current time
-    };
+  // const clickToNotify = async () => {
+  //   const notification = {
+  //     title: "First Notification",
+  //     message: "This is the first notification testing",
+  //     recipient: email,
+  //     createdAt: new Date().toISOString(), // Add current time
+  //   };
 
-    try {
-      await saveNotifications(notification);
-      addNotification({
-        title: notification.title,
-        message: notification.message,
-        duration: 4000,
-        icon: logo,
-        native: true,
-        onClick: () => navigate("/notification"),
-      });
-      findNotificationMessages(email); // Fetch updated notifications
-    } catch (error) {
-      console.error("Error saving notification", error);
-    }
-  };
+  //   try {
+  //     await saveNotifications(notification);
+  //     addNotification({
+  //       title: notification.title,
+  //       message: notification.message,
+  //       duration: 4000,
+  //       icon: logo,
+  //       native: true,
+  //       onClick: () => navigate("/notification"),
+  //     });
+  //     findNotificationMessages(email); // Fetch updated notifications
+  //   } catch (error) {
+  //     console.error("Error saving notification", error);
+  //   }
+  // };
 
-  const labourAccepted = async () => {
-    const notification = {
-      title: "First Notification",
-      message: "This is the first notification testing",
-      recipient: email,
-      createdAt: new Date().toISOString(), // Add current time
-    };
+  // const labourAccepted = async () => {
+  //   const notification = {
+  //     title: "First Notification",
+  //     message: "This is the first notification testing",
+  //     recipient: email,
+  //     createdAt: new Date().toISOString(), // Add current time
+  //   };
 
-    try {
-      await saveNotifications(notification);
-      addNotification({
-        title: notification.title,
-        message: notification.message,
-        duration: 4000,
-        icon: logo,
-        native: true,
-        onClick: () => navigate("/notification"),
-      });
-      findNotificationMessages(email); // Fetch updated notifications
-    } catch (error) {
-      console.error("Error saving notification", error);
-    }
-  };
+  //   try {
+  //     await saveNotifications(notification);
+  //     addNotification({
+  //       title: notification.title,
+  //       message: notification.message,
+  //       duration: 4000,
+  //       icon: logo,
+  //       native: true,
+  //       onClick: () => navigate("/notification"),
+  //     });
+  //     findNotificationMessages(email); // Fetch updated notifications
+  //   } catch (error) {
+  //     console.error("Error saving notification", error);
+  //   }
+  // };
 
   const labourHired = async () => {
     const notification = {
@@ -173,7 +172,7 @@ function Notification() {
         Hire
       </button> */}
 
-      <Container maxWidth="md" sx={{ mt: 10, mb: 60 }}>
+      <Container maxWidth="md" sx={{ mt: 10, mb: 55 }}>
         <Typography
           variant="h4"
           sx={{

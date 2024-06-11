@@ -6,7 +6,7 @@ const ChangePassword = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
-  let email = "customer@example.com"; // Use let instead of const if you intend to reassign email
+  let email = localStorage.getItem('userEmail'); // Use let instead of const if you intend to reassign email
 
   useEffect(() => {
     // Fetch the initial password from the server

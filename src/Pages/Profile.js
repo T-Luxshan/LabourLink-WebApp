@@ -3,7 +3,6 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import Account from "../Components/Account"; 
-import user from "../Components/User.json"; 
 import TabPanel from "@mui/lab/TabPanel";
 import TabContext from "@mui/lab/TabContext";
 import { useMediaQuery } from "@mui/material";
@@ -118,18 +117,18 @@ function Profile() {
 
 export default Profile;
 
-const titleStyles = {
-  h5: {
-    fontFamily: "Montserrat",
-    fontWeight: "bold",
-    marginBottom: "20px",
-  },
-};
+// const titleStyles = {
+//   h5: {
+//     fontFamily: "Montserrat",
+//     fontWeight: "bold",
+//     marginBottom: "20px",
+//   },
+// };
 
-const paperStyles = {
-  root: {
-    padding: "20px",
-    maxWidth: "800px",
-    width: "100%",
-  },
-};
+// const paperStyles = {
+//   root: {
+//     padding: "20px",
+//     maxWidth: "800px",
+//     width: "100%",
+//   },
+// };
