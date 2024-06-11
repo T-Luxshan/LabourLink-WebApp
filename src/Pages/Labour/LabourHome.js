@@ -27,14 +27,14 @@ const defaultTheme = createTheme({
 
 const FullHeightBox = styled(Box)({
   margin: 0,
-  backgroundColor: '#F4F3EF',
+  backgroundColor: '#F6F9FD',
 });
 
 const MainBox = styled(Box)({
   minHeight: '100vh',
   marginTop: 80,
   marginLeft: 60,
-  backgroundColor: '#F4F3EF',
+  backgroundColor: '#F6F9FD',
   paddingTop: '20px',
   borderRadius: 20,
 });
@@ -43,7 +43,7 @@ const SubBox = styled(Box)({
   minHeight: '50vh',
   marginTop: 80,
   marginRight: 50,
-  backgroundColor: '#F4F3EF',
+  backgroundColor: '#F6F9FD',
   padding: '20px',
   borderRadius: 20,
 });
@@ -214,7 +214,7 @@ const LabourHome = () => {
           <Grid item xs={12} md={4}>
             <SubBox>
               <Box sx={{ backgroundColor: 'white', p: 2, borderRadius: 4 }}>
-                <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1A237E', mb: 3, mt: '20px' }}>
+                <Typography variant="h6" sx={{fontWeight: 'bold', color: '#1A237E', mb: 3, mt: '5px', textAlign:'center' }}>
                   My Reviews
                 </Typography>
                 {reviews.length === 0 ? (
@@ -223,7 +223,7 @@ const LabourHome = () => {
                   </Typography>
                 ) : (
                   reviews.map((review, index) => (
-                    <Box key={index} sx={{ pt: 2, pr: 2, pl: 2, boxShadow: 1, borderRadius: 4, mb: 2, display: 'flex', flexDirection: 'column' }} onClick={() => handleReviewClick(review)}>
+                    <Box key={index} sx={{backgroundColor:'#F6F9FD', pt: 2, pr: 2, pl: 2, boxShadow: 0, borderRadius: 4, mb: 2, display: 'flex', flexDirection: 'column' }} onClick={() => handleReviewClick(review)}>
                       <Typography sx={{ fontWeight: 'bold', mb: 2 }}>{review.customerName}</Typography>
                       <Rating name="half-rating-read" value={review.rating} precision={0.5} readOnly />
                       <Typography sx={{ color: 'grey' }}>Job role : {review.jobRole}</Typography>
