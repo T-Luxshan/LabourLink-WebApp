@@ -13,6 +13,8 @@ import Report from '../../Components/Report';
 import LanguageIcon from '@mui/icons-material/Language';
 import reviewsData from './MyReviews.json';
 import AboutMeModel from '../../Components/AboutMeModel';
+import { getLabourById } from '../../Service/LabourService';
+import { getLabourProfileById } from '../../Service/LabourHomeService';
 
 const defaultTheme = createTheme({
   palette: {
@@ -49,27 +51,49 @@ const SubBox = styled(Box)({
 });
 
 const LabourHome = () => {
-  const [jobRole, setJobRole] = useState([]);
+  // const [jobRole, setJobRole] = useState([]);
   const [service, setService] = useState('');
   const [experience, setExperience] = useState('');
   const [avgRating, setAvgRating] = useState('');
-  const [name, setName] = useState('');
+  // const [name, setName] = useState('');
   const [reviews, setReviews] = useState([]);
   const [aboutMe, setAboutMe] = useState('');
   const [language, setLanguage] = useState([]);
+  const [email, setEmail] = useState(localStorage.getItem('userEmail'));
+  const [labour, setLabour] = useState(null);
+  const [profile, setProfile] = useState(null);
 
-  let availableJobRoles = ["Painter", "Driver"];
-  let languages  = ["Tamil", "Sinhala", "English"];
+  // let availableJobRoles = ["Painter", "Driver"];
+  // let languages  = ["Tamil", "Sinhala", "English"];
   useEffect(() => {
-    setJobRole(availableJobRoles);
+    // setJobRole(availableJobRoles);
     setService(120);
     setExperience(20);
     setAvgRating(4.8);
-    setName('Luxshan Thuraisingam');
+    // setName('Luxshan Thuraisingam');
     setReviews(reviewsData);
-    setLanguage(languages);
-    setAboutMe(" Experienced Driver with over two decades of dedicated service since the year 2000. Possessing a strong track record of safe driving, punctuality, and excellent knowledge of local and regional routes.");
-  }, []);
+    // setLanguage(languages);
+    // setAboutMe(" Experienced Driver with over two decades of dedicated service since the year 2000. Possessing a strong track record of safe driving, punctuality, and excellent knowledge of local and regional routes.");
+    fetchLabour(email);
+  }, [email]);
+
+  const fetchLabour = (email) => {
+    getLabourById(email)
+      .then(res => {
+        setLabour(res.data);
+        console.log(res);
+      })
+      .catch(err => {
+        console.log("labor fetching failed:", err);
+      });
+
+    getLabourProfileById(email)
+      .then(res => {
+        setProfile(res.data);
+        console.log(res);
+      })
+      .catch(err => console.log("profile fetch failed :", err));
+  }
 
   const handleReviewClick = (review) => {
     console.log(review);
@@ -77,12 +101,11 @@ const LabourHome = () => {
 
   const handleAboutMe = (abtME) => {
     setAboutMe(abtME);
-  }; 
+  };
 
   const handleLanguage = (lang) => {
     setLanguage(lang);
-  }; 
-  
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -102,27 +125,31 @@ const LabourHome = () => {
                 alignItems: 'left'
               }}>
                 <Avatar alt="Labour" src={require('../../Images/findMe.png')} sx={{ width: 150, height: 150 }} />
-                <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'black', mb: '5px', mt: '20px' }}>
-                  {name}
-                </Typography>
-                <Typography sx={{ fontWeight: '500', color: 'black', mb: '5px' }}>
-                  {jobRole.join(' | ')}
-                </Typography>
+                {labour && (
+                  <>
+                    <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'black', mb: '5px', mt: '20px' }}>
+                      {labour.name}
+                    </Typography>
+                    <Typography sx={{ fontWeight: '500', color: 'black', mb: '5px' }}>
+                      {labour.jobRole.join(' | ')}
+                    </Typography>
 
-                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: '100px', marginTop: '20px' }}>
-                  <Typography sx={{ textAlign: 'center', fontWeight: 'bold', color: '#1A237E' }}>
-                    {service} <br />
-                    Total Service
-                  </Typography>
-                  <Typography sx={{ textAlign: 'center', fontWeight: 'bold', color: '#1A237E' }}>
-                    {experience} yrs<br />
-                    Experience
-                  </Typography>
-                  <Typography sx={{ textAlign: 'center', fontWeight: 'bold', color: '#1A237E' }}>
-                    {avgRating} <br />
-                    Rating
-                  </Typography>
-                </Box>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: '100px', marginTop: '20px' }}>
+                      <Typography sx={{ textAlign: 'center', fontWeight: 'bold', color: '#1A237E' }}>
+                        {service} <br />
+                        Total Service
+                      </Typography>
+                      <Typography sx={{ textAlign: 'center', fontWeight: 'bold', color: '#1A237E' }}>
+                        {experience} yrs<br />
+                        Experience
+                      </Typography>
+                      <Typography sx={{ textAlign: 'center', fontWeight: 'bold', color: '#1A237E' }}>
+                        {avgRating} <br />
+                        Rating
+                      </Typography>
+                    </Box>
+                  </>
+                )}
               </Box>
               {/* About me box */}
               <Box sx={{
@@ -133,42 +160,44 @@ const LabourHome = () => {
                   <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#FE9E0D' }}>
                     About me
                   </Typography>
-                  <AboutMeModel 
-                      aboutMe={aboutMe} 
-                      onAboutMeChange={handleAboutMe} 
-                      onLanguageChange={handleLanguage} />
+                  <AboutMeModel
+                    aboutMe={aboutMe}
+                    onAboutMeChange={handleAboutMe}
+                    onLanguageChange={handleLanguage} />
                 </Box>
-                {aboutMe ?
+                {profile && profile.aboutMe ?
                   <Typography sx={{ fontWeight: '500', color: 'black', mb: '5px' }}>
-                    {aboutMe}
+                    {profile.aboutMe}
                   </Typography>
                   :
                   <Typography sx={{ fontWeight: '500', color: 'grey', mb: '5px' }}>
                     Say something about yourself, So customer will know about you.
                   </Typography>
                 }
-                
+
                 <Typography sx={{ fontWeight: 'bold', color: '#FE9E0D', mt: '20px' }}>
                   Language
                 </Typography>
-                {language.length != 0 ? 
-                <Typography sx={{  mb: 1, pb: 1 }}>
-                < LanguageIcon sx={{ fontSize: 'small', mr: 1 }} />
-                  {language.join(', ')}
-                </Typography>
-                :
-                <Typography sx={{ fontWeight: '500', color: 'grey', mb: '5px' }}>
-                  Please mention the language/ languages you speak.
-                </Typography>
+                {profile && profile.languages && profile.languages.length !== 0 ?
+                  <Typography sx={{ mb: 1, pb: 1 }}>
+                    <LanguageIcon sx={{ fontSize: 'small', mr: 1 }} />
+                    {profile.languages.join(', ')}
+                  </Typography>
+                  :
+                  <Typography sx={{ fontWeight: '500', color: 'grey', mb: '5px' }}>
+                    Please mention the language/ languages you speak.
+                  </Typography>
                 }
-                
+
                 <Typography sx={{ fontWeight: 'bold', color: '#FE9E0D', mt: '20px' }}>
                   Contact details
                 </Typography>
-                <Typography sx={{ mb: 2, pb: 3 }}>
-                  <CallIcon sx={{ fontSize: 'small', mr: 1 }}></CallIcon>
-                  0764541834
-                </Typography>
+                {labour && (
+                  <Typography sx={{ mb: 2, pb: 3 }}>
+                    <CallIcon sx={{ fontSize: 'small', mr: 1 }}></CallIcon>
+                    {labour.mobileNumber}
+                  </Typography>
+                )}
               </Box>
 
               {/* Appointments */}
@@ -214,7 +243,7 @@ const LabourHome = () => {
           <Grid item xs={12} md={4}>
             <SubBox>
               <Box sx={{ backgroundColor: 'white', p: 2, borderRadius: 4 }}>
-                <Typography variant="h6" sx={{fontWeight: 'bold', color: '#1A237E', mb: 3, mt: '5px', textAlign:'center' }}>
+                <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1A237E', mb: 3, mt: '5px', textAlign: 'center' }}>
                   My Reviews
                 </Typography>
                 {reviews.length === 0 ? (
@@ -223,7 +252,7 @@ const LabourHome = () => {
                   </Typography>
                 ) : (
                   reviews.map((review, index) => (
-                    <Box key={index} sx={{backgroundColor:'#F6F9FD', pt: 2, pr: 2, pl: 2, boxShadow: 0, borderRadius: 4, mb: 2, display: 'flex', flexDirection: 'column' }} onClick={() => handleReviewClick(review)}>
+                    <Box key={index} sx={{ backgroundColor: '#F6F9FD', pt: 2, pr: 2, pl: 2, boxShadow: 0, borderRadius: 4, mb: 2, display: 'flex', flexDirection: 'column' }} onClick={() => handleReviewClick(review)}>
                       <Typography sx={{ fontWeight: 'bold', mb: 2 }}>{review.customerName}</Typography>
                       <Rating name="half-rating-read" value={review.rating} precision={0.5} readOnly />
                       <Typography sx={{ color: 'grey' }}>Job role : {review.jobRole}</Typography>
