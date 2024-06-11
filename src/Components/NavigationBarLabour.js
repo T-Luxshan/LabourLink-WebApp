@@ -31,8 +31,7 @@ import { findNotifications } from "../Service/NotificationService";
 import { LogoutUser } from "../Service/AuthService";
 
 const NavigationBarLabour = () => {
-  // const [email, setEmail] = useState(localStorage.getItem("userEmail"));
-  const [email, setEmail] = useState("luckybraveboys@gmail.com");
+  const [email, setEmail] = useState(localStorage.getItem("userEmail"));
   const [notifications, setNotifications] = useState([]);
   const [value, setValue] = useState(0);
   const theme = useTheme();
