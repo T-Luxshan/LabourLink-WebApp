@@ -13,7 +13,7 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { verifyOTP } from '../../Service/AuthServeice';
+import { verifyOTP } from '../../Service/AuthService';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import OTPInput, { ResendOTP } from "otp-input-react";

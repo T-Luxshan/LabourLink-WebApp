@@ -28,7 +28,7 @@ import { useNavigate } from "react-router-dom";
 import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
 import HistoryRoundedIcon from "@mui/icons-material/HistoryRounded";
 import { findNotifications } from "../Service/NotificationService";
-import { LogoutUser } from "../Service/AuthServeice";
+import { LogoutUser } from "../Service/AuthService";
 
 const NavigationBar = () => {
   const [email, setEmail] = useState(localStorage.getItem("userEmail"));

@@ -14,7 +14,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/system';
-import { isNICExist } from '../Service/AuthServeice';
+import { isNICExist } from '../Service/AuthService';
 
 const defaultTheme = createTheme({
     palette: {

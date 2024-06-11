@@ -14,7 +14,7 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { registerCustomer } from '../../Service/AuthServeice';
+import { registerCustomer } from '../../Service/AuthService';
 import { useNavigate } from 'react-router-dom';
 
 const defaultTheme = createTheme({

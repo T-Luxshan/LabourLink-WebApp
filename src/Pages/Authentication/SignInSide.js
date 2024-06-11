@@ -13,7 +13,7 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { getUserRole, login } from '../../Service/AuthServeice';
+import { getUserRole, login, loginCustomer } from '../../Service/AuthService';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 const defaultTheme = createTheme({
@@ -46,26 +46,33 @@ const SignInSide = () => {
       getUserRole(lowercaseEmail)
         .then(res=>{
           console.log(res.data)
+          alert(res.data.role);
           login(res.data.role, lowercaseEmail, data.get('password'))
             .then(response=> {
               localStorage.setItem("token", response.data.accessToken);
               localStorage.setItem("refreshToken", response.data.refreshToken);
+              localStorage.setItem("userEmail", lowercaseEmail);
               console.log(response);
+              if(res.data.role == 'CUSTOMER' || res.data.verified){
+                navigate('/');
+              }else{
+                navigate('/wait');
+              }
             })
             .catch(error=> {
               console.log(error)
               setLogError("Invalid login, please try again");
             }); 
-          if(res.data.role == 'CUSTOMER' || res.data.verified)
-            navigate('/');
-          else
-            navigate('/wait');
+          
         })
         .catch(err=>{
           console.log(err);
-          setLogError("Invalid login, please try again");
+          setLogError("Account with this email doesn't exist");
         })
       // let response = await loginCustomer("CUSTOMER", data.get('email'), data.get('password')); 
+      //     localStorage.setItem("token", response.data.accessToken);
+      //     localStorage.setItem("refreshToken", response.data.refreshToken);
+      //     navigate('/');
 
 
       // console.log(response);
