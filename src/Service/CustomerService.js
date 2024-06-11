@@ -1,4 +1,5 @@
 import axiosAuthInstance from "./AuthServeice";
+import axios from "axios";
 
 const REST_API_BASE_URL = "http://localhost:8080/api/customer";
 
@@ -17,5 +18,5 @@ export const updateCustomer = (email, customer) => {
 };
 
 export const deleteCustomer = (email) => {
-  return axiosAuthInstance.delete(REST_API_BASE_URL + "/" + email);
+  return axiosAuthInstance.delete(`http://localhost:8080/api/customer/deleteCustomer/${email}`);
 };

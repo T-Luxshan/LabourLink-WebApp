@@ -10,16 +10,36 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { getCustomersByEmail } from "../Service/CustomerService";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
-import { getUserByToken } from "../Service/UserService";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import { deleteCustomer } from "../Service/CustomerService";
 
 const Account = () => {
   const [customer, setCustomer] = useState({});
-  const [email, setEmail] = useState(localStorage.getItem('userEmail'));
+  const [email, setEmail] = useState(localStorage.getItem("userEmail"));
   const navigate = useNavigate();
+  const [open, setOpen] = React.useState(false);
 
-  useEffect(()=>{
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    deleteCustomer(email);
+    setOpen(false);
+    navigate("/login"); 
+    // localStorage.removeItem("token");
+    // localStorage.removeItem("refreshToken");
+    // localStorage.removeItem("userEmail");
+  };
+
+  useEffect(() => {
     fetchCustomerData(email);
-  },[email])
+  }, [email]);
 
   async function fetchCustomerData(email) {
     try {
@@ -137,7 +157,46 @@ const Account = () => {
           >
             Edit
           </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<DeleteIcon />}
+            onClick={handleClickOpen}
+            style={{
+              backgroundColor: "#F97300",
+              color: "#00204A",
+              marginLeft: 20,
+            }}
+          >
+            Delete Account
+          </Button>
         </Box>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title" style={{ color: "#00204A" }}>
+            Do you want to delete your account?
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              If you are deleting your account you may not be abled to continue
+              and all your data will be deleted permanently
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Disagree</Button>
+            <Button
+              onClick={handleClose}
+              autoFocus
+              style={{ color: "#FF0000" }}
+            >
+              Agree
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Paper>
     </Container>
   );

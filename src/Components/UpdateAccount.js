@@ -12,7 +12,10 @@ import {
   updateCustomer,
 } from "../Service/CustomerService";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import NavigationBar from "./NavigationBar"
+import NavigationBar from "./NavigationBar";
+import addNotification from "react-push-notification";
+import logo from "../Images/app-logo3.png";
+import { saveNotifications } from "../Service/NotificationService";
 
 const UpdateAccount = () => {
   const navigate = useNavigate();
@@ -38,15 +41,39 @@ const UpdateAccount = () => {
         console.log("Customer updated successfully");
       }
       navigate("/profile");
+      accountUpdated();
     } catch (error) {
       console.error(error);
       // Handle error here
     }
   };
 
+  const accountUpdated = async () => {
+    const notification = {
+      title: "Account Updated Successfully",
+      message: "You have successfully updated account details ",
+      recipient: email, // Adjust as necessary
+      createdAt: new Date().toISOString(), // Add current time
+    };
+
+    try {
+      await saveNotifications(notification);
+      addNotification({
+        title: notification.title,
+        message: notification.message,
+        duration: 4000,
+        icon: logo,
+        native: true,
+        onClick: () => navigate("/notification"),
+      });
+    } catch (error) {
+      console.error("Error saving notification", error);
+    }
+  };
+
   return (
     <div>
-      <NavigationBar/>
+      <NavigationBar />
       <Card sx={{ width: "500px", margin: "auto", marginTop: "150px" }}>
         <CardContent>
           <Typography
@@ -94,9 +121,11 @@ const UpdateAccount = () => {
                 />
               </Grid>
               <Grid item sx={{ textAlign: "left" }}>
-                <Button type="submit" variant="contained" color="primary">
+                
+                <Button type="submit" variant="contained" color="primary" sx={{mr:3}}>
                   Submit
                 </Button>
+                <Button variant="outlined" onClick={()=>{navigate("/profile")}}>Cancel</Button>
               </Grid>
             </Grid>
           </form>

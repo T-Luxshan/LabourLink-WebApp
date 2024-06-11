@@ -58,7 +58,7 @@ export default function HiredHistory() {
   }
 
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden", mt: 10, mb: 60 }}>
+    <Paper sx={{ width: "100%", overflow: "hidden", mt: 10, mb: 55 }}>
       <TableContainer sx={{ maxHeight: 550 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
