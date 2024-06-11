@@ -31,7 +31,8 @@ import { findNotifications } from "../Service/NotificationService";
 import { LogoutUser } from "../Service/AuthService";
 
 const NavigationBarLabour = () => {
-  const [email, setEmail] = useState(localStorage.getItem("userEmail"));
+  // const [email, setEmail] = useState(localStorage.getItem("userEmail"));
+  const [email, setEmail] = useState("luckybraveboys@gmail.com");
   const [notifications, setNotifications] = useState([]);
   const [value, setValue] = useState(0);
   const theme = useTheme();
@@ -112,7 +113,7 @@ const NavigationBarLabour = () => {
               <Tab
                 label="Home"
                 component={Link}
-                to="/profile/labour"
+                to="/home/labour"
                 sx={{
                   color: value === 0 ? "#F97300" : "white",
                   textTransform: "none",
@@ -123,7 +124,7 @@ const NavigationBarLabour = () => {
               <Tab
                 label="Appointments"
                 component={Link}
-                to="/profile/labour/newappointments"
+                to="/labour/newappointments"
                 sx={{
                   color: value === 1 ? "#F97300" : "white",
                   textTransform: "none",
@@ -177,7 +178,7 @@ const NavigationBarLabour = () => {
               <Tab
                 label="Profile"
                 component={Link}
-                to="/profile"
+                to="/labour/profile"
                 sx={{
                   color: value === 5 ? "#F97300" : "white",
                   textTransform: "none",
@@ -242,7 +243,7 @@ const NavigationBarLabour = () => {
             to="/labourcategories"
             onClick={handleDrawerToggle}
           >
-            <ListItemIcon>
+            {/* <ListItemIcon>
               <BookIcon />
             </ListItemIcon>
             <ListItemText primary="Hire Labor" />
@@ -251,7 +252,7 @@ const NavigationBarLabour = () => {
             component={Link}
             to="/profile"
             onClick={handleDrawerToggle}
-          >
+          > */}
             <ListItemIcon>
               <AccountCircleIcon />
             </ListItemIcon>

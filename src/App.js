@@ -20,10 +20,12 @@ import Review from "./Components/Review";
 import JoinAs from "./Pages/Authentication/JoinAs";
 import LabourSignUp from "./Pages/Authentication/LabourSignUp";
 import WaitingPage from "./Pages/Authentication/WaitingPage";
-import LabourProfile from "./Pages/Labour/LabourProfile";
+import LabourHome from "./Pages/Labour/LabourHome";
 import NavigationBarLabour from "./Components/NavigationBarLabour";
 import Report from "./Components/Report";
 import NewAppointments from "./Pages/Labour/NewAppointments";
+import LabourProfile from "./Pages/LabourProfile"
+import UpdateLabourAccount from "./Components/UpdateLabourAccount";
 
 
 export const ThemeContext = createContext(null);
@@ -209,25 +211,36 @@ function App() {
             />
             {/* Labour pages */}
             <Route
-              path="/profile/labour"
+              path="/home/labour"
               element={
                 <>
                   <NavigationBarLabour/>
-                  <LabourProfile />
-
+                  <LabourHome />
+                  <Footer />
                 </>
               }
             />
             <Route
-              path="/profile/labour/newappointments"
+              path="/labour/newappointments"
               element={
                 <>
                   <NavigationBarLabour/>
                   <NewAppointments />
-
+                  <Footer />
                 </>
               }
             />
+            <Route
+              path="/labour/profile"
+              element={
+                <>
+                  <NavigationBarLabour />
+                  <LabourProfile />
+                  <Footer />
+                </>
+              }
+            />
+            <Route path="/update-account-labour" element={<UpdateLabourAccount />} />
           </Routes>
         </Router>
       </div>
