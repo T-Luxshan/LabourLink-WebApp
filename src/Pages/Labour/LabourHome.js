@@ -48,7 +48,7 @@ const SubBox = styled(Box)({
   borderRadius: 20,
 });
 
-const LabourProfile = () => {
+const LabourHome = () => {
   const [jobRole, setJobRole] = useState([]);
   const [service, setService] = useState('');
   const [experience, setExperience] = useState('');
@@ -219,4 +219,4 @@ const LabourProfile = () => {
   );
 }
 
-export default LabourProfile;
+export default LabourHome;
