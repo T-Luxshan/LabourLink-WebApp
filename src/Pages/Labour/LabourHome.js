@@ -10,7 +10,7 @@ import Rating from '@mui/material/Rating';
 import CallIcon from '@mui/icons-material/Call';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import Report from '../../Components/Report';
-
+import LanguageIcon from '@mui/icons-material/Language';
 import reviewsData from './MyReviews.json';
 import AboutMeModel from '../../Components/AboutMeModel';
 
@@ -56,9 +56,10 @@ const LabourHome = () => {
   const [name, setName] = useState('');
   const [reviews, setReviews] = useState([]);
   const [aboutMe, setAboutMe] = useState('');
+  const [language, setLanguage] = useState([]);
 
   let availableJobRoles = ["Painter", "Driver"];
-
+  let languages  = ["Tamil", "Sinhala", "English"];
   useEffect(() => {
     setJobRole(availableJobRoles);
     setService(120);
@@ -66,6 +67,7 @@ const LabourHome = () => {
     setAvgRating(4.8);
     setName('Luxshan Thuraisingam');
     setReviews(reviewsData);
+    setLanguage(languages);
     setAboutMe(" Experienced Driver with over two decades of dedicated service since the year 2000. Possessing a strong track record of safe driving, punctuality, and excellent knowledge of local and regional routes.");
   }, []);
 
@@ -75,7 +77,12 @@ const LabourHome = () => {
 
   const handleAboutMe = (abtME) => {
     setAboutMe(abtME);
-  };
+  }; 
+
+  const handleLanguage = (lang) => {
+    setLanguage(lang);
+  }; 
+  
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -126,7 +133,10 @@ const LabourHome = () => {
                   <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#FE9E0D' }}>
                     About me
                   </Typography>
-                  <AboutMeModel aboutMe={aboutMe} onAboutMeChange={handleAboutMe} />
+                  <AboutMeModel 
+                      aboutMe={aboutMe} 
+                      onAboutMeChange={handleAboutMe} 
+                      onLanguageChange={handleLanguage} />
                 </Box>
                 {aboutMe ?
                   <Typography sx={{ fontWeight: '500', color: 'black', mb: '5px' }}>
@@ -137,11 +147,25 @@ const LabourHome = () => {
                     Say something about yourself, So customer will know about you.
                   </Typography>
                 }
-
+                
+                <Typography sx={{ fontWeight: 'bold', color: '#FE9E0D', mt: '20px' }}>
+                  Language
+                </Typography>
+                {language.length != 0 ? 
+                <Typography sx={{  mb: 1, pb: 1 }}>
+                < LanguageIcon sx={{ fontSize: 'small', mr: 1 }} />
+                  {language.join(', ')}
+                </Typography>
+                :
+                <Typography sx={{ fontWeight: '500', color: 'grey', mb: '5px' }}>
+                  Please mention the language/ languages you speak.
+                </Typography>
+                }
+                
                 <Typography sx={{ fontWeight: 'bold', color: '#FE9E0D', mt: '20px' }}>
                   Contact details
                 </Typography>
-                <Typography sx={{ fontWeight: 'bold', mb: 2, pb: 3 }}>
+                <Typography sx={{ mb: 2, pb: 3 }}>
                   <CallIcon sx={{ fontSize: 'small', mr: 1 }}></CallIcon>
                   0764541834
                 </Typography>
