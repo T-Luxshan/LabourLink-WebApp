@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   TextField,
   Button,
@@ -7,36 +7,41 @@ import {
   CardContent,
   Typography,
 } from "@mui/material";
-// import {
-//   getCustomersByEmail,
-//   updateCustomer,
-// } from "../Service/CustomerService";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import NavigationBar from "./NavigationBar"
+import { useLocation, useNavigate } from "react-router-dom";
+import NavigationBarLabour from "./NavigationBarLabour";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+const schema = yup.object().shape({
+  name: yup
+    .string()
+    .matches(/^[A-Za-z]+(?: [A-Za-z]+)*$/, "Please enter a valid name")
+    .required("Your name is required"),
+  mobileNumber: yup
+    .string()
+    .matches(/^[0-9]{10}$/, "Please enter a valid mobile number")
+    .required("Mobile number is required"),
+  nic: yup
+    .string()
+    .matches(/^[0-9]{12}$|^[0-9]{9}[v|V]$/, 'Please enter a valid NIC number')
+    .required('Your NIC number is required')
+});
 
 const UpdateLabourAccount = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  // const { email } = useParams();//
 
-  const [name, setName] = useState(location.state?.labour.name);
-  const [mobileNumber, setMobileNumber] = useState(
-    location.state?.labour.mobileNumber
-  );
-  const [nic, setNic] = useState(location.state?.labour.nic);
-  const [email, setEmail] = useState(location.state?.labour.email);
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(schema),
+  });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const labour = { name, mobileNumber, nic };
-    console.log("Form submitted!");
-    console.log(labour);
+  const onSubmit = async (data) => {
+    console.log("Form submitted!", data);
 
     try {
-      // if (email) {
-      //   await updateCustomer(email, customer);
-        console.log("Labour updated successfully");
-      // }
+      // Call your update API here with data
+      console.log("Labour updated successfully");
       navigate("/labour/profile");
     } catch (error) {
       console.error(error);
@@ -46,61 +51,72 @@ const UpdateLabourAccount = () => {
 
   return (
     <div>
-      <NavigationBar/>
+      <NavigationBarLabour/>
       <Card sx={{ width: "500px", margin: "auto", marginTop: "150px" }}>
         <CardContent>
           <Typography
-            variant="h5" // Increase the size to h4
+            variant="h5"
             sx={{
-              fontFamily: "Montserrat", // Set font family to Montserrat
-              fontWeight: "bold", // Optionally set font weight to bold
-              mt: 2, // Optional margin top
+              fontFamily: "Montserrat",
+              fontWeight: "bold",
+              mt: 2,
               textAlign: "center",
             }}
           >
-            Update account
+            Update Account
           </Typography>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container direction="column" spacing={2}>
               <Grid item>
-                <TextField
-                  fullWidth
-                  required
-                  id="name"
-                  label="Name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </Grid>
-              {/* <Grid item>
-                <TextField
-                  fullWidth
-                  required
-                  id="email"
-                  label="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </Grid> */}
-              <Grid item>
-                <TextField
-                  fullWidth
-                  required
-                  id="mobileNumber"
-                  label="Mobile Number"
-                  value={mobileNumber}
-                  onChange={(e) => setMobileNumber(e.target.value)}
+                <Controller
+                  name="name"
+                  control={control}
+                  defaultValue={location.state?.labour.name || ''}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      id="name"
+                      label="Name"
+                      error={!!errors.name}
+                      helperText={errors.name ? errors.name.message : ''}
+                    />
+                  )}
                 />
               </Grid>
               <Grid item>
-                <TextField
-                  fullWidth
-                  required
-                  id="nic"
-                  label="Nic"
-                  value={nic}
-                  onChange={(e) => setNic(e.target.value)}
+                <Controller
+                  name="mobileNumber"
+                  control={control}
+                  defaultValue={location.state?.labour.mobileNumber || ''}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      id="mobileNumber"
+                      label="Mobile Number"
+                      error={!!errors.mobileNumber}
+                      helperText={errors.mobileNumber ? errors.mobileNumber.message : ''}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item>
+                <Controller
+                  name="nic"
+                  control={control}
+                  defaultValue={location.state?.labour.nic || ''}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      id="nic"
+                      label="NIC"
+                      error={!!errors.nic}
+                      helperText={errors.nic ? errors.nic.message : ''}
+                    />
+                  )}
                 />
               </Grid>
               <Grid item sx={{ textAlign: 'right', gap: 3 }}>
@@ -108,7 +124,7 @@ const UpdateLabourAccount = () => {
                   variant="contained"
                   color="primary"
                   onClick={() => navigate("/labour/profile")}
-                  sx={{ mr: 2 }} // Add margin-right for spacing between buttons
+                  sx={{ mr: 2 }}
                 >
                   Cancel
                 </Button>
