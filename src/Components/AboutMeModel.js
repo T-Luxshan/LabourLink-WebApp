@@ -22,7 +22,7 @@ import {
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
-import { updateProfile } from '../Service/LabourHomeService';
+import { createProfile, getLabourProfileById, updateProfile } from '../Service/LabourHomeService';
 import CircularProgress from '@mui/material/CircularProgress';
 
 const ITEM_HEIGHT = 48;
@@ -64,8 +64,8 @@ const AboutMeModel = ({onAboutMeChange, onLanguageChange, onGenderChange }) => {
   const [gender, setGender] = React.useState('');
   const [updated, setUpdated] = React.useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  // const [email, setEmail] = useState(localStorage.getItem('userEmail'));
-  const [email, setEmail] = useState("sophiawilliams@example.com");
+  const [email, setEmail] = useState(localStorage.getItem('userEmail'));
+  // const [email, setEmail] = useState("sophiawilliams@example.com");
   const [error, setError] = useState('');
   
 
@@ -96,17 +96,37 @@ const AboutMeModel = ({onAboutMeChange, onLanguageChange, onGenderChange }) => {
     console.log(language);
 
     setIsLoading(true);
-    updateProfile(email, aboutMe, gender, language)
-      .then(res => {
-        setUpdated(true);
-        setIsLoading(false);
-        setOpen(false);
+
+    getLabourProfileById(email)
+      .then(res=>{
+        const profileData = res.data;
+        if(!profileData.aboutMe && (!profileData.language || profileData.language.length === 0) && !profileData.gender){
+          createProfile(aboutMe, gender, languages, email)
+            .then(res=>{
+              setUpdated(true);
+              setIsLoading(false);
+              setOpen(false);
+            })
+            .catch(err=>{
+              setError("Profile update failed");
+              console.log(err);
+            })
+        }else {
+          updateProfile(email, aboutMe, gender, language)
+          .then(res => {
+            setUpdated(true);
+            setIsLoading(false);
+            setOpen(false);
+          })
+          .catch(err => {
+            setError("Profile update failed");
+            console.log(err);
+            // setIsLoading(false);
+          });
+        }
       })
-      .catch(err => {
-        setError("Profile update failed");
-        console.log(err);
-        setIsLoading(false);
-      });
+
+    
   };
 
   const handleLanguageChange = (event) => {
