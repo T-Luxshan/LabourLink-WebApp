@@ -25,3 +25,9 @@ export const updateProfile = (email, aboutMe, gender, languages) => {
     })
 }
 
+export const createProfile = (aboutMe, gender, languages, labourEmail) => {
+    return axiosAuthInstance.post(`${REST_API_BASE_URL_LABOUR_PROFILE}/create`, {
+        aboutMe, gender, languages, labourEmail
+    })
+}
+
