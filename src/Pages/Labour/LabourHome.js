@@ -65,10 +65,7 @@ const LabourHome = () => {
   const [labour, setLabour] = useState(null);
   const [profile, setProfile] = useState(null);
 
-  // let availableJobRoles = ["Painter", "Driver"];
-  // let languages  = ["Tamil", "Sinhala", "English"];
   useEffect(() => {
-    // setJobRole(availableJobRoles);
     setService(120);
     setExperience(20);
     // setAvgRating(4.8);
@@ -92,6 +89,9 @@ const LabourHome = () => {
     getLabourProfileById(email)
       .then(res => {
         setProfile(res.data);
+        setAboutMe(res.data.aboutMe);
+        setGender(res.data.gender);
+        setLanguage(res.data.languages);
         console.log(res);
       })
       .catch(err => console.log("profile fetch failed :", err));
@@ -187,7 +187,7 @@ const LabourHome = () => {
                 </Box>
                 {profile && profile.aboutMe ?
                   <Typography sx={{ fontWeight: '500', color: 'black', mb: '5px' }}>
-                    {profile.aboutMe}
+                    {aboutMe}
                   </Typography>
                   :
                   <Typography sx={{ fontWeight: '500', color: 'grey', mb: '5px' }}>
@@ -201,7 +201,7 @@ const LabourHome = () => {
                 {profile && profile.languages && profile.languages.length !== 0 ?
                   <Typography sx={{ mb: 1, pb: 1 }}>
                     <LanguageIcon sx={{ fontSize: 'small', mr: 1 }} />
-                    {profile.languages.join(', ')}
+                    {language.join(', ')}
                   </Typography>
                   :
                   <Typography sx={{ fontWeight: '500', color: 'grey', mb: '5px' }}>
@@ -213,7 +213,7 @@ const LabourHome = () => {
                 </Typography>
                 {profile && profile.gender ?
                   <Typography sx={{ fontWeight: '500', color: 'black', mb: '5px' }}>
-                    {profile.gender}
+                    {gender}
                   </Typography>
                   :
                   <Typography sx={{ fontWeight: '500', color: 'grey', mb: '5px' }}>
