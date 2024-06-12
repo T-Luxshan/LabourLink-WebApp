@@ -59,7 +59,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const AboutMeModel = ({onAboutMeChange, onLanguageChange, onGenderChange }) => {
   const [open, setOpen] = useState(false);
-  const [aboutMe, setAboutMe] = useState(AboutMe);
+  const [aboutMe, setAboutMe] = useState('');
   const [language, setLanguage] = useState([]);
   const [gender, setGender] = React.useState('');
   const [updated, setUpdated] = React.useState(false);
@@ -191,9 +191,9 @@ const AboutMeModel = ({onAboutMeChange, onLanguageChange, onGenderChange }) => {
                         label="Gender"
                         onChange={handleGender}
                       >
-                        <MenuItem value={'male'}>Male</MenuItem>
-                        <MenuItem value={'female'}>Female</MenuItem>
-                        <MenuItem value={'other'}>Other</MenuItem>
+                        <MenuItem value={'Male'}>Male</MenuItem>
+                        <MenuItem value={'Female'}>Female</MenuItem>
+                        <MenuItem value={'Other'}>Other</MenuItem>
                         <MenuItem value={'Prefer not to say'}>Prefer not to say</MenuItem>
                       </Select>
                     </FormControl>
