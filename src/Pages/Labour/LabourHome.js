@@ -14,7 +14,7 @@ import LanguageIcon from '@mui/icons-material/Language';
 import reviewsData from './MyReviews.json';
 import AboutMeModel from '../../Components/AboutMeModel';
 import { getLabourById } from '../../Service/LabourService';
-import { getLabourProfileById } from '../../Service/LabourHomeService';
+import { getAvgRating, getLabourProfileById, getMyReviews } from '../../Service/LabourHomeService';
 
 const defaultTheme = createTheme({
   palette: {
@@ -59,7 +59,9 @@ const LabourHome = () => {
   const [reviews, setReviews] = useState([]);
   const [aboutMe, setAboutMe] = useState('');
   const [language, setLanguage] = useState([]);
-  const [email, setEmail] = useState(localStorage.getItem('userEmail'));
+  const [gender, setGender] = useState('');
+  // const [email, setEmail] = useState(localStorage.getItem('userEmail'));
+  const [email, setEmail] = useState("sophiawilliams@example.com");
   const [labour, setLabour] = useState(null);
   const [profile, setProfile] = useState(null);
 
@@ -69,9 +71,9 @@ const LabourHome = () => {
     // setJobRole(availableJobRoles);
     setService(120);
     setExperience(20);
-    setAvgRating(4.8);
+    // setAvgRating(4.8);
     // setName('Luxshan Thuraisingam');
-    setReviews(reviewsData);
+    // setReviews(reviewsData);
     // setLanguage(languages);
     // setAboutMe(" Experienced Driver with over two decades of dedicated service since the year 2000. Possessing a strong track record of safe driving, punctuality, and excellent knowledge of local and regional routes.");
     fetchLabour(email);
@@ -93,6 +95,19 @@ const LabourHome = () => {
         console.log(res);
       })
       .catch(err => console.log("profile fetch failed :", err));
+
+    getMyReviews()
+      .then(res=>{
+        console.log(res.data);
+        setReviews(res.data);
+      })
+      .catch(err => console.log("Review fetch failed :", err));
+
+    getAvgRating()
+      .then(res=>{
+        setAvgRating(res.data);
+      })
+      .catch(err => console.log("avg rating fetch failed :", err));
   }
 
   const handleReviewClick = (review) => {
@@ -106,6 +121,10 @@ const LabourHome = () => {
   const handleLanguage = (lang) => {
     setLanguage(lang);
   };
+  const  handleGender= (gen) => {
+    setGender(gen);
+  };
+  
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -161,9 +180,10 @@ const LabourHome = () => {
                     About me
                   </Typography>
                   <AboutMeModel
-                    aboutMe={aboutMe}
                     onAboutMeChange={handleAboutMe}
-                    onLanguageChange={handleLanguage} />
+                    onLanguageChange={handleLanguage}
+                    onGenderChange={handleGender}
+                     />
                 </Box>
                 {profile && profile.aboutMe ?
                   <Typography sx={{ fontWeight: '500', color: 'black', mb: '5px' }}>
@@ -185,7 +205,19 @@ const LabourHome = () => {
                   </Typography>
                   :
                   <Typography sx={{ fontWeight: '500', color: 'grey', mb: '5px' }}>
-                    Please mention the language/ languages you speak.
+                    Add language/ languages you speak.
+                  </Typography>
+                }
+                <Typography sx={{ fontWeight: 'bold', color: '#FE9E0D', mt: '20px' }}>
+                  Gender
+                </Typography>
+                {profile && profile.gender ?
+                  <Typography sx={{ fontWeight: '500', color: 'black', mb: '5px' }}>
+                    {profile.gender}
+                  </Typography>
+                  :
+                  <Typography sx={{ fontWeight: '500', color: 'grey', mb: '5px' }}>
+                    Add your gender
                   </Typography>
                 }
 
