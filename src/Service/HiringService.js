@@ -9,3 +9,7 @@ export const bookLabour = (booking) => {
 export const getBookingHistoryByCustomerId = (email) => {
   return axiosAuthInstance.get(REST_API_BASE_URL + "/customer/" + email);
 }
+
+export const getAppointmentsByLabourAndStage = (email, stage) => {
+  return axiosAuthInstance.get(`${REST_API_BASE_URL}/labour/${email}/${stage}`);
+}
