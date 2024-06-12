@@ -11,6 +11,7 @@ import { getCustomersByEmail } from "../Service/CustomerService";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import { getUserByToken } from "../Service/UserService";
+import { getLabourById } from "../Service/LabourService";
 
 const AccountLabour = () => {
   const [labour, setLabour] = useState({});
@@ -26,17 +27,15 @@ const AccountLabour = () => {
     setJobRole(availableJobRoles);
   },[email])
 
-  async function fetchLabourData(email) {
-    try {
-      console.log("Fetching labour data for email:", email);
-      // const response = await getLabourByEmail(email);
-      // console.log("Customer data fetched:", response.data);
-      // setLabour(response.data);
-    } catch (error) {
-      navigate("/login");
-      console.error("Error fetching labour data:", error);
-    }
+  const fetchLabourData = (email) => {
+    getLabourById(email)
+      .then(res =>setLabour(res.data))
+      .catch(err =>{
+        console.error("Error fetching labour data:", err);
+        // navigate("/login");
+      })
   }
+  
 
   const handleEditClick = () => {
     navigate("/update-account-labour", {
