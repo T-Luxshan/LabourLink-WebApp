@@ -32,7 +32,7 @@ const AccountLabour = () => {
       .then(res =>setLabour(res.data))
       .catch(err =>{
         console.error("Error fetching labour data:", err);
-        // navigate("/login");
+        navigate("/login");
       })
   }
   
