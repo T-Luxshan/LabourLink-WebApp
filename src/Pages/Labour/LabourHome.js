@@ -16,6 +16,7 @@ import AboutMeModel from '../../Components/AboutMeModel';
 import { getLabourById } from '../../Service/LabourService';
 import { getAvgRating, getLabourProfileById, getMyReviews } from '../../Service/LabourHomeService';
 import { useNavigate } from "react-router-dom";
+import { getAppointmentsByLabourAndStage } from '../../Service/HiringService';
 
 const defaultTheme = createTheme({
   palette: {
@@ -66,6 +67,8 @@ const LabourHome = () => {
   // const [email, setEmail] = useState("sophiawilliams@example.com");
   const [labour, setLabour] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [acceptedAppointments, setAcceptedAppointments] = useState([]);
+  const [completedAppointments, setCompletedppointments] = useState([]);
 
   useEffect(() => {
     setService(120);
@@ -76,6 +79,7 @@ const LabourHome = () => {
     // setLanguage(languages);
     // setAboutMe(" Experienced Driver with over two decades of dedicated service since the year 2000. Possessing a strong track record of safe driving, punctuality, and excellent knowledge of local and regional routes.");
     fetchLabour(email);
+    appointmentDetails(email);
   }, [email]);
 
   const fetchLabour = (email) => {
@@ -114,6 +118,26 @@ const LabourHome = () => {
         setAvgRating(res.data);
       })
       .catch(err => console.log("avg rating fetch failed :", err));
+  }
+
+  const appointmentDetails = (email) => {
+
+    // Get Accepted Appointments
+    getAppointmentsByLabourAndStage(email, "ACCEPTED")
+      .then(res=>{
+        setAcceptedAppointments(res.data);
+      })
+      .catch(err=>{
+        console.log("Fetching appointments failed", err);
+        // navigate("/login"); // uncomment later
+      })
+
+    // Get Completed Appointments
+    // getAppointmentsByLabourAndStage(email, "COMPLETED")
+    // .then(res=>{
+    //   setCompletedppointments(res.data);
+    //   // navigate("/login"); // uncomment later
+    // })
   }
 
   const handleReviewClick = (review) => {
