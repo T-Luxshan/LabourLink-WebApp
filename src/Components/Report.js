@@ -31,7 +31,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
 });
 
-const Report = () => {
+const Report = ({reportTo}) => {
   const [open, setOpen] = React.useState(false);
   const [issue, setIssue] = React.useState('');
   const [description, setDescription] = React.useState('');
@@ -39,10 +39,6 @@ const Report = () => {
   const [reportId, setReportID] = React.useState(null);
 
   
-  const labour = {
-            "name":"Luxshan",
-            "email": "lucky@gmail.com"
-          }
   const handleIssueChange = (event) => {
     setIssue(event.target.value);
   };
@@ -59,7 +55,7 @@ const Report = () => {
       setError('');  
       console.log(issue, description );
       if(reportId){
-        editUserReport(reportId, issue, description, labour.email)
+        editUserReport(reportId, issue, description, reportTo)
           .then(res=>{
             setReportID(res.data.id);
             console.log(res);
@@ -67,7 +63,7 @@ const Report = () => {
           .catch(err=>console.log(err));  
       setOpen(false);
       }else{
-        reportUser(issue, description, labour.email)
+        reportUser(issue, description, reportTo)
           .then(res=>{
             setReportID(res.data.id);
             console.log(res);
@@ -105,7 +101,7 @@ const Report = () => {
           aria-describedby="alert-dialog-slide-description"
           sx={{backgroundPosition: 'center',}}
         >
-          <DialogTitle>Report {labour.name}</DialogTitle>
+          <DialogTitle>Report user</DialogTitle>
           <DialogContent>
           
             <DialogContentText id="alert-dialog-slide-description">
