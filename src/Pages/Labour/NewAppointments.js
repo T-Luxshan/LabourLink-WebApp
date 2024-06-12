@@ -9,6 +9,7 @@ import appointmentData from "./Appointments.json";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import WorkIcon from '@mui/icons-material/Work';
+import { getAppointmentsByLabourAndStage } from "../../Service/HiringService";
 
 const defaultTheme = createTheme({
   palette: {
@@ -45,27 +46,37 @@ const SubBox = styled(Box)({
 });
 
 const NewAppointments = () => {
-  const [jobRole, setJobRole] = useState([]);
-  const [service, setService] = useState("");
-  const [experience, setExperience] = useState("");
-  const [avgRating, setAvgRating] = useState("");
-  const [name, setName] = useState("");
+  // const [jobRole, setJobRole] = useState([]);
+  // const [service, setService] = useState("");
+  // const [experience, setExperience] = useState("");
+  // const [avgRating, setAvgRating] = useState("");
+  // const [name, setName] = useState("");
   const [appointments, setAppointments] = useState([]);
   const [currentAppointment, setCurrentAppointment] = useState(null);
+  let email = localStorage.getItem('userEmail');
 
   let availableJobRoles = ["Painter", "Driver"];
 
   useEffect(() => {
-    setJobRole(availableJobRoles);
-    setService(120);
-    setExperience(20);
-    setAvgRating(4.8);
-    setName("Luxshan Thuraisingam");
-    setAppointments(appointmentData); // Set reviews from the imported JSON data
-    if (appointmentData.length > 0) {
-      setCurrentAppointment(appointmentData[0]);
-    }
-  }, []);
+    // setJobRole(availableJobRoles);
+    // setService(120);
+    // setExperience(20);
+    // setAvgRating(4.8);
+    // setName("Luxshan Thuraisingam");
+    getAppointmentsByLabourAndStage(email, "PENDING")
+      .then(res=>{
+        let appointmentData = res.data;
+        setAppointments(appointmentData); // Set reviews from the imported JSON data
+        if (appointmentData.length > 0) {
+          setCurrentAppointment(appointmentData[0]);
+        }
+      })
+      .catch(err=>{
+        console.log("fetching appointmentData failed.", err);
+        // navigate("/login"); uncomment later.
+      })
+    
+  }, [email]);
 
   const handleViewClick = (appointment) => {
     setCurrentAppointment(appointment);
