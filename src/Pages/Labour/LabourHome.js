@@ -15,6 +15,7 @@ import reviewsData from './MyReviews.json';
 import AboutMeModel from '../../Components/AboutMeModel';
 import { getLabourById } from '../../Service/LabourService';
 import { getAvgRating, getLabourProfileById, getMyReviews } from '../../Service/LabourHomeService';
+import { useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme({
   palette: {
@@ -51,6 +52,7 @@ const SubBox = styled(Box)({
 });
 
 const LabourHome = () => {
+  const navigate = useNavigate();
   // const [jobRole, setJobRole] = useState([]);
   const [service, setService] = useState('');
   const [experience, setExperience] = useState('');
@@ -60,8 +62,8 @@ const LabourHome = () => {
   const [aboutMe, setAboutMe] = useState('');
   const [language, setLanguage] = useState([]);
   const [gender, setGender] = useState('');
-  // const [email, setEmail] = useState(localStorage.getItem('userEmail'));
-  const [email, setEmail] = useState("sophiawilliams@example.com");
+  const [email, setEmail] = useState(localStorage.getItem('userEmail'));
+  // const [email, setEmail] = useState("sophiawilliams@example.com");
   const [labour, setLabour] = useState(null);
   const [profile, setProfile] = useState(null);
 
@@ -84,6 +86,7 @@ const LabourHome = () => {
       })
       .catch(err => {
         console.log("labor fetching failed:", err);
+        // navigate("/login"); uncomment later.
       });
 
     getLabourProfileById(email)
@@ -94,7 +97,10 @@ const LabourHome = () => {
         setLanguage(res.data.languages);
         console.log(res);
       })
-      .catch(err => console.log("profile fetch failed :", err));
+      .catch(err => {
+        console.log("profile fetch failed :", err)
+        // navigate("/login"); // uncomment later
+      });
 
     getMyReviews()
       .then(res=>{
@@ -290,7 +296,7 @@ const LabourHome = () => {
                       <Typography sx={{ color: 'grey' }}>Job role : {review.jobRole}</Typography>
                       <Typography>{review.description}</Typography>
                       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-                        <Report />
+                        <Report reportTo={review.customerEmail}/>
                       </Box>
                     </Box>
                   ))
