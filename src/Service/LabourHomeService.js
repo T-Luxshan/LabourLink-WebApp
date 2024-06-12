@@ -5,7 +5,7 @@ const REST_API_BASE_URL_LABOUR_PROFILE = "http://localhost:8080/api/labour-profi
 const REST_API_BASE_URL_LABOUR_REVIEW = "http://localhost:8080/api/v1/labourReview";
 
 export const getLabourProfileById = (email) => {
-    return axios.get(`${REST_API_BASE_URL_LABOUR_PROFILE}/getLabourProfileById/${email}`)
+    return axiosAuthInstance.get(`${REST_API_BASE_URL_LABOUR_PROFILE}/getLabourProfileById/${email}`)
 }
 
 // get my reviews
@@ -20,7 +20,7 @@ export const getAvgRating= () => {
 
 // Update profile
 export const updateProfile = (email, aboutMe, gender, languages) => {
-    return axios.put(`${REST_API_BASE_URL_LABOUR_PROFILE}/update/${email}`,{
+    return axiosAuthInstance.put(`${REST_API_BASE_URL_LABOUR_PROFILE}/update/${email}`,{
         email, aboutMe, gender, languages
     })
 }
