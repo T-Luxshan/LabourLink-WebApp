@@ -12,6 +12,12 @@ import NavigationBarLabour from "./NavigationBarLabour";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { updateLabour } from "../Service/LabourService";
+
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 const schema = yup.object().shape({
   name: yup
@@ -31,6 +37,21 @@ const schema = yup.object().shape({
 const UpdateLabourAccount = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  let email = localStorage.getItem('userEmail');
+
+  const [updateMsg, setUpdateMsg] = useState("");
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  // Circular loading effect
+  const [open, setOpen] = React.useState(false);
+
+  // Snackbar for success/failed message
+  const [updateState, setUpdateState] = useState(false);
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setShowSnackbar(false);
+  };
 
   const { control, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
@@ -38,16 +59,33 @@ const UpdateLabourAccount = () => {
 
   const onSubmit = async (data) => {
     console.log("Form submitted!", data);
+    setOpen(true);
+    updateLabour(email, data.name, data.mobileNumber, data.nic)
+      .then(res=>{
+        setTimeout(() => {
+          setOpen(false);
+          setShowSnackbar(true);
+          setUpdateMsg("Updated Successfully!");
+          setUpdateState(true);
+          navigate("/labour/profile");
+        }, 2000);
+      })
+      .catch(err=>{
+        console.log("update failed")
+        setTimeout(() => {
+          setOpen(false);
+          setShowSnackbar(true);
+          setUpdateMsg("Failed to update your details");
+          setUpdateState(false);
+        }, 2000);
+      })
+   
 
-    try {
-      // Call your update API here with data
-      console.log("Labour updated successfully");
-      navigate("/labour/profile");
-    } catch (error) {
-      console.error(error);
-      // Handle error here
-    }
+      
+   
   };
+
+
 
   return (
     <div>
@@ -133,6 +171,27 @@ const UpdateLabourAccount = () => {
                 </Button>
               </Grid>
             </Grid>
+              <Backdrop
+              sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+              open={open}
+            >
+              <CircularProgress color="inherit" />
+            </Backdrop>
+
+            <Snackbar
+              open={showSnackbar}
+              autoHideDuration={6000}
+              onClose={handleSnackbarClose}
+            >
+              <Alert
+                onClose={handleSnackbarClose}
+                severity={updateState ? "success" : "error"}
+                variant="filled"
+                sx={{ width: "100%" }}
+              >
+                {updateMsg}
+              </Alert>
+            </Snackbar>
           </form>
         </CardContent>
       </Card>
