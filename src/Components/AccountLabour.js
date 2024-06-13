@@ -11,12 +11,48 @@ import { getCustomersByEmail } from "../Service/CustomerService";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import { getUserByToken } from "../Service/UserService";
-import { getLabourById } from "../Service/LabourService";
+import { deleteLabour, getLabourById } from "../Service/LabourService";
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+
 
 const AccountLabour = () => {
   const [labour, setLabour] = useState({});
   const [email, setEmail] = useState(localStorage.getItem('userEmail'));
   const [jobRole, setJobRole] = useState([]);
+
+  const [open, setOpen] = React.useState(false);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  
+  // Snackbar for success/failed message
+  const [updateMsg, setUpdateMsg] = useState("");
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setShowSnackbar(false);
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   let availableJobRoles = ["Painter", "Driver"];
   
@@ -44,6 +80,26 @@ const AccountLabour = () => {
       },
     });
   };
+  const handleDelete = () => {
+    setOpen(true);
+  };
+
+  const handleAccountDelete = () => {
+   
+    deleteLabour(email)
+      .then(res=>{
+        console.log("Account deleted");
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('userEmail');
+        navigate("/");
+      })
+      .catch(err=>{
+        console.log("Account deletion failed", err)
+        setUpdateMsg("Account deletion failed");
+        setShowSnackbar(true);
+      })
+  }
 
   return (
     <Container maxWidth="sm" style={{ marginTop: "20px" }}>
@@ -146,16 +202,68 @@ const AccountLabour = () => {
             <Typography variant="body1">{jobRole.join(' , ')}</Typography>
           </Grid>
         </Grid>
-        <Box mt={4} display="flex" justifyContent="flex-end">
+        <Box mt={4} display="flex" justifyContent="center" gap={15}>
+        <Button
+            variant="contained"
+            color="error"
+            startIcon={<DeleteOutlineIcon />}
+            onClick={handleDelete}
+          >
+            Delete account
+          </Button>
           <Button
             variant="contained"
             color="primary"
             startIcon={<CreateIcon />}
             onClick={handleEditClick}
           >
-            Edit
+            Edit account
           </Button>
         </Box>
+
+        <Snackbar
+          open={showSnackbar}
+          autoHideDuration={6000}
+          onClose={handleSnackbarClose}
+        >
+          <Alert
+            onClose={handleSnackbarClose}
+            severity="error"
+            variant="filled"
+            sx={{ width: "100%" }}
+          >
+            {updateMsg}
+          </Alert>
+        </Snackbar>
+
+ 
+    <React.Fragment>
+      <Dialog
+        fullScreen={fullScreen}
+        open={open}
+        // onClose={handleClose}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <DialogTitle id="responsive-dialog-title">
+          Are you sure, you want to delete account?
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            We will miss you!!
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={handleClose} >
+            cancel
+          </Button>
+          <Button onClick={handleAccountDelete} autoFocus color="error">
+            delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </React.Fragment>
+  
+
       </Paper>
     </Container>
   );
