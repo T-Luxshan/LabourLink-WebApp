@@ -16,7 +16,12 @@ import AboutMeModel from '../../Components/AboutMeModel';
 import { getLabourById } from '../../Service/LabourService';
 import { getAvgRating, getLabourProfileById, getMyReviews } from '../../Service/LabourHomeService';
 import { useNavigate } from "react-router-dom";
-import { getAppointmentsByLabourAndStage } from '../../Service/HiringService';
+import { getAppointmentsByLabourAndStage, UpdateBookingStage } from '../../Service/HiringService';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import WorkIcon from '@mui/icons-material/Work';
+import appointmentData from "./Appointments.json";
+import Button from "@mui/material/Button";
 
 const defaultTheme = createTheme({
   palette: {
@@ -54,32 +59,25 @@ const SubBox = styled(Box)({
 
 const LabourHome = () => {
   const navigate = useNavigate();
-  // const [jobRole, setJobRole] = useState([]);
   const [service, setService] = useState('');
-  const [experience, setExperience] = useState('');
   const [avgRating, setAvgRating] = useState('');
-  // const [name, setName] = useState('');
   const [reviews, setReviews] = useState([]);
   const [aboutMe, setAboutMe] = useState('');
   const [language, setLanguage] = useState([]);
   const [gender, setGender] = useState('');
   const [email, setEmail] = useState(localStorage.getItem('userEmail'));
-  // const [email, setEmail] = useState("sophiawilliams@example.com");
+  // let email = "luckyarts@gmail.com";
   const [labour, setLabour] = useState(null);
   const [profile, setProfile] = useState(null);
   const [acceptedAppointments, setAcceptedAppointments] = useState([]);
-  const [completedAppointments, setCompletedppointments] = useState([]);
+  const [completedAppointments, setCompletedAppointments] = useState([]);
 
   useEffect(() => {
     setService(120);
-    setExperience(20);
-    // setAvgRating(4.8);
-    // setName('Luxshan Thuraisingam');
-    // setReviews(reviewsData);
-    // setLanguage(languages);
-    // setAboutMe(" Experienced Driver with over two decades of dedicated service since the year 2000. Possessing a strong track record of safe driving, punctuality, and excellent knowledge of local and regional routes.");
     fetchLabour(email);
     appointmentDetails(email);
+    // setAcceptedAppointments(appointmentData);
+    // setCompletedAppointments(appointmentData);
   }, [email]);
 
   const fetchLabour = (email) => {
@@ -89,7 +87,7 @@ const LabourHome = () => {
         console.log(res);
       })
       .catch(err => {
-        console.log("labor fetching failed:", err);
+        console.log("labour fetching failed:", err);
         // navigate("/login"); uncomment later.
       });
 
@@ -107,37 +105,37 @@ const LabourHome = () => {
       });
 
     getMyReviews()
-      .then(res=>{
+      .then(res => {
         console.log(res.data);
         setReviews(res.data);
       })
       .catch(err => console.log("Review fetch failed :", err));
 
     getAvgRating()
-      .then(res=>{
+      .then(res => {
         setAvgRating(res.data);
       })
       .catch(err => console.log("avg rating fetch failed :", err));
   }
 
   const appointmentDetails = (email) => {
-
-    // Get Accepted Appointments
     getAppointmentsByLabourAndStage(email, "ACCEPTED")
-      .then(res=>{
+      .then(res => {
         setAcceptedAppointments(res.data);
       })
-      .catch(err=>{
+      .catch(err => {
         console.log("Fetching appointments failed", err);
         // navigate("/login"); // uncomment later
       })
 
-    // Get Completed Appointments
-    // getAppointmentsByLabourAndStage(email, "COMPLETED")
-    // .then(res=>{
-    //   setCompletedppointments(res.data);
-    //   // navigate("/login"); // uncomment later
-    // })
+      getAppointmentsByLabourAndStage(email, "COMPLETED")
+      .then(res => {
+        setCompletedAppointments(res.data);
+      })
+      .catch(err => {
+        console.log("Fetching appointments failed", err);
+        // navigate("/login"); // uncomment later
+      })
   }
 
   const handleReviewClick = (review) => {
@@ -151,10 +149,33 @@ const LabourHome = () => {
   const handleLanguage = (lang) => {
     setLanguage(lang);
   };
-  const  handleGender= (gen) => {
+
+  const handleGender = (gen) => {
     setGender(gen);
   };
-  
+
+  const handleComplete = (id) => {
+    console.log("this is ", id);
+    UpdateBookingStage(id, "COMPLETED")
+      .then(res=>{
+        console.log("updated to completed");
+        let updatedAccepted = acceptedAppointments.filter(appt => appt.id !== id);
+        let completedAppt = acceptedAppointments.find(appt => appt.id === id);
+
+        setAcceptedAppointments(updatedAccepted);
+        setCompletedAppointments([...completedAppointments, completedAppt]);
+      })
+      .catch(err=>console.log("update stage failed", err))
+  }
+  const handleReject = (id) => {
+    UpdateBookingStage(id, "DECLINED")
+      .then(res=>{
+        console.log("updated to DECLINED");
+        let updatedAccepted = acceptedAppointments.filter(appt => appt.id !== id);
+        setAcceptedAppointments(updatedAccepted);
+    })
+      .catch(err=>console.log("update stage failed", err))
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -189,10 +210,6 @@ const LabourHome = () => {
                         Total Service
                       </Typography>
                       <Typography sx={{ textAlign: 'center', fontWeight: 'bold', color: '#1A237E' }}>
-                        {experience} yrs<br />
-                        Experience
-                      </Typography>
-                      <Typography sx={{ textAlign: 'center', fontWeight: 'bold', color: '#1A237E' }}>
                         {avgRating} <br />
                         Rating
                       </Typography>
@@ -213,7 +230,7 @@ const LabourHome = () => {
                     onAboutMeChange={handleAboutMe}
                     onLanguageChange={handleLanguage}
                     onGenderChange={handleGender}
-                     />
+                  />
                 </Box>
                 {profile && profile.aboutMe ?
                   <Typography sx={{ fontWeight: '500', color: 'black', mb: '5px' }}>
@@ -229,7 +246,7 @@ const LabourHome = () => {
                   Language
                 </Typography>
                 {profile && profile.languages && profile.languages.length !== 0 ?
-                  <Typography sx={{ mb: 1, pb: 1 }}>
+                  <Typography sx={{ mb: 1, pb: 1, display: 'flex', alignItems: 'center' }}>
                     <LanguageIcon sx={{ fontSize: 'small', mr: 1 }} />
                     {language.join(', ')}
                   </Typography>
@@ -255,7 +272,7 @@ const LabourHome = () => {
                   Contact details
                 </Typography>
                 {labour && (
-                  <Typography sx={{ mb: 2, pb: 3 }}>
+                  <Typography sx={{ mb: 2, pb: 3, display: 'flex', alignItems: 'center' }}>
                     <CallIcon sx={{ fontSize: 'small', mr: 1 }}></CallIcon>
                     {labour.mobileNumber}
                   </Typography>
@@ -271,13 +288,34 @@ const LabourHome = () => {
                   Appointments
                 </Typography>
                 <Box sx={{ ml: 2, pb: 3 }}>
-                  <Typography sx={{ fontWeight: '500', color: 'black', mb: '5px' }}>
-                    <RadioButtonCheckedIcon sx={{ fontSize: 'small', mr: 1 }}></RadioButtonCheckedIcon>
-                    Nina Patel
-                  </Typography>
-                  <Typography sx={{ fontSize: 12, color: 'black', mb: '5px', ml: 3 }}>
-                    20.12.2000 | 10am-2pm
-                  </Typography>
+                  {acceptedAppointments.length === 0 ?
+                    <Typography sx={{ textAlign: 'center', color: 'grey' }}>
+                      There are no appointments to attend.
+                    </Typography>
+                    :
+                    acceptedAppointments.map((appointment, index) => (
+                      <Box sx={{ display: 'flex', flexDirection: 'column' }} key={index}>
+                        <Box sx={{ p: 2, m: 1, borderRadius: 4 }} backgroundColor="#F6F9FD">
+                          <Typography sx={{ mb: 0, pb: 1, display: 'flex', alignItems: 'center', fontWeight: 'bold' }}>
+                            <RadioButtonCheckedIcon fontSize='small' sx={{ mr: "5px" }} />
+                            {appointment.customerName}
+                          </Typography>
+                          <Typography sx={{ mb: 1, ml: 3, pb: 1, display: 'flex', alignItems: 'center' }}>
+                            <CalendarMonthIcon fontSize="10px" sx={{ mr: "5px" }} />
+                            {appointment.date} |
+                            <AccessTimeIcon fontSize="10px" sx={{ mr: "5px", ml: "5px" }} />
+                            {appointment.startTime} |
+                            <WorkIcon fontSize="small" sx={{ mr: "5px", ml: "5px" }} />
+                            {appointment.jobRole}
+                            <Box sx={{ ml: 10, display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+                              <Button variant="outlined" color="secondary" onClick={()=> handleComplete(appointment.id)}>Completed</Button>
+                              <Button variant="outlined" color="secondary" onClick={()=> handleReject((appointment.id))}>Reject</Button>
+                            </Box>
+                          </Typography>
+                        </Box>
+                      </Box>
+                    ))
+                  }
                 </Box>
               </Box>
 
@@ -290,16 +328,32 @@ const LabourHome = () => {
                   Work history
                 </Typography>
                 <Box sx={{ ml: 2, pb: 3 }}>
-                  <Typography sx={{ fontWeight: '500', color: 'black', mb: '5px' }}>
-                    <RadioButtonCheckedIcon sx={{ fontSize: 'small', mr: 1 }}></RadioButtonCheckedIcon>
-                    Nina Patel
-                  </Typography>
-                  <Typography sx={{ fontSize: 12, color: 'black', mb: '5px', ml: 3 }}>
-                    20.12.2000 | 10am-2pm
-                  </Typography>
+                  {completedAppointments.length === 0 ?
+                    <Typography sx={{ textAlign: 'center', color: 'grey' }}>
+                      Your work history is empty
+                    </Typography>
+                    :
+                    completedAppointments.map((appointment, index) => (
+                      <Box sx={{ display: 'flex', flexDirection: 'column' }} key={index}>
+                        <Box sx={{ p: 2, m: 1, borderRadius: 4 }} backgroundColor="#F6F9FD">
+                          <Typography sx={{ mb: 0, pb: 1, display: 'flex', alignItems: 'center', fontWeight: 'bold' }}>
+                            <RadioButtonCheckedIcon fontSize='small' sx={{ mr: "5px" }} />
+                            {appointment.customerName}
+                          </Typography>
+                          <Typography sx={{ mb: 1, ml: 3, pb: 1, display: 'flex', alignItems: 'center' }}>
+                            <CalendarMonthIcon fontSize="10px" sx={{ mr: "5px" }} />
+                            {appointment.date} |
+                            <AccessTimeIcon fontSize="10px" sx={{ mr: "5px", ml: "5px" }} />
+                            {appointment.startTime} |
+                            <WorkIcon fontSize="small" sx={{ mr: "5px", ml: "5px" }} />
+                            {appointment.jobRole}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    ))
+                  }
                 </Box>
               </Box>
-
             </MainBox>
           </Grid>
           <Grid item xs={12} md={4}>
@@ -320,7 +374,7 @@ const LabourHome = () => {
                       <Typography sx={{ color: 'grey' }}>Job role : {review.jobRole}</Typography>
                       <Typography>{review.description}</Typography>
                       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-                        <Report reportTo={review.customerEmail}/>
+                        <Report reportTo={review.customerEmail} />
                       </Box>
                     </Box>
                   ))
