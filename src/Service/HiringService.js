@@ -13,3 +13,9 @@ export const getBookingHistoryByCustomerId = (email) => {
 export const getAppointmentsByLabourAndStage = (email, stage) => {
   return axiosAuthInstance.get(`${REST_API_BASE_URL}/labour/${email}/${stage}`);
 }
+
+export const UpdateBookingStage = (id, bookingStage) => {
+  return axiosAuthInstance.patch(`${REST_API_BASE_URL}/updateStage/${id}`,{
+    bookingStage
+  })
+}
