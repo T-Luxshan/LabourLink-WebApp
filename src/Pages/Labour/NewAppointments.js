@@ -9,7 +9,7 @@ import appointmentData from "./Appointments.json";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import WorkIcon from '@mui/icons-material/Work';
-import { getAppointmentsByLabourAndStage } from "../../Service/HiringService";
+import { getAppointmentsByLabourAndStage, UpdateBookingStage } from "../../Service/HiringService";
 
 const defaultTheme = createTheme({
   palette: {
@@ -46,11 +46,6 @@ const SubBox = styled(Box)({
 });
 
 const NewAppointments = () => {
-  // const [jobRole, setJobRole] = useState([]);
-  // const [service, setService] = useState("");
-  // const [experience, setExperience] = useState("");
-  // const [avgRating, setAvgRating] = useState("");
-  // const [name, setName] = useState("");
   const [appointments, setAppointments] = useState([]);
   const [currentAppointment, setCurrentAppointment] = useState(null);
   let email = localStorage.getItem('userEmail');
@@ -58,15 +53,10 @@ const NewAppointments = () => {
   let availableJobRoles = ["Painter", "Driver"];
 
   useEffect(() => {
-    // setJobRole(availableJobRoles);
-    // setService(120);
-    // setExperience(20);
-    // setAvgRating(4.8);
-    // setName("Luxshan Thuraisingam");
     getAppointmentsByLabourAndStage(email, "PENDING")
       .then(res=>{
         let appointmentData = res.data;
-        setAppointments(appointmentData); // Set reviews from the imported JSON data
+        setAppointments(appointmentData);
         if (appointmentData.length > 0) {
           setCurrentAppointment(appointmentData[0]);
         }
@@ -81,6 +71,28 @@ const NewAppointments = () => {
   const handleViewClick = (appointment) => {
     setCurrentAppointment(appointment);
   };
+
+  const handleAccept = (id) => {
+    console.log("this is ", id);
+    UpdateBookingStage(id, "ACCEPTED")
+      .then(res=>{
+        console.log("updated to completed");
+        let updatedPending = appointments.filter(appt => appt.id !== id);
+        setAppointments(updatedPending);
+        setCurrentAppointment('');
+      })
+      .catch(err=>console.log("update stage failed", err))
+  }
+  const handleReject = (id) => {
+    UpdateBookingStage(id, "DECLINED")
+      .then(res=>{
+        console.log("updated to DECLINED");
+        let updatedPending = appointments.filter(appt => appt.id !== id);
+        setAppointments(updatedPending);
+        setCurrentAppointment('');
+    })
+      .catch(err=>console.log("update stage failed", err))
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -132,14 +144,14 @@ const NewAppointments = () => {
                         Description: {currentAppointment.jobDescription}
                       </Typography>
                       <Box sx={{display:'flex', justifyContent: 'right', gap: '50px', }}>
-                        <Button variant="contained" color="secondary"> Accept </Button>
-                        <Button variant="contained" color="secondary"> Reject </Button>
+                        <Button variant="contained" color="secondary" onClick={()=> handleAccept((currentAppointment.id))}> Accept </Button>
+                        <Button variant="contained" color="secondary" onClick={()=> handleReject((currentAppointment.id))}> Reject </Button>
                       </Box>
                       
                     </Box>
                   ) : (
                     <Typography sx={{ textAlign: "center", color: "grey" }}>
-                      There are no pending requests
+                      Click view to respond to the pending requests.
                     </Typography>
                   )}
                 </Box>
