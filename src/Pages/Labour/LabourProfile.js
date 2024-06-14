@@ -11,8 +11,9 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SettingsIcon from "@mui/icons-material/Settings";
 import InfoIcon from "@mui/icons-material/Info";
 import About from "../../Components/About";
-import Settings from "../../Components/SettingsInProfile";
+
 import AccountLabour from "../../Components/AccountLabour";
+import LabourSettings from "../../Components/LabourSettings";
 
 function LabourProfile() {
   const isSmallScreen = useMediaQuery("(max-width:600px)");
@@ -105,7 +106,7 @@ function LabourProfile() {
           </TabPanel>
 
           <TabPanel value={1} sx={{ flex: 1 }}>
-            <Settings />
+            <LabourSettings/>
           </TabPanel>
 *
           <TabPanel value={2} sx={{ flex: 1 }}>
