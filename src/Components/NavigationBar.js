@@ -29,6 +29,8 @@ import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
 import HistoryRoundedIcon from "@mui/icons-material/HistoryRounded";
 import { findNotifications } from "../Service/NotificationService";
 import { LogoutUser } from "../Service/AuthService";
+import addNotification from "react-push-notification";
+import logo from "../Images/app-logo3.png";
 
 const NavigationBar = () => {
   const [email, setEmail] = useState(localStorage.getItem("userEmail"));
@@ -75,7 +77,30 @@ const NavigationBar = () => {
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("userEmail");
 
+    loggedOut();
+
     navigate("/login");
+  };
+
+  const loggedOut = async () => {
+    const notification = {
+      title: "Log Out Success",
+      message: "You have successfully logged Out",
+      // recipient: email,
+      createdAt: new Date().toISOString(), // Add current time
+    };
+
+    try {
+      addNotification({
+        title: notification.title,
+        message: notification.message,
+        duration: 4000,
+        icon: logo,
+        native: true,
+      });
+    } catch (error) {
+      console.error("Error saving notification", error);
+    }
   };
 
   return (
@@ -169,7 +194,7 @@ const NavigationBar = () => {
                       badgeContent={unreadCount}
                       max={99}
                     >
-                      <NotificationsActiveIcon />
+                      <NotificationsActiveIcon sx={{mb: 0.5}}/>
                     </Badge>
                   </>
                 }
@@ -183,7 +208,7 @@ const NavigationBar = () => {
                   textTransform: "none",
                   fontFamily: "Montserrat",
                 }}
-                icon={<AccountCircleIcon />}
+                icon={<AccountCircleIcon sx={{mb: 2}}/>}
               />
             </Tabs>
           )}

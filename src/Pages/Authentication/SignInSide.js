@@ -15,6 +15,8 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getUserRole, login, loginCustomer } from '../../Service/AuthService';
 import { Navigate, useNavigate } from 'react-router-dom';
+import addNotification from "react-push-notification";
+import logo from "../../Images/app-logo3.png";
 
 const defaultTheme = createTheme({
   palette: {
@@ -78,8 +80,10 @@ const SignInSide = () => {
       //     navigate('/');
 
 
-      // console.log(response);
-      // navigate('/');
+      // new change of pull
+      console.log(response);
+      navigate('/');
+      loggedIn();
             
       setLogError("");
     } catch (e){
@@ -87,6 +91,27 @@ const SignInSide = () => {
     }
     
 
+  };
+
+  const loggedIn = async () => {
+    const notification = {
+      title: "LogIn Success",
+      message: "You have successfully logged In",
+      // recipient: email,
+      createdAt: new Date().toISOString(), // Add current time
+    };
+
+    try {
+      addNotification({
+        title: notification.title,
+        message: notification.message,
+        duration: 4000,
+        icon: logo,
+        native: true,
+      });
+    } catch (error) {
+      console.error("Error saving notification", error);
+    }
   };
 
   return (
