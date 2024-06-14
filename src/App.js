@@ -211,7 +211,7 @@ function App() {
             />
             {/* Labour pages */}
             <Route
-              path="/home/labour"
+              path="/labour/home"
               element={
                 <>
                   <NavigationBarLabour/>
