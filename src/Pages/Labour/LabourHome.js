@@ -59,7 +59,7 @@ const SubBox = styled(Box)({
 
 const LabourHome = () => {
   const navigate = useNavigate();
-  const [service, setService] = useState('');
+  const [service, setService] = useState(0);
   const [avgRating, setAvgRating] = useState('');
   const [reviews, setReviews] = useState([]);
   const [aboutMe, setAboutMe] = useState('');
@@ -73,7 +73,7 @@ const LabourHome = () => {
   const [completedAppointments, setCompletedAppointments] = useState([]);
 
   useEffect(() => {
-    setService(120);
+    
     fetchLabour(email);
     appointmentDetails(email);
     // setAcceptedAppointments(appointmentData);
@@ -131,6 +131,8 @@ const LabourHome = () => {
       getAppointmentsByLabourAndStage(email, "COMPLETED")
       .then(res => {
         setCompletedAppointments(res.data);
+        setService((res.data).length);
+        console.log((res.data).length);
       })
       .catch(err => {
         console.log("Fetching appointments failed", err);
@@ -162,6 +164,7 @@ const LabourHome = () => {
         let updatedAccepted = acceptedAppointments.filter(appt => appt.id !== id);
         let completedAppt = acceptedAppointments.find(appt => appt.id === id);
 
+        setService(service+1);
         setAcceptedAppointments(updatedAccepted);
         setCompletedAppointments([...completedAppointments, completedAppt]);
       })
@@ -198,7 +201,7 @@ const LabourHome = () => {
                 {labour && (
                   <>
                     <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'black', mb: '5px', mt: '20px' }}>
-                      {labour.name}
+                      {labour.name} 
                     </Typography>
                     <Typography sx={{ fontWeight: '500', color: 'black', mb: '5px' }}>
                       {labour.jobRole.join(' | ')}
