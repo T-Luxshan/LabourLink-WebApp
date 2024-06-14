@@ -45,8 +45,8 @@ export const registerCustomer = (name, email, password, mobileNumber, address) =
     }
   
     //API for Change password.
-    export const changePassword = (email, password, repeatPassword) =>{
-      return axios.post(`${FORGOTPASSWORD_BASE_URL}/changePassword/CUSTOMER/${email}`,{
+    export const changePassword = (email, role, password, repeatPassword) =>{
+      return axios.post(`${FORGOTPASSWORD_BASE_URL}/changePassword/${role}/${email}`,{
         password, repeatPassword
       });
     };

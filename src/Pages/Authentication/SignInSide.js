@@ -56,9 +56,13 @@ const SignInSide = () => {
               console.log(response);
               if(res.data.role == 'CUSTOMER'){
                 navigate('/');
+                console.log(response);
+                loggedIn();
               }else {
                 if(res.data.verified) {
                   navigate('/labour/home');
+                  console.log(response);
+                  loggedIn();
                 } else {
                   navigate('/wait');
                 }
@@ -81,9 +85,7 @@ const SignInSide = () => {
 
 
       // new change of pull
-      console.log(response);
-      navigate('/');
-      loggedIn();
+     
             
       setLogError("");
     } catch (e){
