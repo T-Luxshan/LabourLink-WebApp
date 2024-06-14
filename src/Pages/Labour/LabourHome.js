@@ -20,7 +20,6 @@ import { getAppointmentsByLabourAndStage, UpdateBookingStage } from '../../Servi
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import WorkIcon from '@mui/icons-material/Work';
-import appointmentData from "./Appointments.json";
 import Button from "@mui/material/Button";
 
 const defaultTheme = createTheme({
@@ -31,6 +30,9 @@ const defaultTheme = createTheme({
     secondary: {
       main: '#00204A',
     },
+  },
+  typography: {
+    fontFamily: 'Montserrat, sans-serif',
   },
 });
 
@@ -60,7 +62,7 @@ const SubBox = styled(Box)({
 const LabourHome = () => {
   const navigate = useNavigate();
   const [service, setService] = useState(0);
-  const [avgRating, setAvgRating] = useState('');
+  const [avgRating, setAvgRating] = useState();
   const [reviews, setReviews] = useState([]);
   const [aboutMe, setAboutMe] = useState('');
   const [language, setLanguage] = useState([]);
@@ -223,7 +225,7 @@ const LabourHome = () => {
               {/* About me box */}
               <Box sx={{
                 mb: 2,
-                backgroundColor: 'white', pt: 2, pl: 3, pr: 3, borderRadius: 4,
+                backgroundColor: 'white', pt: 2, pl: 3, pr: 3, borderRadius: 4
               }}>
                 <Box sx={{ display: 'flex', flexDirection: 'row', mb: '5px', mt: '20px' }}>
                   <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#FE9E0D' }}>
@@ -240,12 +242,12 @@ const LabourHome = () => {
                     {aboutMe}
                   </Typography>
                   :
-                  <Typography sx={{ fontWeight: '500', color: 'grey', mb: '5px' }}>
+                  <Typography sx={{ fontWeight: '500', color: 'grey', mb: '5px'}}>
                     Say something about yourself, So customer will know about you.
                   </Typography>
                 }
 
-                <Typography sx={{ fontWeight: 'bold', color: '#FE9E0D', mt: '20px' }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#FE9E0D', mt: '20px'}}>
                   Language
                 </Typography>
                 {profile && profile.languages && profile.languages.length !== 0 ?

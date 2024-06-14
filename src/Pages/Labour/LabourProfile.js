@@ -11,9 +11,23 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SettingsIcon from "@mui/icons-material/Settings";
 import InfoIcon from "@mui/icons-material/Info";
 import About from "../../Components/About";
-
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AccountLabour from "../../Components/AccountLabour";
 import LabourSettings from "../../Components/LabourSettings";
+
+const defaultTheme = createTheme({
+  palette: {
+    primary: {
+      main: '#FE9E0D',
+    },
+    secondary: {
+      main: '#00204A',
+    },
+  },
+  typography: {
+    fontFamily: 'Montserrat, sans-serif',
+  },
+});
 
 function LabourProfile() {
   const isSmallScreen = useMediaQuery("(max-width:600px)");

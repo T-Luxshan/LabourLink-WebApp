@@ -24,10 +24,13 @@ const defaultTheme = createTheme({
     },
     secondary: {
       main: '#EAE9E7', 
-    },
-    
+    }, 
+  },
+  typography: {
+    fontFamily: 'Montserrat, sans-serif',
   },
 });
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;

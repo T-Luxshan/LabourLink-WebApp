@@ -14,11 +14,14 @@ import { getAppointmentsByLabourAndStage, UpdateBookingStage } from "../../Servi
 const defaultTheme = createTheme({
   palette: {
     primary: {
-      main: "#FE9E0D",
+      main: '#FE9E0D',
     },
     secondary: {
-      main: "#00204A",
+      main: '#00204A',
     },
+  },
+  typography: {
+    fontFamily: 'Montserrat, sans-serif',
   },
 });
 

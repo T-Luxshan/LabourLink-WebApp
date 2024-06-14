@@ -25,6 +25,21 @@ import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const defaultTheme = createTheme({
+  palette: {
+    primary: {
+      main: '#FE9E0D',
+    },
+    secondary: {
+      main: '#00204A',
+    },
+  },
+  typography: {
+    fontFamily: 'Montserrat, sans-serif',
+  },
+});
 
 
 const AccountLabour = () => {

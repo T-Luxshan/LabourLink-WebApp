@@ -25,6 +25,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { createProfile, getLabourProfileById, updateProfile } from '../Service/LabourHomeService';
 import CircularProgress from '@mui/material/CircularProgress';
 
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -50,6 +51,9 @@ const defaultTheme = createTheme({
     secondary: {
       main: '#EAE9E7', 
     },
+  },
+  typography: {
+    fontFamily: 'Montserrat, sans-serif',
   },
 });
 

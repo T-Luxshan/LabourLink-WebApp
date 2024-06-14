@@ -3,7 +3,23 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import ChangePassword from "./ChangePassword";
-import ChangeTheme from "./ChangeTheme";
+// import ChangeTheme from "./ChangeTheme";
+
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const defaultTheme = createTheme({
+  palette: {
+    primary: {
+      main: '#FE9E0D',
+    },
+    secondary: {
+      main: '#00204A',
+    },
+  },
+  typography: {
+    fontFamily: 'Montserrat, sans-serif',
+  },
+});
 
 const LabourSettings = () => {
   return (
