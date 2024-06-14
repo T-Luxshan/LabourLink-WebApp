@@ -56,7 +56,7 @@ const SignInSide = () => {
                 navigate('/');
               }else {
                 if(res.data.verified) {
-                  navigate('/home/labour');
+                  navigate('/labour/home');
                 } else {
                   navigate('/wait');
                 }
