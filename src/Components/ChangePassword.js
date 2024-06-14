@@ -10,6 +10,8 @@ import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { getUserRole } from "../Service/AuthService";
+import { changePassword } from "../Service/AuthService";
 
 const schema = yup.object().shape({
   password: yup
@@ -41,24 +43,36 @@ const ChangePassword = () => {
 
   const onSubmit = (data) => {
     setOpen(true);
-    updatePassword(email, data.password)
-      .then((res) => {
-        console.log("Done");
-        setTimeout(() => {
-          setOpen(false);
-          setShowSnackbar(true);
-          setUpdateMsg("Password updated Successfully!");
-          setUpdateState(true);
-        }, 2000);
+    getUserRole(email)
+      .then(response=>{
+        changePassword(email, response.data.role, data.password, data.confirmPassword)
+          .then((res) => {
+            console.log("Done");
+            setTimeout(() => {
+              setOpen(false);
+              setShowSnackbar(true);
+              setUpdateMsg("Password updated Successfully!");
+              setUpdateState(true);
+            }, 2000);
+          })
+          .catch((err) => {
+            setTimeout(() => {
+              setOpen(false);
+              setShowSnackbar(true);
+              setUpdateMsg("Error updating password");
+              setUpdateState(false);
+            }, 2000);
+          });
       })
-      .catch((err) => {
+      .catch(err=>{
         setTimeout(() => {
           setOpen(false);
           setShowSnackbar(true);
           setUpdateMsg("Error updating password");
           setUpdateState(false);
         }, 2000);
-      });
+      })
+    
   };
 
   // Circular loading effect
