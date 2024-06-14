@@ -13,7 +13,7 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { verifyOTP } from '../../Service/AuthService';
+import { sendOTP, verifyOTP } from '../../Service/AuthService';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import OTPInput, { ResendOTP } from "otp-input-react";
@@ -58,6 +58,12 @@ const VerifyOTP = () => {
             setError("OTP verification failed");
         })
   };
+
+  const resendOTP = () => {
+    sendOTP(email, role)
+      .then(console.log("OTP resend"))
+      .catch(err=>console.log("OTP resend failed.", err));
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -109,15 +115,11 @@ const VerifyOTP = () => {
                     <Typography variant="subtitle2" gutterBottom sx={{ mr: 0, lineHeight: 1 }}>
                         Didn't receive OTP?
                     </Typography>
-                    <Button variant="text" 
+                    <Button variant="text" onClick={resendOTP}
                         sx={{ fontSize: 13, textTransform: 'none', pb: 2, mt:1, mr:10 }}>
                         Resend
                     </Button>
                 </Box>
-
-                {/* <ResendOTP onResendClick={() => console.log("Resend clicked")} 
-                    style={{backgroundColor:"#FB9741"}}/> */}
-                
             </Box>
           </Box>
         </Grid>
