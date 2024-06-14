@@ -35,13 +35,13 @@ export const registerCustomer = (name, email, password, mobileNumber, address) =
   }
 
     // API to send email with an OTP when forgot password.
-    export const sendOTP = (email) => {
-      return axios.post(`${FORGOTPASSWORD_BASE_URL}/verifyMail/CUSTOMER/${email}`)
+    export const sendOTP = (email, role) => {
+      return axios.post(`${FORGOTPASSWORD_BASE_URL}/verifyMail/${role}/${email}`)
     } 
   
     // API for verify OTP.
-    export const verifyOTP = (otp, email) => {
-      return axios.post(`${FORGOTPASSWORD_BASE_URL}/verifyOtp/CUSTOMER/${otp}/${email}`)
+    export const verifyOTP = (otp, email, role) => {
+      return axios.post(`${FORGOTPASSWORD_BASE_URL}/verifyOtp/${role}/${otp}/${email}`)
     }
   
     //API for Change password.

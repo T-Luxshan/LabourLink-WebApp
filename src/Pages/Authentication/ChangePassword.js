@@ -53,6 +53,7 @@ const schema = yup.object().shape({
 
 const ChangePassword = () => {
   const { email } = useEmailContext();
+  const { role } = useEmailContext();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -76,7 +77,7 @@ const ChangePassword = () => {
   const handleChangePassword = async (data) => {
     console.log(data);
     
-    changePassword(email, data.password, data.confirmPassword)
+    changePassword(email, role, data.password, data.confirmPassword)
         .then(res => {
             console.log(res);
             handleClickOpen();

@@ -39,6 +39,7 @@ const schema = yup.object().shape({
 
 const VerifyOTP = () => {
   const { email } = useEmailContext();
+  const { role } = useEmailContext();
   const [OTP, setOTP] = useState("");
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -48,7 +49,7 @@ const VerifyOTP = () => {
   const handleOTP = async () => {
     
     console.log(email);
-    verifyOTP(OTP, email)
+    verifyOTP(OTP, email, role)
         .then(res => {
             console.log(res);
             navigate("/changepassword");

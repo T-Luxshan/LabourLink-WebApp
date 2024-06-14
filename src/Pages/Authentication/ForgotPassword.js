@@ -13,7 +13,7 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { isCustomerExist, sendOTP } from '../../Service/AuthService';
+import { getUserRole, isCustomerExist, sendOTP } from '../../Service/AuthService';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { useEmailContext } from '../../Service/EmailContext';
@@ -39,6 +39,7 @@ const schema = yup.object().shape({
 
 const ForgotPassword = () => {
   const { setEmail } = useEmailContext();
+  const { setRole } = useEmailContext();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -55,18 +56,28 @@ const ForgotPassword = () => {
         .then(res => {
           if(res.data){
             setLoading(true);
-            sendOTP(lowercasedEmail)
-              .then(res => {
-                setError("");
-                console.log(res.data);
-                setEmail(lowercasedEmail);
-                navigate('/verifyotp');
+            getUserRole(lowercasedEmail)
+              .then(usrResponse=>{
+                  sendOTP(lowercasedEmail, usrResponse.data.role)
+                    .then(res => {
+                      setError("");
+                      console.log(res.data);
+                      setEmail(lowercasedEmail);
+                      setRole(usrResponse.data.role)
+                      navigate('/verifyotp');
+                    })
+                    .catch(error => {
+                      setLoading(false);
+                      console.log(error);
+                      setError("Couldn't send OTP, please try again in a few minutes");
+                    })
               })
-              .catch(error => {
+              .catch(err=>{
                 setLoading(false);
                 console.log(error);
                 setError("Couldn't send OTP, please try again in a few minutes");
               })
+            
           }else{
             setLoading(false);
             setError("Account doesn't exist for this email");
