@@ -112,7 +112,7 @@ const NavigationBarLabour = () => {
               <Tab
                 label="Home"
                 component={Link}
-                to="/home/labour"
+                to="/labour/home"
                 sx={{
                   color: value === 0 ? "#F97300" : "white",
                   textTransform: "none",
@@ -142,23 +142,12 @@ const NavigationBarLabour = () => {
                 }}
                 icon={<ChatRoundedIcon />}
               />
-              {/* <Tab
-                label="History"
-                component={Link}
-                to="/history"
-                sx={{
-                  color: value === 3 ? "#F97300" : "white",
-                  textTransform: "none",
-                  fontFamily: "Montserrat",
-                }}
-                icon={<HistoryRoundedIcon />}
-              /> */}
               <Tab
                 label="Notification"
                 component={Link}
                 to="/notification"
                 sx={{
-                  color: value === 4 ? "#F97300" : "white",
+                  color: value === 3 ? "#F97300" : "white",
                   textTransform: "none",
                   fontFamily: "Montserrat",
                 }}
@@ -179,7 +168,7 @@ const NavigationBarLabour = () => {
                 component={Link}
                 to="/labour/profile"
                 sx={{
-                  color: value === 5 ? "#F97300" : "white",
+                  color: value === 4 ? "#F97300" : "white",
                   textTransform: "none",
                   fontFamily: "Montserrat",
                 }}
@@ -221,37 +210,29 @@ const NavigationBarLabour = () => {
       </AppBar>
       <Drawer anchor="left" open={openDrawer} onClose={handleDrawerToggle}>
         <List>
-          <ListItemButton component={Link} to="/" onClick={handleDrawerToggle}>
+
+          <ListItemButton component={Link} to="/home/labour" onClick={handleDrawerToggle}>
             <ListItemIcon>
               <HomeIcon />
             </ListItemIcon>
             <ListItemText primary="Home" />
           </ListItemButton>
-          <ListItemButton
-            component={Link}
-            to="/notification"
-            onClick={handleDrawerToggle}
-          >
+
+          <ListItemButton component={Link} to="/labour/newappointments" onClick={handleDrawerToggle}>
+            <ListItemIcon>
+              <BookIcon />
+            </ListItemIcon>
+            <ListItemText primary="Appointments" />
+          </ListItemButton>
+
+          <ListItemButton component={Link} to="/notification" onClick={handleDrawerToggle} >
             <ListItemIcon>
               <NotificationsActiveIcon />
             </ListItemIcon>
             <ListItemText primary="Notification" />
           </ListItemButton>
-          <ListItemButton
-            component={Link}
-            to="/labourcategories"
-            onClick={handleDrawerToggle}
-          >
-            {/* <ListItemIcon>
-              <BookIcon />
-            </ListItemIcon>
-            <ListItemText primary="Hire Labor" />
-          </ListItemButton>
-          <ListItemButton
-            component={Link}
-            to="/profile"
-            onClick={handleDrawerToggle}
-          > */}
+
+          <ListItemButton component={Link} to="/labour/profile" onClick={handleDrawerToggle}>
             <ListItemIcon>
               <AccountCircleIcon />
             </ListItemIcon>
