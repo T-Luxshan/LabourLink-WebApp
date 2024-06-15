@@ -26,6 +26,7 @@ import Report from "./Components/Report";
 import NewAppointments from "./Pages/Labour/NewAppointments";
 import LabourProfile from "./Pages/Labour/LabourProfile"
 import UpdateLabourAccount from "./Components/UpdateLabourAccount";
+import LabourPerfomance from "./Pages/LabourPerfomance";
 
 
 export const ThemeContext = createContext(null);
@@ -241,6 +242,15 @@ function App() {
               }
             />
             <Route path="/update-account-labour" element={<UpdateLabourAccount />} />
+            <Route
+              path="/labour-pefermance"
+              element={
+                <>
+                  <LabourPerfomance />
+                  <Footer />
+                </>
+              }
+            />
           </Routes>
         </Router>
       </div>
