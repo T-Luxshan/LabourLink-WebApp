@@ -29,10 +29,8 @@ import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
 import HistoryRoundedIcon from "@mui/icons-material/HistoryRounded";
 import { findNotifications } from "../Service/NotificationService";
 import { LogoutUser } from "../Service/AuthService";
-import addNotification from "react-push-notification";
-import logo from "../Images/app-logo3.png";
 
-const NavigationBar = () => {
+const NavigationBarLabour = () => {
   const [email, setEmail] = useState(localStorage.getItem("userEmail"));
   const [notifications, setNotifications] = useState([]);
   const [value, setValue] = useState(0);
@@ -77,30 +75,7 @@ const NavigationBar = () => {
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("userEmail");
 
-    loggedOut();
-
     navigate("/login");
-  };
-
-  const loggedOut = async () => {
-    const notification = {
-      title: "Log Out Success",
-      message: "You have successfully logged Out",
-      // recipient: email,
-      createdAt: new Date().toISOString(), // Add current time
-    };
-
-    try {
-      addNotification({
-        title: notification.title,
-        message: notification.message,
-        duration: 4000,
-        icon: logo,
-        native: true,
-      });
-    } catch (error) {
-      console.error("Error saving notification", error);
-    }
   };
 
   return (
@@ -137,7 +112,7 @@ const NavigationBar = () => {
               <Tab
                 label="Home"
                 component={Link}
-                to="/"
+                to="/labour/home"
                 sx={{
                   color: value === 0 ? "#F97300" : "white",
                   textTransform: "none",
@@ -146,9 +121,9 @@ const NavigationBar = () => {
                 icon={<HomeIcon />}
               />
               <Tab
-                label="Hire Labor"
+                label="Appointments"
                 component={Link}
-                to="/labourcategories"
+                to="/labour/newappointments"
                 sx={{
                   color: value === 1 ? "#F97300" : "white",
                   textTransform: "none",
@@ -168,22 +143,11 @@ const NavigationBar = () => {
                 icon={<ChatRoundedIcon />}
               />
               <Tab
-                label="History"
-                component={Link}
-                to="/history"
-                sx={{
-                  color: value === 3 ? "#F97300" : "white",
-                  textTransform: "none",
-                  fontFamily: "Montserrat",
-                }}
-                icon={<HistoryRoundedIcon />}
-              />
-              <Tab
                 label="Notification"
                 component={Link}
                 to="/notification"
                 sx={{
-                  color: value === 4 ? "#F97300" : "white",
+                  color: value === 3 ? "#F97300" : "white",
                   textTransform: "none",
                   fontFamily: "Montserrat",
                 }}
@@ -194,7 +158,7 @@ const NavigationBar = () => {
                       badgeContent={unreadCount}
                       max={99}
                     >
-                      <NotificationsActiveIcon sx={{mb: 0.5}}/>
+                      <NotificationsActiveIcon />
                     </Badge>
                   </>
                 }
@@ -202,13 +166,13 @@ const NavigationBar = () => {
               <Tab
                 label="Profile"
                 component={Link}
-                to="/profile"
+                to="/labour/profile"
                 sx={{
-                  color: value === 5 ? "#F97300" : "white",
+                  color: value === 4 ? "#F97300" : "white",
                   textTransform: "none",
                   fontFamily: "Montserrat",
                 }}
-                icon={<AccountCircleIcon sx={{mb: 2}}/>}
+                icon={<AccountCircleIcon />}
               />
             </Tabs>
           )}
@@ -246,37 +210,29 @@ const NavigationBar = () => {
       </AppBar>
       <Drawer anchor="left" open={openDrawer} onClose={handleDrawerToggle}>
         <List>
-          <ListItemButton component={Link} to="/" onClick={handleDrawerToggle}>
+
+          <ListItemButton component={Link} to="/home/labour" onClick={handleDrawerToggle}>
             <ListItemIcon>
               <HomeIcon />
             </ListItemIcon>
             <ListItemText primary="Home" />
           </ListItemButton>
-          <ListItemButton
-            component={Link}
-            to="/notification"
-            onClick={handleDrawerToggle}
-          >
+
+          <ListItemButton component={Link} to="/labour/newappointments" onClick={handleDrawerToggle}>
+            <ListItemIcon>
+              <BookIcon />
+            </ListItemIcon>
+            <ListItemText primary="Appointments" />
+          </ListItemButton>
+
+          <ListItemButton component={Link} to="/notification" onClick={handleDrawerToggle} >
             <ListItemIcon>
               <NotificationsActiveIcon />
             </ListItemIcon>
             <ListItemText primary="Notification" />
           </ListItemButton>
-          <ListItemButton
-            component={Link}
-            to="/labourcategories"
-            onClick={handleDrawerToggle}
-          >
-            <ListItemIcon>
-              <BookIcon />
-            </ListItemIcon>
-            <ListItemText primary="Hire Labor" />
-          </ListItemButton>
-          <ListItemButton
-            component={Link}
-            to="/profile"
-            onClick={handleDrawerToggle}
-          >
+
+          <ListItemButton component={Link} to="/labour/profile" onClick={handleDrawerToggle}>
             <ListItemIcon>
               <AccountCircleIcon />
             </ListItemIcon>
@@ -288,4 +244,4 @@ const NavigationBar = () => {
   );
 };
 
-export default NavigationBar;
+export default NavigationBarLabour;

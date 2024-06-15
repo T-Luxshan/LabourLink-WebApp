@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "jobRole": "driver",
+        "customerName": "John Doe",
+        "date": "2024-06-10",
+        "startTime": "09:00",
+        "bookingStage": "PENDING",
+        "jobDescription": "Transporting goods to the warehouse located in the downtown area. Ensure all items are secured properly. Maintain schedule to avoid delays. Contact warehouse manager upon arrival."
+    },
+    {
+        "id": 2,
+        "jobRole": "painter",
+        "customerName": "Jane Smith",
+        "date": "2024-06-12",
+        "startTime": "10:00",
+        "bookingStage": "PENDING",
+        "jobDescription": "Painting the living room, including walls and ceiling. Use provided paint colors as specified by the customer. Prepare surfaces by removing old paint. Clean up the area after painting."
+    },
+    {
+        "id": 7,
+        "jobRole": "driver",
+        "customerName": "Eve Foster",
+        "date": "2024-06-18",
+        "startTime": "06:30",
+        "bookingStage": "PENDING",
+        "jobDescription": "Moving furniture from the client's house to the new apartment. Ensure all items are wrapped and secured. Coordinate with the client for any special instructions. Unload and place furniture as directed."
+    },
+    {
+        "id": 8,
+        "jobRole": "painter",
+        "customerName": "Frank Green",
+        "date": "2024-06-19",
+        "startTime": "14:00",
+        "bookingStage": "PENDING",
+        "jobDescription": "Touch-up painting in various rooms. Match the existing paint colors. Repair any minor damages on the walls before painting. Ensure a clean and professional finish."
+    }
+]

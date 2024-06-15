@@ -31,7 +31,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
 });
 
-const Report = () => {
+const Report = ({reportTo}) => {
   const [open, setOpen] = React.useState(false);
   const [issue, setIssue] = React.useState('');
   const [description, setDescription] = React.useState('');
@@ -39,10 +39,6 @@ const Report = () => {
   const [reportId, setReportID] = React.useState(null);
 
   
-  const labour = {
-            "name":"Luxshan",
-            "email": "lucky@gmail.com"
-          }
   const handleIssueChange = (event) => {
     setIssue(event.target.value);
   };
@@ -59,7 +55,7 @@ const Report = () => {
       setError('');  
       console.log(issue, description );
       if(reportId){
-        editUserReport(reportId, issue, description, labour.email)
+        editUserReport(reportId, issue, description, reportTo)
           .then(res=>{
             setReportID(res.data.id);
             console.log(res);
@@ -67,7 +63,7 @@ const Report = () => {
           .catch(err=>console.log(err));  
       setOpen(false);
       }else{
-        reportUser(issue, description, labour.email)
+        reportUser(issue, description, reportTo)
           .then(res=>{
             setReportID(res.data.id);
             console.log(res);
@@ -85,18 +81,18 @@ const Report = () => {
     <Grid container component="main" item xs={false} sm={4} md={6} >
     {issue ?
       (
-      <Button variant="outlined" onClick={handleClickOpen}>
+      <Button variant="text" onClick={handleClickOpen} sx={{fontSize: '12px', textTransform: 'none', ml: 0}}>
         Edit Report
       </Button>
       )
       :
-      ( <Button variant="outlined" onClick={handleClickOpen}>
-          Add Report
+      ( <Button variant="text" onClick={handleClickOpen} sx={{fontSize: '12px', textTransform: 'none', ml: 0}}>
+          Report
         </Button>
       )
       }
                                     {/* Need to check the styling when we merge  */}
-      <Grid item xs={12} sm={8} md={5} elevation={2} sx={{ height: '5vh', mt: '150px',  }}> 
+      <Grid item xs={12} sm={8} md={5} elevation={2} sx={{ height: '0vh', mt: '0px',  }}> 
         <Dialog
           open={open}
           TransitionComponent={Transition}
@@ -105,7 +101,7 @@ const Report = () => {
           aria-describedby="alert-dialog-slide-description"
           sx={{backgroundPosition: 'center',}}
         >
-          <DialogTitle>Report {labour.name}</DialogTitle>
+          <DialogTitle>Report user</DialogTitle>
           <DialogContent>
           
             <DialogContentText id="alert-dialog-slide-description">
