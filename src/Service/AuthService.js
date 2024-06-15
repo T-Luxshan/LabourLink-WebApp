@@ -8,11 +8,11 @@ const  baseURL = 'http://localhost:8080/api';
 const FORGOTPASSWORD_BASE_URL = "http://localhost:8080/forgotPassword";
 
 // // API for register customer
-// export const registerCustomer = (name, email, password, mobileNumber, address) => {
-//     return axios.post(`${REST_API_BASE_URL_AUTH}/register/customer`, {
-//         name, email, password, mobileNumber, address
-//     });
-//   };
+export const registerCustomer = (name, email, password, mobileNumber, address) => {
+    return axios.post(`${REST_API_BASE_URL_AUTH}/register/customer`, {
+        name, email, password, mobileNumber, address
+    });
+  };
 
 
   // // API for login customer
@@ -124,7 +124,7 @@ axiosAuthInstance.interceptors.request.use(
   }
 );
 
-// export default axiosAuthInstance;
+export default axiosAuthInstance;
 
 //logout the user from the application.
 export const LogoutUser = () => {

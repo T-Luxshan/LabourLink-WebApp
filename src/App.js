@@ -23,7 +23,6 @@ import LabourSignUp from "./Pages/Authentication/LabourSignUp";
 import WaitingPage from "./Pages/Authentication/WaitingPage";
 import LabourHome from "./Pages/Labour/LabourHome";
 import NavigationBarLabour from "./Components/NavigationBarLabour";
-import Report from "./Components/Report";
 import NewAppointments from "./Pages/Labour/NewAppointments";
 import LabourProfile from "./Pages/Labour/LabourProfile"
 import UpdateLabourAccount from "./Components/UpdateLabourAccount";
