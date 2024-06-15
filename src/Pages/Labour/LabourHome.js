@@ -21,6 +21,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import WorkIcon from '@mui/icons-material/Work';
 import Button from "@mui/material/Button";
+import { addLabourLocation } from '../../Service/LocationService';
 
 const defaultTheme = createTheme({
   palette: {
@@ -67,14 +68,36 @@ const LabourHome = () => {
   const [aboutMe, setAboutMe] = useState('');
   const [language, setLanguage] = useState([]);
   const [gender, setGender] = useState('');
-  const [email, setEmail] = useState(localStorage.getItem('userEmail'));
-  // let email = "luckyarts@gmail.com";
+  // const [email, setEmail] = useState(localStorage.getItem('userEmail'));
+  let email = "luckythurailucky@gmail.com";
   const [labour, setLabour] = useState(null);
   const [profile, setProfile] = useState(null);
   const [acceptedAppointments, setAcceptedAppointments] = useState([]);
   const [completedAppointments, setCompletedAppointments] = useState([]);
+  const [position, setPosition] = useState({ lat: 6.7953, lng: 79.9022 });
 
   useEffect(() => {
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setPosition({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+          addLabourLocation(position.coords.latitude, position.coords.longitude, email)
+            .then(res=>console.log(res.data))
+            .catch(err=>console.log("failed to add location"))
+        },
+        (error) => {
+          console.error("Error getting geolocation:", error);
+        }
+      );
+      console.log(position);
+      
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
     
     fetchLabour(email);
     appointmentDetails(email);
