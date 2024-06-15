@@ -16,6 +16,9 @@ import { EmailProvider } from "./Service/EmailContext";
 import Notification from "./Pages/Notification";
 import MapView from "./Pages/MapView";
 import HiredHistory from "./Pages/HiredHistory";
+import Review from "./Components/Review";
+import Report from "./Components/Report";
+
 
 export const ThemeContext = createContext(null);
 
@@ -152,6 +155,24 @@ function App() {
                   <NavigationBar />
                   <HiredHistory />
                   <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/review"
+              element={
+                <>
+                  {/* <NavigationBar /> */}
+                  <Review />
+                </>
+              }
+            />
+            <Route
+              path="/report"
+              element={
+                <>
+                  {/* <NavigationBar /> */}
+                  <Report/>
                 </>
               }
             />
