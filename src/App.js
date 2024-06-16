@@ -247,7 +247,7 @@ function App() {
               element={
                 <>
                   <LabourPerfomance />
-                  <Footer />
+                 
                 </>
               }
             />
