@@ -17,12 +17,14 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { deleteCustomer } from "../Service/CustomerService";
+import { displayProfilePhoto } from "../Service/ProfilePhoto";
 
 const Account = () => {
   const [customer, setCustomer] = useState({});
   const [email, setEmail] = useState(localStorage.getItem("userEmail"));
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
+  const [profilePhoto, setProfilePhoto] = useState();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -31,7 +33,7 @@ const Account = () => {
   const handleClose = () => {
     deleteCustomer(email);
     setOpen(false);
-    navigate("/login"); 
+    navigate("/login");
     // localStorage.removeItem("token");
     // localStorage.removeItem("refreshToken");
     // localStorage.removeItem("userEmail");
@@ -39,17 +41,32 @@ const Account = () => {
 
   useEffect(() => {
     fetchCustomerData(email);
+    fetchProfile(email);
   }, [email]);
 
   async function fetchCustomerData(email) {
     try {
       console.log("Fetching customer data for email:", email);
       const response = await getCustomersByEmail(email);
+      const imageData = response.data;
       console.log("Customer data fetched:", response.data);
       setCustomer(response.data);
     } catch (error) {
       navigate("/login");
       console.error("Error fetching customer data:", error);
+    }
+  }
+
+  async function fetchProfile(email) {
+    try {
+      console.log("Fetching customer Profile picture for email:", email);
+      const response = await displayProfilePhoto(email);
+      const imageData = response.data;
+      console.log(imageData);
+      setProfilePhoto(imageData);
+      // setProfilePhoto(`data:${imageData.mimeType};base64,${imageData}`);
+    } catch (error) {
+      console.error("Error fetching customer Profile picture:", error);
     }
   }
 
@@ -83,16 +100,40 @@ const Account = () => {
         backgroundColor="#EEEEEE"
       >
         <Box textAlign="center" mb={3}>
+          {/* {profilePhoto ? (
+            <img
+              alt="Profile Photo"
+              src={profilePhoto} // Use profilePhoto state here
+              style={{
+                margin: "0 auto",
+                backgroundColor: "#ff9800",
+                width: 80,
+                height: 80,
+              }}
+            />
+          ) : (
+            // Display a placeholder image or error message if necessary
+            <Avatar
+              style={{
+                margin: "0 auto",
+                backgroundColor: "#ff9800",
+                width: 80,
+                height: 80,
+              }}
+            >
+              <AccountCircleIcon style={{ fontSize: 60 }} />
+            </Avatar>
+          )} */}
           <Avatar
-            style={{
-              margin: "0 auto",
-              backgroundColor: "#ff9800",
-              width: 80,
-              height: 80,
-            }}
-          >
-            <AccountCircleIcon style={{ fontSize: 60 }} />
-          </Avatar>
+              style={{
+                margin: "0 auto",
+                backgroundColor: "#ff9800",
+                width: 80,
+                height: 80,
+              }}
+            >
+              <AccountCircleIcon style={{ fontSize: 60 }} />
+            </Avatar>
         </Box>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>

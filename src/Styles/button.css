@@ -1,0 +1,17 @@
+/* styles.module.css */
+.animatedButton {
+    /* Base styles for the button */
+    background-color: green; /* Assuming success color is green */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    animation: button-animation 1s ease-in-out infinite;
+  }
+  
+  @keyframes button-animation {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); } /* Expand slightly */
+    100% { transform: scale(1); }
+  }
+  
