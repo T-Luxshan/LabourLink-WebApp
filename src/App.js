@@ -140,7 +140,7 @@ function App() {
               path="/chat"
               element={
                 <>
-                  <NavigationBar />
+                  {/* <NavigationBar /> */}
                   <ChatApplication />
                   <Footer />
                 </>

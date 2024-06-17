@@ -9,6 +9,10 @@ export const getUserByEmail = (email) => {
 export const findConnectedUsers = () =>{
     return axiosAuthInstance.get(REST_API_BASE_URL + "/connectedLabours")
   };
+
+  export const findConnectedCustomers = () =>{
+    return axiosAuthInstance.get(REST_API_BASE_URL + "/connectedCustomers")
+  };
   
 
 export const updateUserStatus = (email, newUser) => {

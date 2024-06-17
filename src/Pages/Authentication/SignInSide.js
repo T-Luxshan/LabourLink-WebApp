@@ -53,6 +53,7 @@ const SignInSide = () => {
               localStorage.setItem("token", response.data.accessToken);
               localStorage.setItem("refreshToken", response.data.refreshToken);
               localStorage.setItem("userEmail", lowercaseEmail);
+              localStorage.setItem("userRole",res.data.role);
               console.log(response);
               if(res.data.role == 'CUSTOMER'){
                 navigate('/');

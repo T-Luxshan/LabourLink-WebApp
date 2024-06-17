@@ -22,20 +22,22 @@ import {
   updateNotificationReadStatus,
   deleteNotification,
 } from "../Service/NotificationService";
+import NavigationBarCustomer from "../Components/NavigationBar";
+import NavigationBarLabour from "../Components/NavigationBarLabour";
 
 function Notification() {
-  const email = (localStorage.getItem('userEmail'));
+  const email = localStorage.getItem("userEmail");
+  const [userRole, setUserRole] = useState(localStorage.getItem("userRole"));
   const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(email !== null){
+    if (email !== null) {
       findNotificationMessages(email);
-    }else{
-      navigate('/login');
+    } else {
+      navigate("/login");
     }
   }, [email]);
-
 
   async function findNotificationMessages(email) {
     try {
@@ -172,6 +174,11 @@ function Notification() {
         Hire
       </button> */}
 
+      {userRole === "CUSTOMER" ? (
+        <NavigationBarCustomer />
+      ) : (
+        <NavigationBarLabour />
+      )}
       <Container maxWidth="md" sx={{ mt: 10, mb: 55 }}>
         <Typography
           variant="h4"

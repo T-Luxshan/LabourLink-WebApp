@@ -21,11 +21,16 @@ import {
   findConnectedUsers,
   updateUserStatus,
   findChatMessages,
+  findConnectedCustomers
 } from "../Service/UserService";
+import NavigationBarCustomer from "../Components/NavigationBar"
+import NavigationBarLabour from "../Components/NavigationBarLabour"
 var stompClient = null;
+
 
 const ChatApplication = () => {
   const[ senderEmail,SetSenderEmail] =  useState(localStorage.getItem('userEmail'));
+  const[userRole,setUserRole]=useState(localStorage.getItem('userRole'));
   const { receiverEmail } = useParams();
   const [user, setUser] = useState({
     email: senderEmail ,
@@ -123,6 +128,7 @@ const ChatApplication = () => {
   };
 
   async function findAndDisplayConnectedUsers() {
+    if(userRole=='CUSTOMER'){
     try {
       const connectedUserResponse = await findConnectedUsers(); // Call the function
       const connectedUsersData = await connectedUserResponse.data; // Access data property of response
@@ -134,6 +140,19 @@ const ChatApplication = () => {
       console.log("Error fetching connected users:", error);
     }
   }
+  else{
+    try {
+      const connectedUserResponse = await findConnectedCustomers(); // Call the function
+      const connectedUsersData = await connectedUserResponse.data; // Access data property of response
+      const filteredUsers = connectedUsersData.filter(
+        (u) => u.email !== user.email
+      );
+      setConnectedUsers(filteredUsers);
+    } catch (error) {
+      console.log("Error fetching connected users:", error);
+    }
+
+  }}
 
   //update connected users and display in realtime at every time message is sent and received
   useEffect(() => {
@@ -237,7 +256,9 @@ const ChatApplication = () => {
   };
 
   return (
+    
     <Container sx={{ mt: 10 }}>
+      {userRole === 'CUSTOMER' ? <NavigationBarCustomer /> : <NavigationBarLabour />}
       {user.status === "ONLINE" ? (
         <Box sx={{ my: 4 }}>
           <Typography
