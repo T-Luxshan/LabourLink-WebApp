@@ -199,7 +199,7 @@ const LabourPerformance = () => {
                   display: 'flex',
                   flexDirection: 'row',
                   justifyContent: 'center',
-                  width: '110%',
+                  width: '100%',
                   ml: 5,
                 }}
               >
@@ -215,13 +215,13 @@ const LabourPerformance = () => {
                       cornerRadius: 5,
                       startAngle: -90,
                       endAngle: 180,
-                      cx: 130,
+                      cx: 95,
                       cy: 150,
                     },
                   ]}
                   height={300}
                 />
-                <Box sx={{ ml:2, }}>
+                <Box sx={{ ml:0, }}>
                   {/* Use CustomLineChart with yAxisLabel */}
                   <CustomLineChart
                     xAxis={[
