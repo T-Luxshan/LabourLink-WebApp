@@ -6,26 +6,30 @@ import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useEffect, useState } from "react";
 import appointmentData from "./Appointments.json";
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import WorkIcon from '@mui/icons-material/Work';
-import { getAppointmentsByLabourAndStage, UpdateBookingStage,getFullBookingDetails } from "../../Service/HiringService";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import WorkIcon from "@mui/icons-material/Work";
+import {
+  getAppointmentsByLabourAndStage,
+  UpdateBookingStage,
+  getFullBookingDetails,
+} from "../../Service/HiringService";
 import addNotification from "react-push-notification";
-import {saveNotifications} from "../../Service/NotificationService"
+import { saveNotifications } from "../../Service/NotificationService";
 import logo from "../../Images/app-logo3.png";
 import { useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme({
   palette: {
     primary: {
-      main: '#FE9E0D',
+      main: "#FE9E0D",
     },
     secondary: {
-      main: '#00204A',
+      main: "#00204A",
     },
   },
   typography: {
-    fontFamily: 'Montserrat, sans-serif',
+    fontFamily: "Montserrat, sans-serif",
   },
 });
 
@@ -56,19 +60,19 @@ const NewAppointments = () => {
   const [appointments, setAppointments] = useState([]);
   const [currentAppointment, setCurrentAppointment] = useState(null);
   const [bookingDetails, setBookingDetails] = useState(null);
-  let email = localStorage.getItem('userEmail');
-  const navigate=useNavigate();
+  let email = localStorage.getItem("userEmail");
+  const navigate = useNavigate();
 
   useEffect(() => {
     getAppointmentsByLabourAndStage(email, "PENDING")
-      .then(res => {
+      .then((res) => {
         let appointmentData = res.data;
         setAppointments(appointmentData);
         if (appointmentData.length > 0) {
           setCurrentAppointment(appointmentData[0]);
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.log("fetching appointmentData failed.", err);
         // navigate("/login"); uncomment later.
       });
@@ -97,26 +101,26 @@ const NewAppointments = () => {
     if (!bookingDetails) return;
     labourAccepted();
     UpdateBookingStage(id, "ACCEPTED")
-      .then(res => {
+      .then((res) => {
         console.log("updated to ACCEPTED");
-        let updatedPending = appointments.filter(appt => appt.id !== id);
+        let updatedPending = appointments.filter((appt) => appt.id !== id);
         setAppointments(updatedPending);
         setCurrentAppointment(null);
       })
-      .catch(err => console.log("update stage failed", err));
+      .catch((err) => console.log("update stage failed", err));
   };
 
   const handleReject = (id) => {
     if (!bookingDetails) return;
     labourRejected();
     UpdateBookingStage(id, "DECLINED")
-      .then(res => {
+      .then((res) => {
         console.log("updated to DECLINED");
-        let updatedPending = appointments.filter(appt => appt.id !== id);
+        let updatedPending = appointments.filter((appt) => appt.id !== id);
         setAppointments(updatedPending);
         setCurrentAppointment(null);
       })
-      .catch(err => console.log("update stage failed", err));
+      .catch((err) => console.log("update stage failed", err));
   };
 
   const labourAccepted = async () => {
@@ -212,32 +216,57 @@ const NewAppointments = () => {
                 </Typography>
                 <Box sx={{ marginTop: "20px" }}>
                   {currentAppointment ? (
-                    <Box sx={{m:4}}>
-                      <Typography variant="h6" sx={{color:'#FE9E0D', fontWeight:'bold', mb:2}}>
+                    <Box sx={{ m: 4 }}>
+                      <Typography
+                        variant="h6"
+                        sx={{ color: "#FE9E0D", fontWeight: "bold", mb: 2 }}
+                      >
                         Schedule details
                       </Typography>
-                      <Typography sx={{mb:2}}>
-                        <CalendarMonthIcon fontSize="small" /> {currentAppointment.date}
+                      <Typography sx={{ mb: 2 }}>
+                        <CalendarMonthIcon fontSize="small" />{" "}
+                        {currentAppointment.date}
                       </Typography>
-                      <Typography sx={{mb:2}}>
-                        <AccessTimeIcon fontSize="small" /> {currentAppointment.startTime}
+                      <Typography sx={{ mb: 2 }}>
+                        <AccessTimeIcon fontSize="small" />{" "}
+                        {currentAppointment.startTime}
                       </Typography>
-                      <Typography sx={{mb:2}}>
-                        <WorkIcon fontSize="small" /> {currentAppointment.jobRole}
+                      <Typography sx={{ mb: 2 }}>
+                        <WorkIcon fontSize="small" />{" "}
+                        {currentAppointment.jobRole}
                       </Typography>
 
-                      <Typography sx={{fontWeight:'bold', mb:2}}>
-                       Client name : {currentAppointment.customerName}
+                      <Typography sx={{ fontWeight: "bold", mb: 2 }}>
+                        Client name : {currentAppointment.customerName}
                       </Typography>
-                      
-                      <Typography sx={{mb:2}}>
+
+                      <Typography sx={{ mb: 2 }}>
                         Description: {currentAppointment.jobDescription}
                       </Typography>
-                      <Box sx={{display:'flex', justifyContent: 'right', gap: '50px', }}>
-                        <Button variant="contained" color="secondary" onClick={()=> handleAccept((currentAppointment.id))}> Accept </Button>
-                        <Button variant="contained" color="secondary" onClick={()=> handleReject((currentAppointment.id))}> Reject </Button>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "right",
+                          gap: "50px",
+                        }}
+                      >
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => handleAccept(currentAppointment.id)}
+                        >
+                          {" "}
+                          Accept{" "}
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => handleReject(currentAppointment.id)}
+                        >
+                          {" "}
+                          Reject{" "}
+                        </Button>
                       </Box>
-                      
                     </Box>
                   ) : (
                     <Typography sx={{ textAlign: "center", color: "grey" }}>
@@ -279,7 +308,7 @@ const NewAppointments = () => {
                         mb: 2,
                         display: "flex",
                         flexDirection: "column",
-                        backgroundColor:'#F6F9FD'
+                        backgroundColor: "#F6F9FD",
                       }}
                     >
                       <Typography sx={{ fontWeight: "bold", mb: 0 }}>
