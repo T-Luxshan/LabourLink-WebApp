@@ -212,7 +212,7 @@ const NavigationBarLabour = () => {
       <Drawer anchor="left" open={openDrawer} onClose={handleDrawerToggle}>
         <List>
 
-          <ListItemButton component={Link} to="/home/labour" onClick={handleDrawerToggle}>
+          <ListItemButton component={Link} to="/labour/home" onClick={handleDrawerToggle}>
             <ListItemIcon>
               <HomeIcon />
             </ListItemIcon>

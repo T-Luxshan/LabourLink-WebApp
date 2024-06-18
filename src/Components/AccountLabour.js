@@ -69,18 +69,18 @@ const AccountLabour = () => {
     setOpen(false);
   };
 
-  let availableJobRoles = ["Painter", "Driver"];
-  
   const navigate = useNavigate();
 
   useEffect(()=>{
     fetchLabourData(email);
-    setJobRole(availableJobRoles);
   },[email])
 
   const fetchLabourData = (email) => {
     getLabourById(email)
-      .then(res =>setLabour(res.data))
+      .then(res =>{
+        setLabour(res.data);
+        setJobRole(res.data.jobRole);
+      })
       .catch(err =>{
         console.error("Error fetching labour data:", err);
         // navigate("/login");
@@ -260,11 +260,13 @@ const AccountLabour = () => {
         aria-labelledby="responsive-dialog-title"
       >
         <DialogTitle id="responsive-dialog-title">
-          Are you sure, you want to delete account?
+          Are you sure you want to delete your account?
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            We will miss you!!
+          This action is irreversible and will permanently delete all your data, including your profile 
+          information, booking details, and ratings. If you delete your account, you will lose access to 
+          all the services associated with it.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
