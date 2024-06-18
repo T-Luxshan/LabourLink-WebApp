@@ -1,67 +1,159 @@
-import React, { useEffect, useState } from "react";
-import { TextField, Button, Container, Typography, getScopedCssBaselineUtilityClass } from "@mui/material";
-import { updateCustomerPassword } from "../Service/CustomerService";
+import React, { useState } from "react";
+import { TextField, Button, Container } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { updatePassword } from "../Service/LabourService";
+import Typography from "@mui/material/Typography";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import { getUserRole } from "../Service/AuthService";
+import { changePassword } from "../Service/AuthService";
+
+const schema = yup.object().shape({
+  password: yup
+    .string()
+    .min(5, "Password can't be less than 5 letters")
+    .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .matches(/[a-z]/, "Password must contain at least one lowercase letter")
+    .matches(/[0-9]/, "Password must contain at least one number")
+    .required("Password can't be empty"),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref("password"), null], "Passwords must match")
+    .required("Please confirm your password"),
+});
 
 const ChangePassword = () => {
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState(null);
-  let email = localStorage.getItem('userEmail'); // Use let instead of const if you intend to reassign email
+  const navigate = useNavigate();
+  const [updateMsg, setUpdateMsg] = useState("");
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const { handleSubmit, control, formState: { errors } } = useForm({
+    resolver: yupResolver(schema),
+  });
+  // const [password, setPassword] = useState("");
+  // const [confirmPassword, setConfirmPassword] = useState("");
+  // const [error, setError] = useState(null);
+  // let email = localStorage.getItem('userEmail'); // Use let instead of const if you intend to reassign email
 
-  useEffect(() => {
-    // Fetch the initial password from the server
-    updateCustomerPassword(email).then((response) => {
-      setPassword(response.data.password);
-    }).catch((error) => {
-      setError("Error fetching password: " + error.message);
-    });
-  }, [email]);// Use email as the dependency instead of undefined id
+  let email = localStorage.getItem("userEmail");
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    console.log(password);
+  const onSubmit = (data) => {
+    setOpen(true);
+    getUserRole(email)
+      .then(response=>{
+        changePassword(email, response.data.role, data.password, data.confirmPassword)
+          .then((res) => {
+            console.log("Done");
+            setTimeout(() => {
+              setOpen(false);
+              setShowSnackbar(true);
+              setUpdateMsg("Password updated Successfully!");
+              setUpdateState(true);
+            }, 2000);
+          })
+          .catch((err) => {
+            setTimeout(() => {
+              setOpen(false);
+              setShowSnackbar(true);
+              setUpdateMsg("Error updating password");
+              setUpdateState(false);
+            }, 2000);
+          });
+      })
+      .catch(err=>{
+        setTimeout(() => {
+          setOpen(false);
+          setShowSnackbar(true);
+          setUpdateMsg("Error updating password");
+          setUpdateState(false);
+        }, 2000);
+      })
+    
+  };
 
-    try {
-      const response = await updateCustomerPassword(email,password);
-      console.log(response);
-      console.log("Password changed successfully");
-      // Optionally, you can reset the form or show a success message to the user
-    } catch (error) {
-      console.error("Error updating password:", error);
-      // Handle errors such as displaying an error message to the user
+  // Circular loading effect
+  const [open, setOpen] = React.useState(false);
+
+  // Snackbar for success/failed message
+  const [updateState, setUpdateState] = useState(false);
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
     }
+    setShowSnackbar(false);
   };
 
   return (
     <Container maxWidth="xs">
-      <form onSubmit={handleSubmit}>
-        <TextField
-          type="password"
-          label="New Password"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Controller
+          name="password"
+          control={control}
+          defaultValue=""
+          render={({ field }) => (
+            <TextField
+              {...field}
+              type="password"
+              label="New Password"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              error={!!errors.password}
+              helperText={errors.password ? errors.password.message : ""}
+            />
+          )}
         />
-        <TextField
-          type="password"
-          label="Confirm New Password"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
+        <Controller
+          name="confirmPassword"
+          control={control}
+          defaultValue=""
+          render={({ field }) => (
+            <TextField
+              {...field}
+              type="password"
+              label="Confirm New Password"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              error={!!errors.confirmPassword}
+              helperText={errors.confirmPassword ? errors.confirmPassword.message : ""}
+            />
+          )}
         />
         <Button
           type="submit"
           variant="contained"
           color="primary"
           fullWidth
-          disabled={!password || password !== confirmPassword}
+          disabled={open}
         >
           Change Password
         </Button>
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={open}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+
+        <Snackbar
+          open={showSnackbar}
+          autoHideDuration={6000}
+          onClose={handleSnackbarClose}
+        >
+          <Alert
+            onClose={handleSnackbarClose}
+            severity={updateState ? "success" : "error"}
+            variant="filled"
+            sx={{ width: "100%" }}
+          >
+            {updateMsg}
+          </Alert>
+        </Snackbar>
       </form>
     </Container>
   );

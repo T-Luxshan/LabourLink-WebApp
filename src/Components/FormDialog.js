@@ -38,6 +38,7 @@ function FormDialog({ labourEmail, cutomerEmail, labourName }) {
   });
   const email = cutomerEmail;
   const navigate = useNavigate();
+  const [userRole, setUserRole] = useState(localStorage.getItem("userRole"));
   
 
   const handleClickOpen = () => {
@@ -96,6 +97,7 @@ function FormDialog({ labourEmail, cutomerEmail, labourName }) {
       console.log("Booking successful:", response.data); // Example: access response data
       handleClose(); // Close the dialog (assuming handleClose exists)
       labourHired();
+      labourHiredNotificationToLabour();
     } catch (error) {
       console.error("Error saving booking", error);
     }
@@ -120,6 +122,21 @@ function FormDialog({ labourEmail, cutomerEmail, labourName }) {
         native: true,
         onClick: () => navigate("/notification"),
       });
+    } catch (error) {
+      console.error("Error saving notification", error);
+    }
+  };
+
+  const labourHiredNotificationToLabour = async () => {
+    const notification = {
+      title: `New Job From ${cutomerEmail}`,
+      message: `You have received hiring request from ${cutomerEmail} respond to him as soon as possible`,
+      recipient: labourEmail, // Adjust as necessary
+      createdAt: new Date().toISOString(), // Add current time
+    };
+
+    try {
+      await saveNotifications(notification);
     } catch (error) {
       console.error("Error saving notification", error);
     }

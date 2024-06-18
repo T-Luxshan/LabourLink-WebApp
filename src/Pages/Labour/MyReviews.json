@@ -1,0 +1,26 @@
+[
+    {
+        "jobRole": "Painter",
+        "description": "No skills, Took lot of time and wasted lot of paint.",
+        "rating": 1.5,
+        "customerName": "Luxshan Thuraisingam",
+        "labourName": "John Doe",
+        "id": 2
+    },
+    {
+        "jobRole": "Driver",
+        "description": "He is very talented and fast driver. He drives very carefully.",
+        "rating": 4.5,
+        "customerName": "Nina Patel",
+        "labourName": "John Doe",
+        "id": 3
+    },
+    {
+        "jobRole": "Painter",
+        "description": "Poor painting skills, Don't know how to mix colors. Don't hire him.",
+        "rating": 0.5,
+        "customerName": "Sureh vimal",
+        "labourName": "John Doe",
+        "id": 4
+    }
+]

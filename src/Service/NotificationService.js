@@ -1,4 +1,4 @@
-import axiosAuthInstance from "./AuthServeice";
+import axiosAuthInstance from "./AuthService";
 
 export const findNotifications = (email) => {
   return axiosAuthInstance.get(`http://localhost:8080/api/notifications/user/${email}`);

@@ -8,7 +8,7 @@ import Profile from "./Pages/Profile";
 import UpdateAccount from "./Components/UpdateAccount";
 import ChatApplication from "./Pages/ChatApplication";
 import SignInSide from "./Pages/Authentication/SignInSide";
-import SignUp from "./Pages/Authentication/SignUp";
+import CustomerSignUp from "./Pages/Authentication/CustomerSignUp";
 import ForgotPassword from "./Pages/Authentication/ForgotPassword";
 import VerifyOTP from "./Pages/Authentication/VerifyOTP";
 import ChangePassword from "./Pages/Authentication/ChangePassword";
@@ -16,6 +16,18 @@ import { EmailProvider } from "./Service/EmailContext";
 import Notification from "./Pages/Notification";
 import MapView from "./Pages/MapView";
 import HiredHistory from "./Pages/HiredHistory";
+import Review from "./Components/Review";
+import JoinAs from "./Pages/Authentication/JoinAs";
+import LabourSignUp from "./Pages/Authentication/LabourSignUp";
+import WaitingPage from "./Pages/Authentication/WaitingPage";
+import LabourHome from "./Pages/Labour/LabourHome";
+import NavigationBarLabour from "./Components/NavigationBarLabour";
+import Report from "./Components/Report";
+import NewAppointments from "./Pages/Labour/NewAppointments";
+import LabourProfile from "./Pages/Labour/LabourProfile"
+import UpdateLabourAccount from "./Components/UpdateLabourAccount";
+import LabourPerfomance from "./Pages/LabourPerfomance";
+
 
 export const ThemeContext = createContext(null);
 
@@ -52,10 +64,19 @@ function App() {
               }
             />
             <Route
-              path="/signup"
+              path="/signup/customer"
               element={
                 <>
-                  <SignUp />
+
+                  <CustomerSignUp /> 
+                </>
+              }
+            />
+            <Route
+              path="/signup/labour"
+              element={
+                <>
+                  <LabourSignUp /> 
                 </>
               }
             />
@@ -119,7 +140,7 @@ function App() {
               path="/chat"
               element={
                 <>
-                  <NavigationBar />
+                  {/* <NavigationBar /> */}
                   <ChatApplication />
                   <Footer />
                 </>
@@ -151,6 +172,81 @@ function App() {
                 <>
                   <NavigationBar />
                   <HiredHistory />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/review"
+              element={
+                <>
+                  {/* <NavigationBar /> */}
+                  <Review />
+                </>
+              }
+            />
+            <Route
+              path="/report"
+              element={
+                <>
+                  {/* <NavigationBar /> */}
+                  <Report />
+                </>
+              }
+            />
+            <Route
+              path="/joinas"
+              element={
+                <>
+                  <JoinAs />
+                </>
+              }
+            />
+            <Route
+              path="/wait"
+              element={
+                <>
+                  <WaitingPage />
+                </>
+              }
+            />
+            {/* Labour pages */}
+            <Route
+              path="/labour/home"
+              element={
+                <>
+                  <NavigationBarLabour/>
+                  <LabourHome />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/labour/newappointments"
+              element={
+                <>
+                  <NavigationBarLabour/>
+                  <NewAppointments />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/labour/profile"
+              element={
+                <>
+                  <NavigationBarLabour />
+                  <LabourProfile />
+                  <Footer />
+                </>
+              }
+            />
+            <Route path="/update-account-labour" element={<UpdateLabourAccount />} />
+            <Route
+              path="/labour-pefermance"
+              element={
+                <>
+                  <LabourPerfomance />
                   <Footer />
                 </>
               }

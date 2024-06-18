@@ -13,8 +13,8 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { loginCustomer } from '../../Service/AuthServeice';
-import { useNavigate } from 'react-router-dom';
+import { getUserRole, login, loginCustomer } from '../../Service/AuthService';
+import { Navigate, useNavigate } from 'react-router-dom';
 import addNotification from "react-push-notification";
 import logo from "../../Images/app-logo3.png";
 
@@ -44,16 +44,49 @@ const SignInSide = () => {
       password: data.get('password'),
     });
     try{
-      let response = await loginCustomer("CUSTOMER", data.get('email'), data.get('password')); 
+      let lowercaseEmail = data.get('email').toLowerCase();
+      getUserRole(lowercaseEmail)
+        .then(res=>{
+          console.log(res.data)
+          login(res.data.role, lowercaseEmail, data.get('password'))
+            .then(response=> {
+              localStorage.setItem("token", response.data.accessToken);
+              localStorage.setItem("refreshToken", response.data.refreshToken);
+              localStorage.setItem("userEmail", lowercaseEmail);
+              localStorage.setItem("userRole",res.data.role);
+              console.log(response);
+              if(res.data.role == 'CUSTOMER'){
+                navigate('/');
+                console.log(response);
+                loggedIn();
+              }else {
+                if(res.data.verified) {
+                  navigate('/labour/home');
+                  console.log(response);
+                  loggedIn();
+                } else {
+                  navigate('/wait');
+                }
+              }
+            })
+            .catch(error=> {
+              console.log(error)
+              setLogError("Invalid login, please try again");
+            }); 
+          
+        })
+        .catch(err=>{
+          console.log(err);
+          setLogError("Account with this email doesn't exist");
+        })
+      // let response = await loginCustomer("CUSTOMER", data.get('email'), data.get('password')); 
+      //     localStorage.setItem("token", response.data.accessToken);
+      //     localStorage.setItem("refreshToken", response.data.refreshToken);
+      //     navigate('/');
 
-      localStorage.setItem("token", response.data.accessToken);
-      localStorage.setItem("refreshToken", response.data.refreshToken);
-      localStorage.setItem("userEmail", data.get('email'));
-      
 
-      console.log(response);
-      navigate('/');
-      loggedIn();
+      // new change of pull
+     
             
       setLogError("");
     } catch (e){
@@ -106,7 +139,7 @@ const SignInSide = () => {
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={2} square sx={{ height: '85vh', mt: '50px',}}>
           <Box
             sx={{
-              my: 8,
+              my: 5,
               mx: 8,
               display: 'flex',
               flexDirection: 'column',
@@ -178,7 +211,7 @@ const SignInSide = () => {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="/signup" variant="body2">
+                  <Link href="/joinas" variant="body2">
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>

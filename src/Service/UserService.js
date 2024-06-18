@@ -1,4 +1,4 @@
-import axiosAuthInstance from "./AuthServeice";
+import axiosAuthInstance from "./AuthService";
 
 const REST_API_BASE_URL = "http://localhost:8080/api/user";
 
@@ -8,6 +8,10 @@ export const getUserByEmail = (email) => {
 
 export const findConnectedUsers = () =>{
     return axiosAuthInstance.get(REST_API_BASE_URL + "/connectedLabours")
+  };
+
+  export const findConnectedCustomers = () =>{
+    return axiosAuthInstance.get(REST_API_BASE_URL + "/connectedCustomers")
   };
   
 
