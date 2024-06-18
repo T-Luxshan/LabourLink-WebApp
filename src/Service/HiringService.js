@@ -19,3 +19,7 @@ export const UpdateBookingStage = (id, bookingStage) => {
     bookingStage
   })
 }
+
+export const getFullBookingDetails = (id) =>{
+  return axiosAuthInstance.get(REST_API_BASE_URL+"/"+id)
+}

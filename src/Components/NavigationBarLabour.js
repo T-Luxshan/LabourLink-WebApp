@@ -74,6 +74,7 @@ const NavigationBarLabour = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("userEmail");
+    localStorage.removeItem("userRole");
 
     navigate("/login");
   };

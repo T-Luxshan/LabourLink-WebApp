@@ -9,7 +9,11 @@ import appointmentData from "./Appointments.json";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import WorkIcon from '@mui/icons-material/Work';
-import { getAppointmentsByLabourAndStage, UpdateBookingStage } from "../../Service/HiringService";
+import { getAppointmentsByLabourAndStage, UpdateBookingStage,getFullBookingDetails } from "../../Service/HiringService";
+import addNotification from "react-push-notification";
+import {saveNotifications} from "../../Service/NotificationService"
+import logo from "../../Images/app-logo3.png";
+import { useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme({
   palette: {
@@ -51,51 +55,134 @@ const SubBox = styled(Box)({
 const NewAppointments = () => {
   const [appointments, setAppointments] = useState([]);
   const [currentAppointment, setCurrentAppointment] = useState(null);
+  const [bookingDetails, setBookingDetails] = useState(null);
   let email = localStorage.getItem('userEmail');
-
-  let availableJobRoles = ["Painter", "Driver"];
+  const navigate=useNavigate();
 
   useEffect(() => {
     getAppointmentsByLabourAndStage(email, "PENDING")
-      .then(res=>{
+      .then(res => {
         let appointmentData = res.data;
         setAppointments(appointmentData);
         if (appointmentData.length > 0) {
           setCurrentAppointment(appointmentData[0]);
         }
       })
-      .catch(err=>{
+      .catch(err => {
         console.log("fetching appointmentData failed.", err);
         // navigate("/login"); uncomment later.
-      })
-    
+      });
   }, [email]);
+
+  useEffect(() => {
+    if (currentAppointment) {
+      getFullHiringDetails(currentAppointment.id);
+    }
+  }, [currentAppointment]);
+
+  async function getFullHiringDetails(id) {
+    try {
+      const response = await getFullBookingDetails(id);
+      setBookingDetails(response.data);
+    } catch (error) {
+      console.log("error fetching booking details", error);
+    }
+  }
 
   const handleViewClick = (appointment) => {
     setCurrentAppointment(appointment);
   };
 
   const handleAccept = (id) => {
-    console.log("this is ", id);
+    if (!bookingDetails) return;
+    labourAccepted();
     UpdateBookingStage(id, "ACCEPTED")
-      .then(res=>{
-        console.log("updated to completed");
+      .then(res => {
+        console.log("updated to ACCEPTED");
         let updatedPending = appointments.filter(appt => appt.id !== id);
         setAppointments(updatedPending);
-        setCurrentAppointment('');
+        setCurrentAppointment(null);
       })
-      .catch(err=>console.log("update stage failed", err))
-  }
+      .catch(err => console.log("update stage failed", err));
+  };
+
   const handleReject = (id) => {
+    if (!bookingDetails) return;
+    labourRejected();
     UpdateBookingStage(id, "DECLINED")
-      .then(res=>{
+      .then(res => {
         console.log("updated to DECLINED");
         let updatedPending = appointments.filter(appt => appt.id !== id);
         setAppointments(updatedPending);
-        setCurrentAppointment('');
-    })
-      .catch(err=>console.log("update stage failed", err))
-  }
+        setCurrentAppointment(null);
+      })
+      .catch(err => console.log("update stage failed", err));
+  };
+
+  const labourAccepted = async () => {
+    if (!currentAppointment || !bookingDetails) return;
+
+    const notification = {
+      title: `Request accepted from ${currentAppointment.customerName}`,
+      message: `You have successfully accepted hiring request from ${currentAppointment.customerName}`,
+      recipient: email,
+      createdAt: new Date().toISOString(),
+    };
+
+    const notificationToCustomer = {
+      title: `Request for ${currentAppointment.jobRole} accepted by ${bookingDetails.labourName}`,
+      message: `Labour has successfully accepted hiring request`,
+      recipient: bookingDetails.customerId,
+      createdAt: new Date().toISOString(),
+    };
+
+    try {
+      await saveNotifications(notification);
+      await saveNotifications(notificationToCustomer);
+      addNotification({
+        title: notification.title,
+        message: notification.message,
+        duration: 4000,
+        icon: logo,
+        native: true,
+        onClick: () => navigate("/notification"),
+      });
+    } catch (error) {
+      console.error("Error saving notification", error);
+    }
+  };
+
+  const labourRejected = async () => {
+    if (!currentAppointment || !bookingDetails) return;
+
+    const notification = {
+      title: `Request from ${currentAppointment.customerName} rejected`,
+      message: `You have rejected hiring request from ${currentAppointment.customerName}`,
+      recipient: email,
+      createdAt: new Date().toISOString(),
+    };
+
+    const notificationToCustomer = {
+      title: `Request for ${currentAppointment.jobRole} is rejected by ${bookingDetails.labourName}`,
+      message: `Labour has rejected hiring request`,
+      recipient: bookingDetails.customerId,
+      createdAt: new Date().toISOString(),
+    };
+    try {
+      await saveNotifications(notification);
+      await saveNotifications(notificationToCustomer);
+      addNotification({
+        title: notification.title,
+        message: notification.message,
+        duration: 4000,
+        icon: logo,
+        native: true,
+        onClick: () => navigate("/notification"),
+      });
+    } catch (error) {
+      console.error("Error saving notification", error);
+    }
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
