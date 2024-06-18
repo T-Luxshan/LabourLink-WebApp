@@ -14,10 +14,10 @@ import { PieChart } from "@mui/x-charts/PieChart";
 
 const columns = [
   { id: "labourName", label: "Labour Name", minWidth: 170 },
-  { id: "jobRole", label: "Labour Role", minWidth: 70 },
-  { id: "date", label: "Date", minWidth: 100 },
-  { id: "startTime", label: "Start Time", minWidth: 100 },
-  { id: "bookingStage", label: "Booking Stage", minWidth: 170 },
+  { id: "jobRole", label: "Labour Role", minWidth: 20 },
+  { id: "date", label: "Date", minWidth: 90 },
+  { id: "startTime", label: "Start Time", minWidth: 40 },
+  { id: "bookingStage", label: "Booking Stage", minWidth: 10 },
   { id: "jobDescription", label: "Job Description", minWidth: 170 },
 ];
 
@@ -27,6 +27,9 @@ export default function HiredHistory() {
   const [bookingHistory, setBookingHistory] = useState([]);
   const email = localStorage.getItem("userEmail");
   const navigate = useNavigate();
+  const [data, setData] = useState([]);
+  const [jobRoleCounts, setJobRoleCounts] = useState({});
+  const [bookingStageCounts, setBookingStageCounts] = useState({});
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -53,10 +56,35 @@ export default function HiredHistory() {
         (a, b) => new Date(b.date) - new Date(a.date)
       );
       setBookingHistory(sortedHistory);
+      setData(response.data);
+      processCounts(response.data);
     } catch (error) {
       console.log("Error fetching history ", error);
     }
   }
+
+  const processCounts = (data) => {
+    const jobRoleCounts = data.reduce((acc, item) => {
+      acc[item.jobRole] = (acc[item.jobRole] || 0) + 1;
+      return acc;
+    }, {});
+
+    const bookingStageCounts = data.reduce((acc, item) => {
+      acc[item.bookingStage] = (acc[item.bookingStage] || 0) + 1;
+      return acc;
+    }, {});
+
+    setJobRoleCounts(jobRoleCounts);
+    setBookingStageCounts(bookingStageCounts);
+  };
+
+  const getPieChartData = (counts) => {
+    return Object.entries(counts).map(([label, value], id) => ({
+      id,
+      value,
+      label,
+    }));
+  };
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden", mt: 10, mb: 0 }}>
@@ -177,18 +205,20 @@ export default function HiredHistory() {
             <PieChart
               series={[
                 {
-                  data: [
-                    { id: 0, value: 10, label: "series A" },
-                    { id: 1, value: 15, label: "series B" },
-                    { id: 2, value: 20, label: "series C" },
-                  ],
+                  data: getPieChartData(jobRoleCounts),
+                  highlightScope: { faded: "global", highlighted: "item" },
+                  faded: {
+                    innerRadius: 10,
+                    additionalRadius: -30,
+                    color: "gray",
+                  },
                   innerRadius: 30,
                   outerRadius: 100,
                   paddingAngle: 5,
                   cornerRadius: 5,
                   startAngle: 0,
                   endAngle: 360,
-                  cx: 150,
+                  cx: 130,
                   cy: 150,
                 },
               ]}
@@ -196,6 +226,64 @@ export default function HiredHistory() {
               height={300}
             />
           </Box>
+          <Box
+  sx={{
+    mb: 2,
+    backgroundColor: "#F7F9F2",
+    p: 2,
+    borderRadius: 4,
+  }}
+>
+  <Typography
+    variant="h6"
+    align=""
+    sx={{
+      fontWeight: "bold",
+      color: "#1a237e",
+      mb: "5px",
+      mt: "5px",
+      ml:5,
+      fontFamily: "Montserrat, sans-serif",
+    }}
+  >
+    Booking Stage Counts
+  </Typography>
+  <Box
+    component="ul"
+    sx={{
+      listStyleType: "none",
+      p: 0,
+      ml:5,
+      mr:35,
+      mb:10
+    }}
+  >
+    {Object.entries(bookingStageCounts).map(([stage, count]) => (
+      <Box
+        component="li"
+        key={stage}
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          mb: 1,
+          fontFamily: "Montserrat, sans-serif",
+          fontSize: "16px",
+          color: "black",
+        }}
+      >
+        <Box
+          sx={{
+            fontWeight: "bold",
+          }}
+        >
+          {stage}:
+        </Box>
+        <Box>{count}</Box>
+      </Box>
+    ))}
+  </Box>
+</Box>
+
         </Grid>
       </Grid>
     </Paper>
