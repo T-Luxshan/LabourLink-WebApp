@@ -68,8 +68,7 @@ const LabourHome = () => {
   const [aboutMe, setAboutMe] = useState('');
   const [language, setLanguage] = useState([]);
   const [gender, setGender] = useState('');
-  // const [email, setEmail] = useState(localStorage.getItem('userEmail'));
-  let email = "luckythurailucky@gmail.com";
+  const [email, setEmail] = useState(localStorage.getItem('userEmail'));
   const [labour, setLabour] = useState(null);
   const [profile, setProfile] = useState(null);
   const [acceptedAppointments, setAcceptedAppointments] = useState([]);

@@ -94,20 +94,20 @@ const NewAppointments = () => {
   };
 
   const handleAccept = (id) => {
-    if (!bookingDetails) return;
+    // if (!bookingDetails) return; 
     labourAccepted();
     UpdateBookingStage(id, "ACCEPTED")
       .then(res => {
         console.log("updated to ACCEPTED");
         let updatedPending = appointments.filter(appt => appt.id !== id);
         setAppointments(updatedPending);
-        setCurrentAppointment(null);
+        setCurrentAppointment("");
       })
       .catch(err => console.log("update stage failed", err));
   };
 
   const handleReject = (id) => {
-    if (!bookingDetails) return;
+    // if (!bookingDetails) return;
     labourRejected();
     UpdateBookingStage(id, "DECLINED")
       .then(res => {
