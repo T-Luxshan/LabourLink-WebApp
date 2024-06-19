@@ -54,6 +54,7 @@ const AccountLabour = () => {
   // Snackbar for success/failed message
   const [updateMsg, setUpdateMsg] = useState("");
   const [showSnackbar, setShowSnackbar] = useState(false);
+  const [imgUri, setImgUri] = useState(true);
   const handleSnackbarClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -117,7 +118,7 @@ const AccountLabour = () => {
   }
 
   return (
-    <Container maxWidth="sm" style={{ marginTop: "20px" }}>
+    <Container maxWidth="sm" style={{ marginTop: "5px" }}>
       <Box textAlign="center" mb={4}>
         <Typography
           variant="h4"
@@ -138,17 +139,26 @@ const AccountLabour = () => {
         backgroundColor="#EEEEEE"
       >
         <Box textAlign="center" mb={3}>
-          <Avatar
+          {imgUri ? 
+            <Avatar alt="Labour" src={require('../Pages/Labour/me.jpeg')} style={{
+              margin: "0 auto",
+              width: 150,  
+              height: 150,
+              }} /> 
+            :
+            <Avatar
             style={{
               margin: "0 auto",
               backgroundColor: "#ff9800",
-              width: 80,
-              height: 80,
-            }}
-          >
-            <AccountCircleIcon style={{ fontSize: 60 }} />
-          </Avatar>
+              width: 150,  
+              height: 150,
+              }}
+            >
+              <AccountCircleIcon style={{ fontSize: 60 }} />
+            </Avatar>
+          }
         </Box>
+
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <Typography

@@ -22,6 +22,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import WorkIcon from '@mui/icons-material/Work';
 import Button from "@mui/material/Button";
 import { addLabourLocation } from '../../Service/LocationService';
+import LabourProfilePhoto from '../../Components/LabourProfilePhoto';
 
 const defaultTheme = createTheme({
   palette: {
@@ -221,7 +222,11 @@ const LabourHome = () => {
                 flexDirection: 'column',
                 alignItems: 'left'
               }}>
-                <Avatar alt="Labour" src={require('../../Images/findMe.png')} sx={{ width: 150, height: 150 }} />
+                <Avatar alt="Labour" src={require('../../Images/findMe.png')} sx={{ width: 150, height: 150, }} />
+                <Box sx={{ml:15,}}>
+                <LabourProfilePhoto/>
+
+                </Box>
                 {labour && (
                   <>
                     <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'black', mb: '5px', mt: '20px' }}>
