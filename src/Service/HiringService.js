@@ -26,5 +26,5 @@ export const getFullBookingDetails = (id) =>{
 }
 
 export const getBookingDetailsForLabour = (email) => {
-  return axios.get(`${REST_API_BASE_URL}/labour/${email}`)
+  return axiosAuthInstance.get(`${REST_API_BASE_URL}/labour/${email}`)
 }
