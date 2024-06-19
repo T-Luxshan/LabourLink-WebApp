@@ -78,6 +78,10 @@ export const registerCustomer = (name, email, password, mobileNumber, address) =
     });
   };
 
+  // Get available job roles.
+  export const getLabourJobRoles = () =>{
+    return axios.get(`${REST_API_BASE_URL_AUTH}/getJobRoles`)
+  } 
 
 const axiosAuthInstance = axios.create({
   baseURL,
