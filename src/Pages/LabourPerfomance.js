@@ -15,6 +15,8 @@ import InputLabel from '@mui/material/InputLabel';
 import Typography from '@mui/material/Typography'; // Import Typography for axis labels
 import BookingData from './BookingDetails.json';
 import ReviewData from './ReviewDetails.json';
+import { getBookingDetailsForLabour } from '../Service/HiringService';
+import { getReviewOFTheLabour } from '../Service/ReviewService';
 
 // Custom LineChart component with yAxisLabel
 const CustomLineChart = ({ series, xAxis, yAxisLabel, width, height }) => {
@@ -39,9 +41,10 @@ const CustomLineChart = ({ series, xAxis, yAxisLabel, width, height }) => {
 };
 
 const LabourPerformance = () => {
+
   React.useEffect(() => {
-    fetchBookingDetails(BookingData);
-    fetchRatingDetails(ReviewData);
+    fetchBookingDetails(email);
+    fetchRatingDetails(email);
   }, []);
 
   const [open, setOpen] = React.useState(true);
@@ -49,13 +52,19 @@ const LabourPerformance = () => {
   const [bookingDetails, setBookingDetails] = React.useState([]);
   const [ratingDetails, setRatingDetails] = React.useState([]);
   const allBookingStagePieData = [];
+  let email = "lehaan@example.com";
 
-  const fetchBookingDetails = (BookingData) => {
-    setBookingDetails(BookingData);
+  const fetchBookingDetails = (email) => {
+    getBookingDetailsForLabour(email)
+      .then(res=>setBookingDetails(res.data))
+      .catch(err=>console.log("Failed to fetch Booking details", err))
   };
 
-  const fetchRatingDetails = (ReviewData) => {
-    setRatingDetails(ReviewData);
+  const fetchRatingDetails = (email) => {
+    getReviewOFTheLabour(email)
+      .then(res=>setRatingDetails(res.data))
+      .catch(err=>console.log("Failed to fetch Rating details", err))
+
   };
 
   const jobRoles = [...new Set(bookingDetails.map((item) => item.jobRole))];

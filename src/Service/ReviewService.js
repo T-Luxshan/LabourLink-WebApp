@@ -1,4 +1,5 @@
 import axiosAuthInstance from "./AuthService";
+import axios from "axios";
 
 const REST_API_BASE_URL_REVIEW = "http://localhost:8080/api/v1/labourReview";
 
@@ -15,3 +16,7 @@ export const editReview = (id, jobRole, description, rating, labourEmail) => {
         jobRole, description, rating, labourEmail
     });
 };
+
+export const getReviewOFTheLabour = (email) => {
+    return axios.get(`${REST_API_BASE_URL_REVIEW}/getReviewById/${email}`)
+}

@@ -24,3 +24,7 @@ export const UpdateBookingStage = (id, bookingStage) => {
 export const getFullBookingDetails = (id) =>{
   return axiosAuthInstance.get(REST_API_BASE_URL+"/"+id)
 }
+
+export const getBookingDetailsForLabour = (email) => {
+  return axios.get(`${REST_API_BASE_URL}/labour/${email}`)
+}
