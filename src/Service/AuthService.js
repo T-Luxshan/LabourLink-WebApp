@@ -7,7 +7,7 @@ const REST_API_BASE_URL_AUTH = "http://localhost:8080/api/v1/auth";
 const  baseURL = 'http://localhost:8080/api';
 const FORGOTPASSWORD_BASE_URL = "http://localhost:8080/forgotPassword";
 
-// API for register customer
+// // API for register customer
 export const registerCustomer = (name, email, password, mobileNumber, address) => {
     return axios.post(`${REST_API_BASE_URL_AUTH}/register/customer`, {
         name, email, password, mobileNumber, address

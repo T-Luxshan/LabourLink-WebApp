@@ -16,6 +16,7 @@ import TextField from '@mui/material/TextField';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
+import { addReview, editReview } from '../Service/ReviewService';
 
 const defaultTheme = createTheme({
   palette: {
@@ -42,6 +43,7 @@ const Review = () => {
   const [description, setDescription] = React.useState('');
   const [rating, setRating] = React.useState(2.5);
   const [error, setError] = React.useState('');
+  const [reviewId, setReviewID] = React.useState(null);
 
   const availableJobRoles = ["CARPENTER", "ELECTRICIAN", "PLUMBER", "PAINTER", "MASON", "WELDER", "DRIVER"];
   const labour = {
@@ -63,7 +65,24 @@ const Review = () => {
     if(jobRole){
       setError('');  
       console.log(jobRole, description, rating );
+      if(reviewId){
+        editReview(reviewId, jobRole, description, rating, labour.email)
+          .then(res=>{
+            console.log(res);
+            setReviewID(res.data.id);
+          })
+        .catch(err=>console.log(err))
+        setOpen(false);
+      }else{
+      addReview(jobRole, description, rating, labour.email)
+        .then(res=>{
+          console.log(res);
+          setReviewID(res.data.id);
+        })
+        .catch(err=>console.log(err))
+
       setOpen(false);
+    }
     }else{
       setError("Please select the job role.")
     }
@@ -97,6 +116,29 @@ const Review = () => {
         >
           <DialogTitle>Add Your Review for {labour.name}</DialogTitle>
           <DialogContent>
+          <Box
+              sx={{
+                // '& > legend': {display:'flex',  mt: 2 },
+                justifyContent: 'center',  mb: 1 , width:350
+              }}
+            >
+              <DialogContentText>
+              {/* <Typography component="legend" 
+                    sx={{textAlign: 'center'}}
+              > */}
+              What is your rate for {labour.name}'s perfomance?
+              {/* </Typography> */}
+              </DialogContentText>
+              <Rating
+                name="half-rating"
+                value={rating}
+                precision={0.5}
+                onChange={(event, newValue) => {
+                  setRating(newValue);
+                }}
+                sx={{ml:15}}
+              />
+            </Box>
             <DialogContentText id="alert-dialog-slide-description">
             Select the job role you hired for...
             </DialogContentText>
@@ -123,29 +165,9 @@ const Review = () => {
                   {error}
                   </Typography>
                 }
-                <Box
-                  sx={{
-                    // '& > legend': {display:'flex',  mt: 2 },
-                    justifyContent: 'center',  mt: 2 , width:350
-                  }}
-                >
-                  <Typography component="legend" 
-                        sx={{textAlign: 'center'}}
-                  >
-                    Rate {labour.name}'s perfomance
-                  </Typography>
-                  <Rating
-                    name="half-rating"
-                    value={rating}
-                    precision={0.5}
-                    onChange={(event, newValue) => {
-                      setRating(newValue);
-                    }}
-                    sx={{ml:15}}
-                  />
-                </Box>
+               
                 <TextField
-                  label="Review"
+                  label="Your Review"
                   variant="outlined"
                   value={description}
                   onChange={handleDescriptionChange}
