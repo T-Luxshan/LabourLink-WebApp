@@ -10,10 +10,13 @@ import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import Box from "@mui/material/Box";
+import { storage } from '../Config/firebase.config';
+import { getDownloadURL, uploadBytes, ref, deleteObject } from 'firebase/storage';
 
 const LabourProfilePhoto = () => {
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
+  const [profileUri, setProfileUri] = React.useState('');
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleClickOpen = () => {
@@ -31,11 +34,49 @@ const LabourProfilePhoto = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      // Handle file upload here
-      console.log("File selected:", file);
+        const imgRef = ref(storage, `ProfilePhoto/profile-${Date.now()}`); 
+        uploadBytes(imgRef, file)
+        .then(() => {
+          console.log('Profile uploaded successfully');
+          return getDownloadURL(imgRef);
+        })
+        .then((url) => {
+          console.log('File available at:', url);
+          setProfileUri(url);
+          console.log(url);
+        //   onFileUpload(url)
+        //   setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error('Error uploading profile:', error);
+        });
     }
     handleClose();
   };
+
+//   const handleUploadDoc = () => {
+//     setIsLoading(true);
+//     if (file) {
+//       const imgRef = ref(storage, `LabourDocuments/document-${nic}-${Date.now()}`);
+//       uploadBytes(img, file)
+//         .then(() => {
+//           console.log('Profile uploaded successfully');
+//           return getDownloadURL(docRef);
+//         })
+//         .then((url) => {
+//           console.log('File available at:', url);
+//           setDocURI(url);
+//           onFileUpload(url)
+//           setIsLoading(false);
+//         })
+//         .catch((error) => {
+//           console.error('Error uploading document:', error);
+//         });
+//     } else {
+//       alert("No file selected to upload");
+//       setIsLoading(false);
+//     }
+//   };
 
   return (
     <React.Fragment>
