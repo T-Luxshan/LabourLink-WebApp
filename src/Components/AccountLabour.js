@@ -27,6 +27,7 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getProfilePicture } from "../Service/ProfilePhotoService";
+import { LogoutUser } from "../Service/AuthService";
 
 const defaultTheme = createTheme({
   palette: {
@@ -85,14 +86,15 @@ const AccountLabour = () => {
       })
       .catch(err =>{
         console.error("Error fetching labour data:", err);
-        // navigate("/login");
+        LogoutUser();
+        navigate("/login");
       })
 
       getProfilePicture(email)
         .then(respose=>{
           setImgUri(respose.data.profileUri);
         })
-        .catch(console.log("failed to fetch profile photo"));
+        .catch(err=>console.log("failed to fetch profile photo"));
   }
   
 

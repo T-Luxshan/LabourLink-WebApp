@@ -5,7 +5,6 @@ import Grid from "@mui/material/Grid";
 import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useEffect, useState } from "react";
-import appointmentData from "./Appointments.json";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import WorkIcon from "@mui/icons-material/Work";
@@ -18,6 +17,7 @@ import addNotification from "react-push-notification";
 import { saveNotifications } from "../../Service/NotificationService";
 import logo from "../../Images/app-logo3.png";
 import { useNavigate } from "react-router-dom";
+import { LogoutUser } from "../../Service/AuthService";
 
 const defaultTheme = createTheme({
   palette: {
@@ -74,7 +74,8 @@ const NewAppointments = () => {
       })
       .catch((err) => {
         console.log("fetching appointmentData failed.", err);
-        // navigate("/login"); uncomment later.
+        LogoutUser();
+        navigate("/login"); 
       });
   }, [email]);
 

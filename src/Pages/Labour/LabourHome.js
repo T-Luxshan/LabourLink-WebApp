@@ -11,7 +11,6 @@ import CallIcon from '@mui/icons-material/Call';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import Report from '../../Components/Report';
 import LanguageIcon from '@mui/icons-material/Language';
-import reviewsData from './MyReviews.json';
 import AboutMeModel from '../../Components/AboutMeModel';
 import { getLabourById } from '../../Service/LabourService';
 import { getAvgRating, getLabourProfileById, getMyReviews } from '../../Service/LabourHomeService';
@@ -24,6 +23,7 @@ import Button from "@mui/material/Button";
 import { addLabourLocation } from '../../Service/LocationService';
 import LabourProfilePhoto from '../../Components/LabourProfilePhoto';
 import { getProfilePicture } from '../../Service/ProfilePhotoService';
+import { LogoutUser } from '../../Service/AuthService';
 
 const defaultTheme = createTheme({
   palette: {
@@ -102,10 +102,7 @@ const LabourHome = () => {
     }
     
     fetchLabour(email);
-    // fetchProfilePic(email);
     fetchAppointmentDetails(email);
-    // setAcceptedAppointments(appointmentData);
-    // setCompletedAppointments(appointmentData);
   }, [email]);
 
   
@@ -115,7 +112,7 @@ const LabourHome = () => {
       .then(res=>{
         setProfilePhoto(res.data.profileUri);
       })
-      .catch(console.log("failed to fetch profile photo"));
+      .catch(err=>console.log("failed to fetch profile photo"));
 
     getLabourById(email)
       .then(res => {
@@ -124,7 +121,8 @@ const LabourHome = () => {
       })
       .catch(err => {
         console.log("labour fetching failed:", err);
-        // navigate("/login"); uncomment later.
+        LogoutUser();
+        navigate("/login"); 
       });
 
     getLabourProfileById(email)
@@ -135,10 +133,10 @@ const LabourHome = () => {
         setLanguage(res.data.languages);
         console.log(res);
       })
-      .catch(err => {
+      .catch(err => 
+        {
         console.log("profile fetch failed :", err)
-        // navigate("/login"); // uncomment later
-      });
+        });
 
     getMyReviews()
       .then(res => {
