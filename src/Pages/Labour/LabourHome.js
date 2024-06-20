@@ -233,7 +233,7 @@ const LabourHome = () => {
                 <Avatar alt="Labour" src={require('../../Images/findMe.png')} sx={{ width: 150, height: 150, }} />
                 }
                 <Box sx={{ml:15,}}>
-                <LabourProfilePhoto onProfileChange={handleProfileChange}/>
+                <LabourProfilePhoto onProfileChange={handleProfileChange} profile={profile}/>
 
                 </Box>
                 {labour && (

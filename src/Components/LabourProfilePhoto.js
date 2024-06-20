@@ -10,14 +10,18 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import Box from "@mui/material/Box";
 import { storage } from '../Config/firebase.config';
-import { getDownloadURL, uploadBytes, ref } from 'firebase/storage';
+import { getDownloadURL, uploadBytes, ref, deleteObject } from 'firebase/storage';
 import Avatar from 'react-avatar-edit';
+import CancelIcon from '@mui/icons-material/Cancel';
+import CircularProgress from '@mui/material/CircularProgress';
 
-const LabourProfilePhoto = ({onProfileChange}) => {
+
+const LabourProfilePhoto = ({onProfileChange, profile}) => {
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
   const [profileUri, setProfileUri] = React.useState('');
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const [isLoading, setIsLoading] = React.useState(false);
   // const [src, setSrc] = React.useState(null);
   const [preview, setPreview] = React.useState(null);
 
@@ -42,6 +46,7 @@ const LabourProfilePhoto = ({onProfileChange}) => {
   };
 
   const handleUpload = () => {
+    setIsLoading(true);
     if (preview) {
       const blob = dataURLtoBlob(preview);
       const imgRef = ref(storage, `ProfilePhoto/profile-${Date.now()}.png`);
@@ -54,13 +59,43 @@ const LabourProfilePhoto = ({onProfileChange}) => {
           console.log('File available at:', url);
           setProfileUri(url);
           onProfileChange(url);
+          setIsLoading(false);
+          handleClose();
         })
         .catch((error) => {
           console.error('Error uploading profile:', error);
         });
     }
-    handleClose();
+    else{
+      setIsLoading(false);
+      handleClose();
+    }
+    
   };
+
+  const handleDelete = async () => {
+    setIsLoading(true);
+        const deleteRef = ref(storage, profileUri);
+        try {
+          deleteObject(deleteRef).then(() => {
+            setProfileUri(null);
+            onProfileChange(null);
+            setInterval(() => {
+              setIsLoading(false);
+            }, 2000)
+          })
+        } catch (error) {
+          setIsLoading(true);
+          // setFile(null);
+
+          setInterval(() => {
+            setIsLoading(false);
+          }, 2000)
+          alert(error)
+        }
+        setOpen(false);
+
+  }
 
   const onCrop = (view) => {
     setPreview(view);
@@ -73,7 +108,7 @@ const LabourProfilePhoto = ({onProfileChange}) => {
   return (
     <React.Fragment>
       <IconButton aria-label="edit" onClick={handleClickOpen}>
-        <EditIcon />
+        <EditIcon fontSize='small'/>
       </IconButton>
       <Dialog
         fullScreen={fullScreen}
@@ -81,10 +116,22 @@ const LabourProfilePhoto = ({onProfileChange}) => {
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">
-          Update profile photo
-        </DialogTitle>
+        <Box display="flex" justifyContent="center" gap={5}>
+          <DialogTitle id="responsive-dialog-title">
+            Update profile photo
+          </DialogTitle>
+          <IconButton aria-label="edit" onClick={handleClose}>
+            <CancelIcon color="error"/>
+          </IconButton>
+        </Box>
+          
+        
         <DialogContent>
+        {isLoading ?
+          <Box sx={{ display: 'flex',justifyContent:"center",  m:"100px"}}>
+            <CircularProgress color='primary'/>
+          </Box>
+        :
           <Avatar 
             width={300}
             height={300}
@@ -92,13 +139,18 @@ const LabourProfilePhoto = ({onProfileChange}) => {
             onClose={onCloseAvatar}
             // src={src}
           />
+        }  
+        
+          
           <Box display="flex" justifyContent="center" gap={10}>
             <Button onClick={handleUpload}>
               Update
             </Button>
-            <Button onClick={handleClose}>
-              Cancel
+            {profile &&
+            <Button onClick={handleDelete} color="error">
+              Delete
             </Button>
+            }
           </Box>
         </DialogContent>
       </Dialog>
