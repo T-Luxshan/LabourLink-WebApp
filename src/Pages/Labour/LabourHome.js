@@ -205,6 +205,11 @@ const LabourHome = () => {
       .catch(err=>console.log("update stage failed", err))
   }
 
+
+  const handleProfileChange = (profileUri) => {
+    setProfile(profileUri);
+  }
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
@@ -222,9 +227,13 @@ const LabourHome = () => {
                 flexDirection: 'column',
                 alignItems: 'left'
               }}>
+                {profile ? 
+                <Avatar alt="Labour" src={profile} sx={{ width: 150, height: 150, }} />
+                :
                 <Avatar alt="Labour" src={require('../../Images/findMe.png')} sx={{ width: 150, height: 150, }} />
+                }
                 <Box sx={{ml:15,}}>
-                <LabourProfilePhoto/>
+                <LabourProfilePhoto onProfileChange={handleProfileChange}/>
 
                 </Box>
                 {labour && (

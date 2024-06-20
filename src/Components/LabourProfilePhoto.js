@@ -3,7 +3,6 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
@@ -11,13 +10,16 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import Box from "@mui/material/Box";
 import { storage } from '../Config/firebase.config';
-import { getDownloadURL, uploadBytes, ref, deleteObject } from 'firebase/storage';
+import { getDownloadURL, uploadBytes, ref } from 'firebase/storage';
+import Avatar from 'react-avatar-edit';
 
-const LabourProfilePhoto = () => {
+const LabourProfilePhoto = ({onProfileChange}) => {
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
   const [profileUri, setProfileUri] = React.useState('');
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  // const [src, setSrc] = React.useState(null);
+  const [preview, setPreview] = React.useState(null);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -27,15 +29,23 @@ const LabourProfilePhoto = () => {
     setOpen(false);
   };
 
-  const handleUpdateClick = () => {
-    document.getElementById('file-input').click();
+  const dataURLtoBlob = (dataurl) => {
+    const arr = dataurl.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], { type: mime });
   };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        const imgRef = ref(storage, `ProfilePhoto/profile-${Date.now()}`); 
-        uploadBytes(imgRef, file)
+  const handleUpload = () => {
+    if (preview) {
+      const blob = dataURLtoBlob(preview);
+      const imgRef = ref(storage, `ProfilePhoto/profile-${Date.now()}.png`);
+      uploadBytes(imgRef, blob)
         .then(() => {
           console.log('Profile uploaded successfully');
           return getDownloadURL(imgRef);
@@ -43,9 +53,7 @@ const LabourProfilePhoto = () => {
         .then((url) => {
           console.log('File available at:', url);
           setProfileUri(url);
-          console.log(url);
-        //   onFileUpload(url)
-        //   setIsLoading(false);
+          onProfileChange(url);
         })
         .catch((error) => {
           console.error('Error uploading profile:', error);
@@ -54,29 +62,13 @@ const LabourProfilePhoto = () => {
     handleClose();
   };
 
-//   const handleUploadDoc = () => {
-//     setIsLoading(true);
-//     if (file) {
-//       const imgRef = ref(storage, `LabourDocuments/document-${nic}-${Date.now()}`);
-//       uploadBytes(img, file)
-//         .then(() => {
-//           console.log('Profile uploaded successfully');
-//           return getDownloadURL(docRef);
-//         })
-//         .then((url) => {
-//           console.log('File available at:', url);
-//           setDocURI(url);
-//           onFileUpload(url)
-//           setIsLoading(false);
-//         })
-//         .catch((error) => {
-//           console.error('Error uploading document:', error);
-//         });
-//     } else {
-//       alert("No file selected to upload");
-//       setIsLoading(false);
-//     }
-//   };
+  const onCrop = (view) => {
+    setPreview(view);
+  };
+
+  const onCloseAvatar = () => {
+    setPreview(null);
+  };
 
   return (
     <React.Fragment>
@@ -93,22 +85,23 @@ const LabourProfilePhoto = () => {
           Update profile photo
         </DialogTitle>
         <DialogContent>
+          <Avatar 
+            width={300}
+            height={300}
+            onCrop={onCrop}
+            onClose={onCloseAvatar}
+            // src={src}
+          />
           <Box display="flex" justifyContent="center" gap={10}>
-            <Button autoFocus onClick={handleUpdateClick}>
+            <Button onClick={handleUpload}>
               Update
             </Button>
-            <Button onClick={handleClose} autoFocus>
-              Delete
+            <Button onClick={handleClose}>
+              Cancel
             </Button>
           </Box>
         </DialogContent>
       </Dialog>
-      <input
-        id="file-input"
-        type="file"
-        style={{ display: 'none' }}
-        onChange={handleFileChange}
-      />
     </React.Fragment>
   );
 }
