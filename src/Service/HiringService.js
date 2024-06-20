@@ -23,3 +23,11 @@ export const UpdateBookingStage = (id, bookingStage) => {
 export const getFullBookingDetails = (id) =>{
   return axiosAuthInstance.get(REST_API_BASE_URL+"/"+id)
 }
+
+export const getCompletedBookings = (email) => {
+  return axiosAuthInstance.get(REST_API_BASE_URL + "/completed-bookings/" + email);
+}
+
+export const updateBookingAmount = (id,amount) => {
+  return axiosAuthInstance.patch(REST_API_BASE_URL + "/updateAmount/" + id , {amount});
+}
