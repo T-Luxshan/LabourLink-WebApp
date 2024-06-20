@@ -48,6 +48,9 @@ const LabourProfilePhoto = ({onProfileChange, profile}) => {
 
   const handleUpload = () => {
     setIsLoading(true);
+    if(profile){
+      handleDelete()
+    }
     if (preview) {
       const blob = dataURLtoBlob(preview);
       const imgRef = ref(storage, `ProfilePhoto/profile-${Date.now()}.png`);

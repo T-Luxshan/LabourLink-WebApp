@@ -73,6 +73,7 @@ const LabourHome = () => {
   const [email, setEmail] = useState(localStorage.getItem('userEmail'));
   const [labour, setLabour] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [ProfilePhoto, setProfilePhoto] = useState("");
   const [acceptedAppointments, setAcceptedAppointments] = useState([]);
   const [completedAppointments, setCompletedAppointments] = useState([]);
   const [position, setPosition] = useState({ lat: 6.7953, lng: 79.9022 });
@@ -101,15 +102,19 @@ const LabourHome = () => {
     }
     
     fetchLabour(email);
+    // fetchProfilePic(email);
     fetchAppointmentDetails(email);
     // setAcceptedAppointments(appointmentData);
     // setCompletedAppointments(appointmentData);
   }, [email]);
 
-
+  
   const fetchLabour = (email) => {
+
     getProfilePicture(email)
-      .then(res=>setProfile(res.data.profileUri))
+      .then(res=>{
+        setProfilePhoto(res.data.profileUri);
+      })
       .catch(console.log("failed to fetch profile photo"));
 
     getLabourById(email)
@@ -213,7 +218,7 @@ const LabourHome = () => {
 
 
   const handleProfileChange = (profileUri) => {
-    setProfile(profileUri);
+    setProfilePhoto(profileUri);
   }
 
   return (
@@ -233,13 +238,10 @@ const LabourHome = () => {
                 flexDirection: 'column',
                 alignItems: 'left'
               }}>
-                {profile ? 
-                <Avatar alt="Labour" src={profile} sx={{ width: 150, height: 150, }} />
-                :
-                <Avatar alt="Labour" src={require('../../Images/findMe.png')} sx={{ width: 150, height: 150, }} />
-                }
+                
+                <Avatar alt="Labour" src={ProfilePhoto} sx={{ width: 150, height: 150, }} />
                 <Box sx={{ml:15,}}>
-                <LabourProfilePhoto onProfileChange={handleProfileChange} profile={profile}/>
+                <LabourProfilePhoto onProfileChange={handleProfileChange} profile={ProfilePhoto}/>
 
                 </Box>
                 {labour && (
