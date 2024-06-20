@@ -276,12 +276,13 @@ const LabourHome = () => {
                     About me
                   </Typography>
                   <AboutMeModel
+                    about_me={aboutMe}
                     onAboutMeChange={handleAboutMe}
                     onLanguageChange={handleLanguage}
                     onGenderChange={handleGender}
                   />
                 </Box>
-                {profile && profile.aboutMe ?
+                {aboutMe ?
                   <Typography sx={{ fontWeight: '500', color: 'black', mb: '5px' }}>
                     {aboutMe}
                   </Typography>
@@ -294,7 +295,7 @@ const LabourHome = () => {
                 <Typography sx={{ fontWeight: 'bold', color: '#FE9E0D', mt: '20px'}}>
                   Language
                 </Typography>
-                {profile && profile.languages && profile.languages.length !== 0 ?
+                {language ?
                   <Typography sx={{ mb: 1, pb: 1, display: 'flex', alignItems: 'center' }}>
                     <LanguageIcon sx={{ fontSize: 'small', mr: 1 }} />
                     {language.join(', ')}
@@ -307,7 +308,7 @@ const LabourHome = () => {
                 <Typography sx={{ fontWeight: 'bold', color: '#FE9E0D', mt: '20px' }}>
                   Gender
                 </Typography>
-                {profile && profile.gender ?
+                {gender ?
                   <Typography sx={{ fontWeight: '500', color: 'black', mb: '5px' }}>
                     {gender}
                   </Typography>
