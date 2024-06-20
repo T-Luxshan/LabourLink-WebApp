@@ -26,6 +26,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { getProfilePicture } from "../Service/ProfilePhotoService";
 
 const defaultTheme = createTheme({
   palette: {
@@ -78,7 +79,7 @@ const AccountLabour = () => {
 
   const fetchLabourData = (email) => {
     getLabourById(email)
-      .then(res =>{
+      .then(res =>{ 
         setLabour(res.data);
         setJobRole(res.data.jobRole);
       })
@@ -86,6 +87,12 @@ const AccountLabour = () => {
         console.error("Error fetching labour data:", err);
         // navigate("/login");
       })
+
+      getProfilePicture(email)
+        .then(respose=>{
+          setImgUri(respose.data.profileUri);
+        })
+        .catch(console.log("failed to fetch profile photo"));
   }
   
 
@@ -139,24 +146,11 @@ const AccountLabour = () => {
         backgroundColor="#EEEEEE"
       >
         <Box textAlign="center" mb={3}>
-          {imgUri ? 
-            <Avatar alt="Labour" src={require('../Pages/Labour/me.jpeg')} style={{
+            <Avatar alt="Labour" src={imgUri} style={{
               margin: "0 auto",
               width: 150,  
               height: 150,
               }} /> 
-            :
-            <Avatar
-            style={{
-              margin: "0 auto",
-              backgroundColor: "#ff9800",
-              width: 150,  
-              height: 150,
-              }}
-            >
-              <AccountCircleIcon style={{ fontSize: 60 }} />
-            </Avatar>
-          }
         </Box>
 
         <Grid container spacing={2}>
