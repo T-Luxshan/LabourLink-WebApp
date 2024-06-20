@@ -12,9 +12,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
-import Typography from '@mui/material/Typography'; // Import Typography for axis labels
-import BookingData from './BookingDetails.json';
-import ReviewData from './ReviewDetails.json';
+import Typography from '@mui/material/Typography'; 
 import { getBookingDetailsForLabour } from '../Service/HiringService';
 import { getReviewOFTheLabour } from '../Service/ReviewService';
 
@@ -22,7 +20,6 @@ import { getReviewOFTheLabour } from '../Service/ReviewService';
 const CustomLineChart = ({ series, xAxis, yAxisLabel, width, height }) => {
   return (
     <Box sx={{ position: 'relative' }}>
-      {/* Add yAxisLabel */}
       <Typography
         sx={{
           position: 'absolute',
@@ -34,7 +31,6 @@ const CustomLineChart = ({ series, xAxis, yAxisLabel, width, height }) => {
       >
         {yAxisLabel}
       </Typography>
-      {/* Render LineChart */}
       <LineChart series={series} xAxis={xAxis} width={width} height={height} />
     </Box>
   );
@@ -52,18 +48,21 @@ const LabourPerformance = () => {
   const [bookingDetails, setBookingDetails] = React.useState([]);
   const [ratingDetails, setRatingDetails] = React.useState([]);
   const allBookingStagePieData = [];
-  let email = "lehaan@example.com";
+  let email = localStorage.getItem('userEmail');
+  
 
   const fetchBookingDetails = (email) => {
     getBookingDetailsForLabour(email)
       .then(res=>setBookingDetails(res.data))
-      .catch(err=>console.log("Failed to fetch Booking details", err))
+      .catch(err=>{
+        console.log("Failed to fetch Booking details");
+     })
   };
 
   const fetchRatingDetails = (email) => {
     getReviewOFTheLabour(email)
       .then(res=>setRatingDetails(res.data))
-      .catch(err=>console.log("Failed to fetch Rating details", err))
+      .catch(err=>console.log("Failed to fetch Rating details"))
 
   };
 
