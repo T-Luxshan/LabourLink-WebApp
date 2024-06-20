@@ -27,7 +27,8 @@ import NewAppointments from "./Pages/Labour/NewAppointments";
 import LabourProfile from "./Pages/Labour/LabourProfile"
 import UpdateLabourAccount from "./Components/UpdateLabourAccount";
 import LabourPerfomance from "./Pages/LabourPerfomance";
-
+import ReceiptTemplete from "./Components/ReceiptTemplete";
+import JobAmount from "../src/Components/JobAmount";
 
 export const ThemeContext = createContext(null);
 
@@ -174,6 +175,18 @@ function App() {
                   <HiredHistory />
                   <Footer />
                 </>
+              }
+            />
+            <Route
+              path="/receipt/:id"
+              element={
+                  <ReceiptTemplete />
+              }
+            />
+            <Route
+              path="/amount"
+              element={
+                  <JobAmount />
               }
             />
             <Route

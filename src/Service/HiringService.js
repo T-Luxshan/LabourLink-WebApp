@@ -28,3 +28,10 @@ export const getFullBookingDetails = (id) =>{
 export const getBookingDetailsForLabour = (email) => {
   return axiosAuthInstance.get(`${REST_API_BASE_URL}/labour/${email}`)
 }
+export const getCompletedBookings = (email) => {
+  return axiosAuthInstance.get(REST_API_BASE_URL + "/completed-bookings/" + email);
+}
+
+export const updateBookingAmount = (id,amount) => {
+  return axiosAuthInstance.patch(REST_API_BASE_URL + "/updateAmount/" + id , {amount});
+}
