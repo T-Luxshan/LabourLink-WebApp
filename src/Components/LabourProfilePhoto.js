@@ -20,11 +20,10 @@ import { addProfilePicture, deleteProfilePicture } from '../Service/ProfilePhoto
 const LabourProfilePhoto = ({onProfileChange, profile}) => {
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
-  const [profileUri, setProfileUri] = React.useState('');
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [isLoading, setIsLoading] = React.useState(false);
-  // const [src, setSrc] = React.useState(null);
   const [preview, setPreview] = React.useState(null);
+  let email = localStorage.getItem('userEmail'); 
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -53,7 +52,7 @@ const LabourProfilePhoto = ({onProfileChange, profile}) => {
     }
     if (preview) {
       const blob = dataURLtoBlob(preview);
-      const imgRef = ref(storage, `ProfilePhoto/profile-${Date.now()}.png`);
+      const imgRef = ref(storage, `ProfilePhoto/profile-${email}-${Date.now()}.png`);
       uploadBytes(imgRef, blob)
         .then(() => {
           console.log('Profile uploaded successfully');
@@ -61,7 +60,6 @@ const LabourProfilePhoto = ({onProfileChange, profile}) => {
         })
         .then((url) => {
           console.log('File available at:', url);
-          setProfileUri(url);
           onProfileChange(url);
           saveToDB(url);
           setIsLoading(false);
@@ -84,7 +82,6 @@ const LabourProfilePhoto = ({onProfileChange, profile}) => {
         try {
           deleteObject(deleteRef).then(() => {
             deleteFromDB()
-            setProfileUri(null);
             onProfileChange(null);
             setInterval(() => {
               setIsLoading(false);
@@ -92,12 +89,9 @@ const LabourProfilePhoto = ({onProfileChange, profile}) => {
           })
         } catch (error) {
           setIsLoading(true);
-          // setFile(null);
-
           setInterval(() => {
             setIsLoading(false);
           }, 2000)
-          alert(error)
         }
         setOpen(false);
   }
@@ -156,7 +150,6 @@ const LabourProfilePhoto = ({onProfileChange, profile}) => {
             height={300}
             onCrop={onCrop}
             onClose={onCloseAvatar}
-            // src={src}
           />
         }  
         
