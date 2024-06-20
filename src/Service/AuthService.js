@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { jwtDecode } from "jwt-decode";
 import dayjs from 'dayjs';
-import { useNavigate } from 'react-router-dom';
 
 const REST_API_BASE_URL_AUTH = "http://localhost:8080/api/v1/auth";
 const  baseURL = 'http://localhost:8080/api';
@@ -131,14 +130,9 @@ axiosAuthInstance.interceptors.request.use(
 export default axiosAuthInstance;
 
 //logout the user from the application.
-export const LogoutUser = () => {
+export const LogoutUser = () => { 
   
-  const navigate = useNavigate();
-
   localStorage.removeItem('token');
   localStorage.removeItem('refreshToken');
   localStorage.removeItem('userEmail');
-
-  navigate('/login');
-
 }
