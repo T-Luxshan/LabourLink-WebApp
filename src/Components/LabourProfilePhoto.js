@@ -14,6 +14,7 @@ import { getDownloadURL, uploadBytes, ref, deleteObject } from 'firebase/storage
 import Avatar from 'react-avatar-edit';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CircularProgress from '@mui/material/CircularProgress';
+import { addProfilePicture, deleteProfilePicture } from '../Service/ProfilePhotoService';
 
 
 const LabourProfilePhoto = ({onProfileChange, profile}) => {
@@ -59,6 +60,7 @@ const LabourProfilePhoto = ({onProfileChange, profile}) => {
           console.log('File available at:', url);
           setProfileUri(url);
           onProfileChange(url);
+          saveToDB(url);
           setIsLoading(false);
           handleClose();
         })
@@ -75,9 +77,10 @@ const LabourProfilePhoto = ({onProfileChange, profile}) => {
 
   const handleDelete = async () => {
     setIsLoading(true);
-        const deleteRef = ref(storage, profileUri);
+        const deleteRef = ref(storage, profile);
         try {
           deleteObject(deleteRef).then(() => {
+            deleteFromDB()
             setProfileUri(null);
             onProfileChange(null);
             setInterval(() => {
@@ -94,7 +97,20 @@ const LabourProfilePhoto = ({onProfileChange, profile}) => {
           alert(error)
         }
         setOpen(false);
+  }
 
+  // Save to Database
+  const saveToDB = (profileUri) => {
+    addProfilePicture(profileUri)
+      .then(res=>console.log("Profile saved to DB"))
+      .catch(err=>console.log("Faild to save to db"))
+  }
+
+  //Delete from Database.
+  const deleteFromDB = (profileUri) => {
+    deleteProfilePicture(profileUri)
+      .then(res=>console.log("Profile deleted from DB"))
+      .catch(err=>console.log("Faild to delete from db"))
   }
 
   const onCrop = (view) => {

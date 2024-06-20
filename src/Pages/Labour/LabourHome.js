@@ -23,6 +23,7 @@ import WorkIcon from '@mui/icons-material/Work';
 import Button from "@mui/material/Button";
 import { addLabourLocation } from '../../Service/LocationService';
 import LabourProfilePhoto from '../../Components/LabourProfilePhoto';
+import { getProfilePicture } from '../../Service/ProfilePhotoService';
 
 const defaultTheme = createTheme({
   palette: {
@@ -100,12 +101,17 @@ const LabourHome = () => {
     }
     
     fetchLabour(email);
-    appointmentDetails(email);
+    fetchAppointmentDetails(email);
     // setAcceptedAppointments(appointmentData);
     // setCompletedAppointments(appointmentData);
   }, [email]);
 
+
   const fetchLabour = (email) => {
+    getProfilePicture(email)
+      .then(res=>setProfile(res.data.profileUri))
+      .catch(console.log("failed to fetch profile photo"));
+
     getLabourById(email)
       .then(res => {
         setLabour(res.data);
@@ -143,7 +149,7 @@ const LabourHome = () => {
       .catch(err => console.log("avg rating fetch failed :", err));
   }
 
-  const appointmentDetails = (email) => {
+  const fetchAppointmentDetails = (email) => {
     getAppointmentsByLabourAndStage(email, "ACCEPTED")
       .then(res => {
         setAcceptedAppointments(res.data);
