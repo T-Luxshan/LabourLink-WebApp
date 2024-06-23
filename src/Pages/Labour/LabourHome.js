@@ -376,10 +376,9 @@ const LabourHome = () => {
                 mb: 2,
                 backgroundColor: 'white', pt: 2, pl: 3, pr: 3, borderRadius: 4,
               }}>
-                
                 <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#FE9E0D', mb: '5px', mt: '20px' }}>
                   Work history
-                </Typography> 
+                </Typography>
                 <Box sx={{ ml: 2, pb: 3, maxHeight: '400px', overflowY: 'auto'}}>
                   {completedAppointments.length === 0 ?
                     <Typography sx={{ textAlign: 'center', color: 'grey' }}>
