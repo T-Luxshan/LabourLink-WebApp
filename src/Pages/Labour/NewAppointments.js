@@ -64,6 +64,10 @@ const NewAppointments = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if(!email){
+      LogoutUser();
+      navigate("/login");
+    }
     getAppointmentsByLabourAndStage(email, "PENDING")
       .then((res) => {
         let appointmentData = res.data;
