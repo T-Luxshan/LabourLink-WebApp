@@ -35,3 +35,7 @@ export const getCompletedBookings = (email) => {
 export const updateBookingAmount = (id,amount) => {
   return axiosAuthInstance.patch(REST_API_BASE_URL + "/updateAmount/" + id , {amount});
 }
+
+export const getBooingDetailsById = (id) => {
+  return axiosAuthInstance.get(`${REST_API_BASE_URL}/${id}`)
+}
