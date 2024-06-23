@@ -79,6 +79,10 @@ const LabourHome = () => {
   const [position, setPosition] = useState({ lat: 6.7953, lng: 79.9022 });
 
   useEffect(() => {
+    if(!email){
+      LogoutUser();
+      navigate("/login");
+    }
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -372,10 +376,11 @@ const LabourHome = () => {
                 mb: 2,
                 backgroundColor: 'white', pt: 2, pl: 3, pr: 3, borderRadius: 4,
               }}>
+                
                 <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#FE9E0D', mb: '5px', mt: '20px' }}>
                   Work history
-                </Typography>
-                <Box sx={{ ml: 2, pb: 3 }}>
+                </Typography> 
+                <Box sx={{ ml: 2, pb: 3, maxHeight: '400px', overflowY: 'auto'}}>
                   {completedAppointments.length === 0 ?
                     <Typography sx={{ textAlign: 'center', color: 'grey' }}>
                       Your work history is empty
@@ -406,7 +411,7 @@ const LabourHome = () => {
           </Grid>
           <Grid item xs={12} md={4}>
             <SubBox>
-              <Box sx={{ backgroundColor: 'white', p: 2, borderRadius: 4 }}>
+              <Box sx={{ backgroundColor: 'white', p: 2, borderRadius: 4, maxHeight: '250vh', overflowY: 'auto' }}>
                 <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1A237E', mb: 3, mt: '5px', textAlign: 'center' }}>
                   My Reviews
                 </Typography>
