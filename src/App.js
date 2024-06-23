@@ -193,7 +193,6 @@ function App() {
               path="/review"
               element={
                 <>
-                  {/* <NavigationBar /> */}
                   <Review />
                 </>
               }
@@ -202,7 +201,6 @@ function App() {
               path="/report"
               element={
                 <>
-                  {/* <NavigationBar /> */}
                   <Report />
                 </>
               }
@@ -260,7 +258,6 @@ function App() {
               element={
                 <>
                   <LabourPerfomance />
-                 
                 </>
               }
             />
