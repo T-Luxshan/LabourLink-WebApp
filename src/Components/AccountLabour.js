@@ -75,6 +75,10 @@ const AccountLabour = () => {
   const navigate = useNavigate();
 
   useEffect(()=>{
+    if(!email){
+      LogoutUser();
+      navigate("/login");
+    }
     fetchLabourData(email);
   },[email])
 
