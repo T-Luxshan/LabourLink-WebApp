@@ -7,14 +7,31 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { updateBookingAmount } from "../Service/HiringService";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-export default function JobAmount() {
+
+const defaultTheme = createTheme({
+  palette: {
+    primary: {
+      main: '#FE9E0D',
+    },
+    secondary: {
+      main: '#00204A',
+    },
+  },
+  typography: {
+    fontFamily: 'Montserrat, sans-serif',
+  },
+});
+
+export default function JobAmount({onAmountChange, bookingId}) {
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState("");
-  const [bookingId, setBookingId] = useState(null);
+  const [bId, setBId] = useState(null);
 
   const handleClickOpen = (id, initialAmount) => {
-    setBookingId(id);
+    setBId(id);
+    // alert(bookingId);
     setAmount(initialAmount);
     setOpen(true);
   };
@@ -28,6 +45,7 @@ export default function JobAmount() {
     try {
       await updateBookingAmount(bookingId, amount);
       console.log("Booking amount updated successfully!");
+      onAmountChange(bId);
     } catch (error) {
       console.error("Error updating booking amount:", error);
     }
@@ -36,8 +54,8 @@ export default function JobAmount() {
 
   return (
     <React.Fragment>
-      <Button variant="outlined" onClick={() => handleClickOpen(20, 1500)}>
-        Open form dialog
+      <Button variant="outlined" color="secondary" onClick={() => handleClickOpen(bookingId ,1500)}>
+        Completed
       </Button>
       <Dialog
         open={open}
@@ -50,7 +68,7 @@ export default function JobAmount() {
         <DialogTitle>Update Booking Amount</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            To update the booking amount, please enter the new amount here.
+            Please enter the payment amount you are paid for.
           </DialogContentText>
           <TextField
             autoFocus
