@@ -341,7 +341,7 @@ const LabourHome = () => {
                 <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#FE9E0D', mb: '5px', mt: '20px' }}>
                   Appointments
                 </Typography>
-                <Box sx={{ ml: 2, pb: 3, maxHeight: '400px', overflowY: 'auto' }}>
+                <Box sx={{ ml: 2, pb: 3, maxHeight: '420px', overflowY: 'auto' }}>
                   {acceptedAppointments.length === 0 ?
                     <Typography sx={{ textAlign: 'center', color: 'grey' }}>
                       There are no appointments to attend.
@@ -364,7 +364,7 @@ const LabourHome = () => {
                             <Box sx={{ ml: 10, display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
                               {/* <Button variant="outlined" color="secondary" onClick={()=> handleComplete(appointment.id)}>Completed</Button> */}
                               <JobAmount onAmountChange={handleAmountChange} bookingId={appointment.id}/>
-                              <Button variant="outlined" color="secondary" onClick={()=> handleReject((appointment.id))}>Reject</Button>
+                              <Button variant="outlined" color="error" onClick={()=> handleReject((appointment.id))}>Reject</Button>
                             </Box>
                           </Typography>
                         </Box>
