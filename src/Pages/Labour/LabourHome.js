@@ -164,7 +164,6 @@ const LabourHome = () => {
       })
       .catch(err => {
         console.log("Fetching appointments failed", err);
-        // navigate("/login"); // uncomment later
       })
 
       getAppointmentsByLabourAndStage(email, "COMPLETED")
@@ -175,7 +174,6 @@ const LabourHome = () => {
       })
       .catch(err => {
         console.log("Fetching appointments failed", err);
-        // navigate("/login"); // uncomment later
       })
   }
 
@@ -224,6 +222,9 @@ const LabourHome = () => {
     setProfilePhoto(profileUri);
   }
 
+  const handleAmountChange = (id) => {
+    handleComplete(id);
+  }
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
@@ -361,7 +362,8 @@ const LabourHome = () => {
                             <WorkIcon fontSize="small" sx={{ mr: "5px", ml: "5px" }} />
                             {appointment.jobRole}
                             <Box sx={{ ml: 10, display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-                              <Button variant="outlined" color="secondary" onClick={()=> handleComplete(appointment.id)}>Completed</Button>
+                              {/* <Button variant="outlined" color="secondary" onClick={()=> handleComplete(appointment.id)}>Completed</Button> */}
+                              <JobAmount onAmountChange={handleAmountChange} bookingId={appointment.id}/>
                               <Button variant="outlined" color="secondary" onClick={()=> handleReject((appointment.id))}>Reject</Button>
                             </Box>
                           </Typography>

@@ -77,9 +77,7 @@ const NewAppointments = () => {
         }
       })
       .catch((err) => {
-        console.log("fetching appointmentData failed.", err);
-        LogoutUser();
-        navigate("/login"); 
+        console.log("No appointment to fetch.");
       });
   }, [email]);
 
