@@ -24,6 +24,7 @@ import { addLabourLocation } from '../../Service/LocationService';
 import LabourProfilePhoto from '../../Components/LabourProfilePhoto';
 import { getProfilePicture } from '../../Service/ProfilePhotoService';
 import { LogoutUser } from '../../Service/AuthService';
+import JobAmount from '../../Components/JobAmount';
 
 const defaultTheme = createTheme({
   palette: {
@@ -339,7 +340,7 @@ const LabourHome = () => {
                 <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#FE9E0D', mb: '5px', mt: '20px' }}>
                   Appointments
                 </Typography>
-                <Box sx={{ ml: 2, pb: 3 }}>
+                <Box sx={{ ml: 2, pb: 3, maxHeight: '400px', overflowY: 'auto' }}>
                   {acceptedAppointments.length === 0 ?
                     <Typography sx={{ textAlign: 'center', color: 'grey' }}>
                       There are no appointments to attend.
