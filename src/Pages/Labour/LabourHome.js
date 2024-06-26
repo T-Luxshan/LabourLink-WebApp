@@ -25,6 +25,7 @@ import LabourProfilePhoto from '../../Components/LabourProfilePhoto';
 import { getProfilePicture } from '../../Service/ProfilePhotoService';
 import { LogoutUser } from '../../Service/AuthService';
 import JobAmount from '../../Components/JobAmount';
+import PageSkeleton from '../../Components/PageSkeleton';
 
 const defaultTheme = createTheme({
   palette: {
@@ -229,6 +230,8 @@ const LabourHome = () => {
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
       <FullHeightBox>
+        {labour ? 
+        
         <Grid container spacing={0}>
           <Grid item xs={12} md={8}>
             <MainBox>
@@ -438,6 +441,9 @@ const LabourHome = () => {
             </SubBox>
           </Grid>
         </Grid>
+        : 
+        <PageSkeleton />
+        }
       </FullHeightBox>
     </ThemeProvider>
   );
