@@ -11,7 +11,6 @@ import CallIcon from '@mui/icons-material/Call';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import Report from '../../Components/Report';
 import LanguageIcon from '@mui/icons-material/Language';
-import reviewsData from './MyReviews.json';
 import AboutMeModel from '../../Components/AboutMeModel';
 import { getLabourById } from '../../Service/LabourService';
 import { getAvgRating, getLabourProfileById, getMyReviews } from '../../Service/LabourHomeService';
@@ -22,6 +21,11 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import WorkIcon from '@mui/icons-material/Work';
 import Button from "@mui/material/Button";
 import { addLabourLocation } from '../../Service/LocationService';
+import LabourProfilePhoto from '../../Components/LabourProfilePhoto';
+import { getProfilePicture } from '../../Service/ProfilePhotoService';
+import { LogoutUser } from '../../Service/AuthService';
+import JobAmount from '../../Components/JobAmount';
+import PageSkeleton from '../../Components/PageSkeleton';
 
 const defaultTheme = createTheme({
   palette: {
@@ -68,15 +72,19 @@ const LabourHome = () => {
   const [aboutMe, setAboutMe] = useState('');
   const [language, setLanguage] = useState([]);
   const [gender, setGender] = useState('');
-  // const [email, setEmail] = useState(localStorage.getItem('userEmail'));
-  let email = "luckythurailucky@gmail.com";
+  const [email, setEmail] = useState(localStorage.getItem('userEmail'));
   const [labour, setLabour] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [ProfilePhoto, setProfilePhoto] = useState("");
   const [acceptedAppointments, setAcceptedAppointments] = useState([]);
   const [completedAppointments, setCompletedAppointments] = useState([]);
   const [position, setPosition] = useState({ lat: 6.7953, lng: 79.9022 });
 
   useEffect(() => {
+    if(!email){
+      LogoutUser();
+      navigate("/login");
+    }
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -100,12 +108,18 @@ const LabourHome = () => {
     }
     
     fetchLabour(email);
-    appointmentDetails(email);
-    // setAcceptedAppointments(appointmentData);
-    // setCompletedAppointments(appointmentData);
+    fetchAppointmentDetails(email);
   }, [email]);
 
+  
   const fetchLabour = (email) => {
+
+    getProfilePicture(email)
+      .then(res=>{
+        setProfilePhoto(res.data.profileUri);
+      })
+      .catch(err=>console.log("failed to fetch profile photo"));
+
     getLabourById(email)
       .then(res => {
         setLabour(res.data);
@@ -113,7 +127,8 @@ const LabourHome = () => {
       })
       .catch(err => {
         console.log("labour fetching failed:", err);
-        // navigate("/login"); uncomment later.
+        LogoutUser();
+        navigate("/login"); 
       });
 
     getLabourProfileById(email)
@@ -124,10 +139,10 @@ const LabourHome = () => {
         setLanguage(res.data.languages);
         console.log(res);
       })
-      .catch(err => {
+      .catch(err => 
+        {
         console.log("profile fetch failed :", err)
-        // navigate("/login"); // uncomment later
-      });
+        });
 
     getMyReviews()
       .then(res => {
@@ -143,14 +158,13 @@ const LabourHome = () => {
       .catch(err => console.log("avg rating fetch failed :", err));
   }
 
-  const appointmentDetails = (email) => {
+  const fetchAppointmentDetails = (email) => {
     getAppointmentsByLabourAndStage(email, "ACCEPTED")
       .then(res => {
         setAcceptedAppointments(res.data);
       })
       .catch(err => {
         console.log("Fetching appointments failed", err);
-        // navigate("/login"); // uncomment later
       })
 
       getAppointmentsByLabourAndStage(email, "COMPLETED")
@@ -161,7 +175,6 @@ const LabourHome = () => {
       })
       .catch(err => {
         console.log("Fetching appointments failed", err);
-        // navigate("/login"); // uncomment later
       })
   }
 
@@ -205,10 +218,20 @@ const LabourHome = () => {
       .catch(err=>console.log("update stage failed", err))
   }
 
+
+  const handleProfileChange = (profileUri) => {
+    setProfilePhoto(profileUri);
+  }
+
+  const handleAmountChange = (id) => {
+    handleComplete(id);
+  }
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
       <FullHeightBox>
+        {labour ? 
+        
         <Grid container spacing={0}>
           <Grid item xs={12} md={8}>
             <MainBox>
@@ -222,7 +245,12 @@ const LabourHome = () => {
                 flexDirection: 'column',
                 alignItems: 'left'
               }}>
-                <Avatar alt="Labour" src={require('../../Images/findMe.png')} sx={{ width: 150, height: 150 }} />
+                
+                <Avatar alt="Labour" src={ProfilePhoto} sx={{ width: 150, height: 150, }} />
+                <Box sx={{ml:15,}}>
+                <LabourProfilePhoto onProfileChange={handleProfileChange} profile={ProfilePhoto}/>
+
+                </Box>
                 {labour && (
                   <>
                     <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'black', mb: '5px', mt: '20px' }}>
@@ -255,12 +283,13 @@ const LabourHome = () => {
                     About me
                   </Typography>
                   <AboutMeModel
+                    about_me={aboutMe}
                     onAboutMeChange={handleAboutMe}
                     onLanguageChange={handleLanguage}
                     onGenderChange={handleGender}
                   />
                 </Box>
-                {profile && profile.aboutMe ?
+                {aboutMe ?
                   <Typography sx={{ fontWeight: '500', color: 'black', mb: '5px' }}>
                     {aboutMe}
                   </Typography>
@@ -273,7 +302,7 @@ const LabourHome = () => {
                 <Typography sx={{ fontWeight: 'bold', color: '#FE9E0D', mt: '20px'}}>
                   Language
                 </Typography>
-                {profile && profile.languages && profile.languages.length !== 0 ?
+                {language ?
                   <Typography sx={{ mb: 1, pb: 1, display: 'flex', alignItems: 'center' }}>
                     <LanguageIcon sx={{ fontSize: 'small', mr: 1 }} />
                     {language.join(', ')}
@@ -286,7 +315,7 @@ const LabourHome = () => {
                 <Typography sx={{ fontWeight: 'bold', color: '#FE9E0D', mt: '20px' }}>
                   Gender
                 </Typography>
-                {profile && profile.gender ?
+                {gender ?
                   <Typography sx={{ fontWeight: '500', color: 'black', mb: '5px' }}>
                     {gender}
                   </Typography>
@@ -315,7 +344,7 @@ const LabourHome = () => {
                 <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#FE9E0D', mb: '5px', mt: '20px' }}>
                   Appointments
                 </Typography>
-                <Box sx={{ ml: 2, pb: 3 }}>
+                <Box sx={{ ml: 2, pb: 3, maxHeight: '420px', overflowY: 'auto' }}>
                   {acceptedAppointments.length === 0 ?
                     <Typography sx={{ textAlign: 'center', color: 'grey' }}>
                       There are no appointments to attend.
@@ -336,8 +365,9 @@ const LabourHome = () => {
                             <WorkIcon fontSize="small" sx={{ mr: "5px", ml: "5px" }} />
                             {appointment.jobRole}
                             <Box sx={{ ml: 10, display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-                              <Button variant="outlined" color="secondary" onClick={()=> handleComplete(appointment.id)}>Completed</Button>
-                              <Button variant="outlined" color="secondary" onClick={()=> handleReject((appointment.id))}>Reject</Button>
+                              {/* <Button variant="outlined" color="secondary" onClick={()=> handleComplete(appointment.id)}>Completed</Button> */}
+                              <JobAmount onAmountChange={handleAmountChange} bookingId={appointment.id}/>
+                              <Button variant="outlined" color="error" onClick={()=> handleReject((appointment.id))}>Reject</Button>
                             </Box>
                           </Typography>
                         </Box>
@@ -355,7 +385,7 @@ const LabourHome = () => {
                 <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#FE9E0D', mb: '5px', mt: '20px' }}>
                   Work history
                 </Typography>
-                <Box sx={{ ml: 2, pb: 3 }}>
+                <Box sx={{ ml: 2, pb: 3, maxHeight: '400px', overflowY: 'auto'}}>
                   {completedAppointments.length === 0 ?
                     <Typography sx={{ textAlign: 'center', color: 'grey' }}>
                       Your work history is empty
@@ -386,7 +416,7 @@ const LabourHome = () => {
           </Grid>
           <Grid item xs={12} md={4}>
             <SubBox>
-              <Box sx={{ backgroundColor: 'white', p: 2, borderRadius: 4 }}>
+              <Box sx={{ backgroundColor: 'white', p: 2, borderRadius: 4, maxHeight: '250vh', overflowY: 'auto' }}>
                 <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1A237E', mb: 3, mt: '5px', textAlign: 'center' }}>
                   My Reviews
                 </Typography>
@@ -411,6 +441,9 @@ const LabourHome = () => {
             </SubBox>
           </Grid>
         </Grid>
+        : 
+        <PageSkeleton />
+        }
       </FullHeightBox>
     </ThemeProvider>
   );

@@ -26,6 +26,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { getProfilePicture } from "../Service/ProfilePhotoService";
+import { LogoutUser } from "../Service/AuthService";
 
 const defaultTheme = createTheme({
   palette: {
@@ -54,6 +56,7 @@ const AccountLabour = () => {
   // Snackbar for success/failed message
   const [updateMsg, setUpdateMsg] = useState("");
   const [showSnackbar, setShowSnackbar] = useState(false);
+  const [imgUri, setImgUri] = useState(true);
   const handleSnackbarClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -69,22 +72,33 @@ const AccountLabour = () => {
     setOpen(false);
   };
 
-  let availableJobRoles = ["Painter", "Driver"];
-  
   const navigate = useNavigate();
 
   useEffect(()=>{
+    if(!email){
+      LogoutUser();
+      navigate("/login");
+    }
     fetchLabourData(email);
-    setJobRole(availableJobRoles);
   },[email])
 
   const fetchLabourData = (email) => {
     getLabourById(email)
-      .then(res =>setLabour(res.data))
+      .then(res =>{ 
+        setLabour(res.data);
+        setJobRole(res.data.jobRole);
+      })
       .catch(err =>{
         console.error("Error fetching labour data:", err);
-        // navigate("/login");
+        LogoutUser();
+        navigate("/login");
       })
+
+      getProfilePicture(email)
+        .then(respose=>{
+          setImgUri(respose.data.profileUri);
+        })
+        .catch(err=>console.log("failed to fetch profile photo"));
   }
   
 
@@ -117,7 +131,7 @@ const AccountLabour = () => {
   }
 
   return (
-    <Container maxWidth="sm" style={{ marginTop: "20px" }}>
+    <Container maxWidth="sm" style={{ marginTop: "5px" }}>
       <Box textAlign="center" mb={4}>
         <Typography
           variant="h4"
@@ -138,17 +152,13 @@ const AccountLabour = () => {
         backgroundColor="#EEEEEE"
       >
         <Box textAlign="center" mb={3}>
-          <Avatar
-            style={{
+            <Avatar alt="Labour" src={imgUri} style={{
               margin: "0 auto",
-              backgroundColor: "#ff9800",
-              width: 80,
-              height: 80,
-            }}
-          >
-            <AccountCircleIcon style={{ fontSize: 60 }} />
-          </Avatar>
+              width: 150,  
+              height: 150,
+              }} /> 
         </Box>
+
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <Typography
@@ -260,11 +270,13 @@ const AccountLabour = () => {
         aria-labelledby="responsive-dialog-title"
       >
         <DialogTitle id="responsive-dialog-title">
-          Are you sure, you want to delete account?
+          Are you sure you want to delete your account?
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            We will miss you!!
+          This action is irreversible and will permanently delete all your data, including your profile 
+          information, booking details, and ratings. If you delete your account, you will lose access to 
+          all the services associated with it.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

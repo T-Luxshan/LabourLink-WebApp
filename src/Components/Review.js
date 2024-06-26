@@ -16,6 +16,9 @@ import TextField from '@mui/material/TextField';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
+import { addReview, editReview } from '../Service/ReviewService';
+import { getLabourJobRoles } from '../Service/AuthService';
+import { getBooingDetailsById } from '../Service/HiringService';
 
 const defaultTheme = createTheme({
   palette: {
@@ -23,7 +26,7 @@ const defaultTheme = createTheme({
       main: '#EC9851', 
     },
     secondary: {
-      main: '#EAE9E7', 
+      main: '#1976D2', 
     }, 
   },
   typography: {
@@ -36,18 +39,37 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
 });
 
-const Review = () => {
+const Review = ({bookingId}) => {
   const [open, setOpen] = React.useState(false);
   const [jobRole, setJobRole] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [rating, setRating] = React.useState(2.5);
   const [error, setError] = React.useState('');
+  const [reviewId, setReviewID] = React.useState(null);
+  const [availableJobRoles, setAvailableJobRoles] = React.useState([]);
+  const [labour, setLabour] = React.useState('');
 
-  const availableJobRoles = ["CARPENTER", "ELECTRICIAN", "PLUMBER", "PAINTER", "MASON", "WELDER", "DRIVER"];
-  const labour = {
-            "name":"Luxshan",
-            "email": "lucky@gmail.com"
-          }
+
+  React.useEffect(()=>{
+    fetchJobRoles();
+    fetchReviewRequirments(bookingId);
+  }, [bookingId])
+
+  const fetchJobRoles = () => {
+    getLabourJobRoles()
+      .then(res=>setAvailableJobRoles(res.data))
+      .catch(err=>console.log("Error fetching Job roles"));
+  }
+
+  const fetchReviewRequirments = (id) => {
+    getBooingDetailsById(id)
+      .then(res=>{
+        setLabour(res.data);
+        console.log(res.data);
+      })
+      .catch(err=>console.log("Failed to fetch labour."));
+  }
+
   const handleChange = (event) => {
     setJobRole(event.target.value);
   };
@@ -56,14 +78,33 @@ const Review = () => {
     setDescription(event.target.value);
   };
 
-  const handleClickOpen = () => setOpen(true);
+  const handleClickOpen = () => {
+    setOpen(true)
+  };
   const handleCancel = () => setOpen(false);
 
   const handleSave = () => {
     if(jobRole){
       setError('');  
       console.log(jobRole, description, rating );
+      if(reviewId){
+        editReview(reviewId, jobRole, description, rating, labour.labourId)
+          .then(res=>{
+            console.log(res);
+            setReviewID(res.data.id);
+          })
+        .catch(err=>console.log(err))
+        setOpen(false);
+      }else{
+      addReview(jobRole, description, rating, labour.labourId)
+        .then(res=>{
+          console.log(res);
+          setReviewID(res.data.id);
+        })
+        .catch(err=>console.log(err))
+
       setOpen(false);
+    }
     }else{
       setError("Please select the job role.")
     }
@@ -72,21 +113,23 @@ const Review = () => {
 
   return (
     <ThemeProvider theme={defaultTheme}> 
-    <Grid container component="main" item xs={false} sm={4} md={6} >
+    <Grid container component="main" item xs={false} sm={4} md={10} >
     {jobRole ?
       (
-      <Button variant="outlined" onClick={handleClickOpen}>
+      <Button variant="contained"
+      color="secondary" onClick={handleClickOpen}>
         Edit Review
       </Button>
       )
       :
-      ( <Button variant="outlined" onClick={handleClickOpen}>
+      ( <Button variant="contained"
+      color="secondary" onClick={handleClickOpen}>
           Add Review
         </Button>
       )
       }
                                     {/* Need to check the styling when we merge  */}
-      <Grid item xs={12} sm={8} md={5} elevation={2} sx={{ height: '5vh', mt: '150px',  }}> 
+      <Grid item xs={12} sm={8} md={5} elevation={2} sx={{ height: '0vh',  }}> 
         <Dialog
           open={open}
           TransitionComponent={Transition}
@@ -95,8 +138,31 @@ const Review = () => {
           aria-describedby="alert-dialog-slide-description"
           sx={{backgroundPosition: 'center',}}
         >
-          <DialogTitle>Add Your Review for {labour.name}</DialogTitle>
+          <DialogTitle>Add Your Review for {labour.labourName}</DialogTitle>
           <DialogContent>
+          <Box
+              sx={{
+                // '& > legend': {display:'flex',  mt: 2 },
+                justifyContent: 'center',  mb: 1 , width:350
+              }}
+            >
+              <DialogContentText>
+              {/* <Typography component="legend" 
+                    sx={{textAlign: 'center'}}
+              > */}
+              What is your rate for {labour.name}'s perfomance?
+              {/* </Typography> */}
+              </DialogContentText>
+              <Rating
+                name="half-rating"
+                value={rating}
+                precision={0.5}
+                onChange={(event, newValue) => {
+                  setRating(newValue);
+                }}
+                sx={{ml:15}}
+              />
+            </Box>
             <DialogContentText id="alert-dialog-slide-description">
             Select the job role you hired for...
             </DialogContentText>
@@ -123,29 +189,9 @@ const Review = () => {
                   {error}
                   </Typography>
                 }
-                <Box
-                  sx={{
-                    // '& > legend': {display:'flex',  mt: 2 },
-                    justifyContent: 'center',  mt: 2 , width:350
-                  }}
-                >
-                  <Typography component="legend" 
-                        sx={{textAlign: 'center'}}
-                  >
-                    Rate {labour.name}'s perfomance
-                  </Typography>
-                  <Rating
-                    name="half-rating"
-                    value={rating}
-                    precision={0.5}
-                    onChange={(event, newValue) => {
-                      setRating(newValue);
-                    }}
-                    sx={{ml:15}}
-                  />
-                </Box>
+               
                 <TextField
-                  label="Review"
+                  label="Your Review"
                   variant="outlined"
                   value={description}
                   onChange={handleDescriptionChange}

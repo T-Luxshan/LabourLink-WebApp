@@ -5,7 +5,6 @@ import Grid from "@mui/material/Grid";
 import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useEffect, useState } from "react";
-import appointmentData from "./Appointments.json";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import WorkIcon from "@mui/icons-material/Work";
@@ -18,6 +17,9 @@ import addNotification from "react-push-notification";
 import { saveNotifications } from "../../Service/NotificationService";
 import logo from "../../Images/app-logo3.png";
 import { useNavigate } from "react-router-dom";
+import { LogoutUser } from "../../Service/AuthService";
+import Report from '../../Components/Report';
+ 
 
 const defaultTheme = createTheme({
   palette: {
@@ -64,6 +66,10 @@ const NewAppointments = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if(!email){
+      LogoutUser();
+      navigate("/login");
+    }
     getAppointmentsByLabourAndStage(email, "PENDING")
       .then((res) => {
         let appointmentData = res.data;
@@ -73,8 +79,7 @@ const NewAppointments = () => {
         }
       })
       .catch((err) => {
-        console.log("fetching appointmentData failed.", err);
-        // navigate("/login"); uncomment later.
+        console.log("No appointment to fetch.");
       });
   }, [email]);
 
@@ -98,20 +103,20 @@ const NewAppointments = () => {
   };
 
   const handleAccept = (id) => {
-    if (!bookingDetails) return;
+    // if (!bookingDetails) return; 
     labourAccepted();
     UpdateBookingStage(id, "ACCEPTED")
       .then((res) => {
         console.log("updated to ACCEPTED");
         let updatedPending = appointments.filter((appt) => appt.id !== id);
         setAppointments(updatedPending);
-        setCurrentAppointment(null);
+        setCurrentAppointment("");
       })
       .catch((err) => console.log("update stage failed", err));
   };
 
   const handleReject = (id) => {
-    if (!bookingDetails) return;
+    // if (!bookingDetails) return;
     labourRejected();
     UpdateBookingStage(id, "DECLINED")
       .then((res) => {
@@ -266,6 +271,12 @@ const NewAppointments = () => {
                           {" "}
                           Reject{" "}
                         </Button>
+                      </Box>
+                      <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+                        <Typography sx={{ fontSize: '12px', fontStyle: 'italic', mt:1 }}>
+                          IF it seems inappropriate:
+                        </Typography>
+                        <Report reportTo={currentAppointment.customerEmail} />
                       </Box>
                     </Box>
                   ) : (

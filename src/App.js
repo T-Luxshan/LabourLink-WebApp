@@ -17,12 +17,12 @@ import Notification from "./Pages/Notification";
 import MapView from "./Pages/MapView";
 import HiredHistory from "./Pages/HiredHistory";
 import Review from "./Components/Review";
+import Report from "./Components/Report";
 import JoinAs from "./Pages/Authentication/JoinAs";
 import LabourSignUp from "./Pages/Authentication/LabourSignUp";
 import WaitingPage from "./Pages/Authentication/WaitingPage";
 import LabourHome from "./Pages/Labour/LabourHome";
 import NavigationBarLabour from "./Components/NavigationBarLabour";
-import Report from "./Components/Report";
 import NewAppointments from "./Pages/Labour/NewAppointments";
 import LabourProfile from "./Pages/Labour/LabourProfile"
 import UpdateLabourAccount from "./Components/UpdateLabourAccount";
@@ -193,7 +193,6 @@ function App() {
               path="/review"
               element={
                 <>
-                  {/* <NavigationBar /> */}
                   <Review />
                 </>
               }
@@ -202,7 +201,6 @@ function App() {
               path="/report"
               element={
                 <>
-                  {/* <NavigationBar /> */}
                   <Report />
                 </>
               }
@@ -260,7 +258,6 @@ function App() {
               element={
                 <>
                   <LabourPerfomance />
-                  <Footer />
                 </>
               }
             />

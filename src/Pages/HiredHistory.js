@@ -11,6 +11,7 @@ import TableRow from "@mui/material/TableRow";
 import { getBookingHistoryByCustomerId, getCompletedBookings } from "../Service/HiringService";
 import { Grid, Typography, Box, Button } from "@mui/material";
 import { PieChart } from "@mui/x-charts/PieChart";
+import Review from "../Components/Review";
 
 
 const columns = [
@@ -113,6 +114,7 @@ export default function HiredHistory() {
   const handleAddReview = (bookingId) => {
     // Handle add review logic
     console.log("Add Review for bookingId: ", bookingId);
+    alert(bookingId);
   };
 
   const handlePrintReceipt = (bookingId) => {
@@ -191,13 +193,15 @@ export default function HiredHistory() {
                           if (column.id === "addReview") {
                             return (
                               <TableCell key={column.id} align={column.align}>
-                                <Button
+                                {/* <Button
                                   variant="contained"
                                   color="primary"
                                   onClick={() => handleAddReview(row.id)}
                                 >
                                   Add Review
-                                </Button>
+                                </Button> */}
+                                <Review bookingId={row.id} />
+
                               </TableCell>
                             );
                           } else if (column.id === "printReceipt") {

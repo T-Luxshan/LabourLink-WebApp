@@ -7,6 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme, createTheme, ThemeProvider } from '@mui/material/styles';
+import {getLabourJobRoles} from '../Service/AuthService';
 import Chip from '@mui/material/Chip';
 
 const defaultTheme = createTheme({
@@ -30,10 +31,14 @@ const JobRole = ({onJobListChange}) => {
   const [jobList, setJoblist] = useState([]);
   const [selectedJobs, setSelectedJobs] = useState([]);
 
-  let availableJobRoles = ["CARPENTER", "ELECTRICIAN", "PLUMBER", "PAINTER", "MASON", "WELDER", "DRIVER"];
-
   useEffect(() => {
-    setJoblist(availableJobRoles);
+    getLabourJobRoles()
+      .then(response => {
+      setJoblist(response.data);
+    })
+    .catch(error => {
+      console.log('Error fetching job roles:');
+    });
   }, []);
 
   const handleClickOpen = () => {

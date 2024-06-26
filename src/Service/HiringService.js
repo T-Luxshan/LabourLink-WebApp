@@ -1,4 +1,5 @@
 import axiosAuthInstance from "./AuthService";
+import axios from "axios";
 
 const REST_API_BASE_URL = "http://localhost:8080/api/bookings";
 
@@ -24,10 +25,17 @@ export const getFullBookingDetails = (id) =>{
   return axiosAuthInstance.get(REST_API_BASE_URL+"/"+id)
 }
 
+export const getBookingDetailsForLabour = (email) => {
+  return axiosAuthInstance.get(`${REST_API_BASE_URL}/labour/${email}`)
+}
 export const getCompletedBookings = (email) => {
   return axiosAuthInstance.get(REST_API_BASE_URL + "/completed-bookings/" + email);
 }
 
 export const updateBookingAmount = (id,amount) => {
   return axiosAuthInstance.patch(REST_API_BASE_URL + "/updateAmount/" + id , {amount});
+}
+
+export const getBooingDetailsById = (id) => {
+  return axiosAuthInstance.get(`${REST_API_BASE_URL}/${id}`)
 }

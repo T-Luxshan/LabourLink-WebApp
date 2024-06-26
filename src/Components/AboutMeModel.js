@@ -61,9 +61,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="right" ref={ref} {...props} />;
 });
 
-const AboutMeModel = ({onAboutMeChange, onLanguageChange, onGenderChange }) => {
+const AboutMeModel = ({onAboutMeChange, onLanguageChange, onGenderChange, about_me }) => {
   const [open, setOpen] = useState(false);
-  const [aboutMe, setAboutMe] = useState('');
+  const [aboutMe, setAboutMe] = useState(about_me);
   const [language, setLanguage] = useState([]);
   const [gender, setGender] = React.useState('');
   const [updated, setUpdated] = React.useState(false);
