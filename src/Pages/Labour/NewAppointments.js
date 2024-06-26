@@ -18,6 +18,8 @@ import { saveNotifications } from "../../Service/NotificationService";
 import logo from "../../Images/app-logo3.png";
 import { useNavigate } from "react-router-dom";
 import { LogoutUser } from "../../Service/AuthService";
+import Report from '../../Components/Report';
+ 
 
 const defaultTheme = createTheme({
   palette: {
@@ -269,6 +271,12 @@ const NewAppointments = () => {
                           {" "}
                           Reject{" "}
                         </Button>
+                      </Box>
+                      <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+                        <Typography sx={{ fontSize: '12px', fontStyle: 'italic', mt:1 }}>
+                          IF it seems inappropriate:
+                        </Typography>
+                        <Report reportTo={currentAppointment.customerEmail} />
                       </Box>
                     </Box>
                   ) : (
