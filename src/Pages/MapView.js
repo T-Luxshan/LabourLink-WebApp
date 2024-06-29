@@ -27,7 +27,7 @@ const MapView = () => {
   const navigate=useNavigate();
 
   const job=jobRole;
-  const [labourAbout, SetLabourAbout] = useState(null);
+  const [labourProfile, SetLabourProfile] = useState(null);
 
   // Get the user's location when the component mounts
   useEffect(() => {
@@ -82,8 +82,8 @@ const MapView = () => {
     }
 
     try {
-      const labourAbout = await getLabourProfileById(labourId);
-      SetLabourAbout(labourAbout.data);
+      const labourProfile = await getLabourProfileById(labourId);
+      SetLabourProfile(labourProfile.data);
     }
     catch (error) {
       console.log("Error fetching labour about:", error);
@@ -179,14 +179,6 @@ const MapView = () => {
 
                 <Grid container spacing={2}>
                   <Grid item xs={4}>
-                    <Typography variant="body1" style={{ fontWeight: "bold" }}>Email:</Typography>
-                  </Grid>
-                  <Grid item xs={8}>
-                    <Typography variant="body1">
-                      {labourSelected?.email || "N/A"}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4}>
                     <Typography variant="body1" style={{ fontWeight: "bold" }}>Name:</Typography>
                   </Grid>
                   <Grid item xs={8}>
@@ -195,11 +187,20 @@ const MapView = () => {
                     </Typography>
                   </Grid>
                   <Grid item xs={4}>
-                    <Typography variant="body1" style={{ fontWeight: "bold" }}>Mobile Number:</Typography>
+                    <Typography variant="body1" style={{ fontWeight: "bold" }}>Gender:</Typography>
                   </Grid>
                   <Grid item xs={8}>
                     <Typography variant="body1">
-                      {labourSelected?.mobileNumber || "N/A"}
+                      {labourProfile?.gender || "N/A"}
+                    </Typography>
+                  </Grid>
+                  
+                  <Grid item xs={4}>
+                    <Typography variant="body1" style={{ fontWeight: "bold" }}>Languages:</Typography>
+                  </Grid>
+                  <Grid item xs={8}>
+                    <Typography variant="body1">
+                      {labourProfile?.languages.join(", ") || "N/A"}
                     </Typography>
                   </Grid>
                   <Grid item xs={4}>
@@ -207,7 +208,7 @@ const MapView = () => {
                   </Grid>
                   <Grid item xs={8}>
                     <Typography variant="body1">
-                      {labourAbout?.aboutMe || "N/A"}
+                      {labourProfile?.aboutMe || "N/A"}
                     </Typography>
                   </Grid>
                   <Grid item xs={8}>
@@ -287,6 +288,28 @@ const MapView = () => {
             <Typography variant="h5" gutterBottom sx={{ marginTop: "40px" }}>
               <strong>Reviews</strong>
             </Typography>
+            <Box sx={{ backgroundColor: 'white', p: 2, borderRadius: 4, maxHeight: '250vh', overflowY: 'auto' }}>
+                <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1A237E', mb: 3, mt: '5px', textAlign: 'center' }}>
+                  My Reviews
+                </Typography>
+                {reviews.length === 0 ? (
+                  <Typography sx={{ textAlign: 'center', color: 'grey' }}>
+                    There are no reviews yet
+                  </Typography>
+                ) : (
+                  reviews.map((review, index) => (
+                    <Box key={index} sx={{ backgroundColor: '#F6F9FD', pt: 2, pr: 2, pl: 2, boxShadow: 0, borderRadius: 4, mb: 2, display: 'flex', flexDirection: 'column' }} onClick={() => handleReviewClick(review)}>
+                      <Typography sx={{ fontWeight: 'bold', mb: 2 }}>{review.customerName}</Typography>
+                      <Rating name="half-rating-read" value={review.rating} precision={0.5} readOnly />
+                      <Typography sx={{ color: 'grey' }}>Job role : {review.jobRole}</Typography>
+                      <Typography>{review.description}</Typography>
+                      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
+                        <Report reportTo={review.customerEmail} />
+                      </Box>
+                    </Box>
+                  ))
+                )}
+              </Box>
           </Grid>
         </Grid>
       </Box>
