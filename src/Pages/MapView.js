@@ -13,6 +13,8 @@ import ManIcon from "@mui/icons-material/Man";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import FormDialog from "../Components/FormDialog";
 import findMe from "../Images/findMeCropped.png";
+import { getLabourProfileById } from "../Service/LabourHomeService";
+import LabourPerfomance from './LabourPerfomance';
 
 const MapView = () => {
   const [labourPosition, setLabourPosition] = useState([]);
@@ -25,6 +27,7 @@ const MapView = () => {
   const navigate=useNavigate();
 
   const job=jobRole;
+  const [labourAbout, SetLabourAbout] = useState(null);
 
   // Get the user's location when the component mounts
   useEffect(() => {
@@ -76,6 +79,14 @@ const MapView = () => {
       console.log("labour details: ", labour);
     } catch (error) {
       console.log("Error fetching labour details:", error);
+    }
+
+    try {
+      const labourAbout = await getLabourProfileById(labourId);
+      SetLabourAbout(labourAbout.data);
+    }
+    catch (error) {
+      console.log("Error fetching labour about:", error);
     }
   };
 
@@ -196,8 +207,14 @@ const MapView = () => {
                   </Grid>
                   <Grid item xs={8}>
                     <Typography variant="body1">
-                      {labourSelected?.about || "N/A"}
+                      {labourAbout?.aboutMe || "N/A"}
                     </Typography>
+                  </Grid>
+                  <Grid item xs={8}>
+                    {/* <Typography variant="body1">
+                      {labourAbout?.aboutMe || "N/A"}
+                    </Typography> */}
+                    <LabourPerfomance email={labourSelected?.email || "N/A"}/>
                   </Grid>
                   <Grid item xs={12}>
                     {/* <Button variant="outlined" onClick={handleHireClick}>
