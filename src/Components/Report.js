@@ -81,12 +81,12 @@ const Report = ({reportTo}) => {
     <Grid container component="main" item xs={false} sm={4} md={6} >
     {issue ?
       (
-      <Button variant="text" onClick={handleClickOpen} sx={{fontSize: '12px', textTransform: 'none', ml: 0}}>
+      <Button variant="outlined" onClick={handleClickOpen} sx={{fontSize: '12px', textTransform: 'none', ml: 0}}>
         Edit Report
       </Button>
       )
       :
-      ( <Button variant="text" onClick={handleClickOpen} sx={{fontSize: '12px', textTransform: 'none', ml: 0}}>
+      ( <Button variant="outlined" onClick={handleClickOpen} sx={{fontSize: '12px', textTransform: 'none', ml: 0}}>
           Report
         </Button>
       )

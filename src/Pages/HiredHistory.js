@@ -12,6 +12,7 @@ import { getBookingHistoryByCustomerId, getCompletedBookings } from "../Service/
 import { Grid, Typography, Box, Button } from "@mui/material";
 import { PieChart } from "@mui/x-charts/PieChart";
 import Review from "../Components/Review";
+import Report from "../Components/Report";
 
 
 const columns = [
@@ -20,6 +21,7 @@ const columns = [
   { id: "date", label: "Date", minWidth: 90 },
   { id: "startTime", label: "Start Time", minWidth: 40 },
   { id: "bookingStage", label: "Booking Stage", minWidth: 10 },
+  { id: "reportUser", label: "Report user", minWidth: 10 },
   { id: "jobDescription", label: "Job Description", minWidth: 170 },
 ];
 
@@ -114,7 +116,7 @@ export default function HiredHistory() {
   const handleAddReview = (bookingId) => {
     // Handle add review logic
     console.log("Add Review for bookingId: ", bookingId);
-    alert(bookingId);
+    // alert(bookingId);
   };
 
   const handlePrintReceipt = (bookingId) => {
@@ -196,7 +198,7 @@ export default function HiredHistory() {
                                 {/* <Button
                                   variant="contained"
                                   color="primary"
-                                  onClick={() => handleAddReview(row.id)}
+                                  onClick={() => handleAddReview(row.labourId)}
                                 >
                                   Add Review
                                 </Button> */}
@@ -419,6 +421,14 @@ export default function HiredHistory() {
                           >
                             {columns.map((column) => {
                               const value = row[column.id];
+                              if (column.id === "reportUser") {
+                                return (
+                                  <TableCell key={column.id} align={column.align}>
+                                <Report reportTo={row.labourId}/>
+
+                                  </TableCell>
+                                );
+                              } else {
                               return (
                                 <TableCell key={column.id} align={column.align}>
                                   <Typography
@@ -430,6 +440,7 @@ export default function HiredHistory() {
                                   </Typography>
                                 </TableCell>
                               );
+                                  }
                             })}
                           </TableRow>
                         );
