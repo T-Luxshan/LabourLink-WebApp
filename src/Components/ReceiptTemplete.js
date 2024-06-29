@@ -18,6 +18,7 @@ import { getFullBookingDetails } from "../Service/HiringService";
 import PrintIcon from "@mui/icons-material/Print";
 import Button from "@material-ui/core/Button";
 
+
 const ReceiptTemplate = () => {
   const ref = useRef();
   const { id } = useParams();
@@ -33,6 +34,7 @@ const ReceiptTemplate = () => {
     }
   }
 
+  
   useEffect(() => {
     fetchCompletedBookingHistory(id);
   }, [id]);
