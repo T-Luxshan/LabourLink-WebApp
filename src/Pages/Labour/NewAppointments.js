@@ -132,7 +132,7 @@ const NewAppointments = () => {
     if (!currentAppointment || !bookingDetails) return;
 
     const notification = {
-      title: `Request accepted from ${currentAppointment.customerName}`,
+      title: `Request from ${currentAppointment.customerName} is accepted`,
       message: `You have successfully accepted hiring request from ${currentAppointment.customerName}`,
       recipient: email,
       createdAt: new Date().toISOString(),
