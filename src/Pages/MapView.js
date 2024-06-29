@@ -15,6 +15,11 @@ import FormDialog from "../Components/FormDialog";
 import findMe from "../Images/findMeCropped.png";
 import { getLabourProfileById } from "../Service/LabourHomeService";
 import LabourPerfomance from './LabourPerfomance';
+import Rating from '@mui/material/Rating';
+import { getReviewOFTheLabour } from "../Service/ReviewService";
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
 
 const MapView = () => {
   const [labourPosition, setLabourPosition] = useState([]);
@@ -28,6 +33,7 @@ const MapView = () => {
 
   const job=jobRole;
   const [labourProfile, SetLabourProfile] = useState(null);
+  const [reviews, setReviews] = useState([]);
 
   // Get the user's location when the component mounts
   useEffect(() => {
@@ -70,6 +76,7 @@ const MapView = () => {
     setSelectedUser(user);
     console.log(user);
     labourFullDetails(user.labourId);
+    FetchlabourReviews(user.labourId);
   };
 
   const labourFullDetails = async (labourId) => {
@@ -89,6 +96,12 @@ const MapView = () => {
       console.log("Error fetching labour about:", error);
     }
   };
+
+  const FetchlabourReviews = (labourId) => {
+    getReviewOFTheLabour(labourId)
+      .then(res => setReviews(res.data))
+      .catch(err => console.log("failed to fetch reviews"));
+  }
 
   // const handleHireClick = () => {
   //   console.log("clicked");
@@ -194,7 +207,7 @@ const MapView = () => {
                       {labourProfile?.gender || "N/A"}
                     </Typography>
                   </Grid>
-                  
+
                   <Grid item xs={4}>
                     <Typography variant="body1" style={{ fontWeight: "bold" }}>Languages:</Typography>
                   </Grid>
@@ -285,31 +298,32 @@ const MapView = () => {
               boxSizing: "border-box",
             }}
           >
+          <Box sx={{ backgroundColor: 'white', p: 2, borderRadius: 4, maxHeight: '250vh', overflowY: 'auto', m: 4 }}>
             <Typography variant="h5" gutterBottom sx={{ marginTop: "40px" }}>
               <strong>Reviews</strong>
             </Typography>
-            <Box sx={{ backgroundColor: 'white', p: 2, borderRadius: 4, maxHeight: '250vh', overflowY: 'auto' }}>
-                <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1A237E', mb: 3, mt: '5px', textAlign: 'center' }}>
-                  My Reviews
+              {reviews.length === 0 ? (
+                <Typography sx={{ textAlign: 'center', color: 'grey', m: 4 }}>
+                  There are no reviews yet
+                  <br /><br />
                 </Typography>
-                {reviews.length === 0 ? (
-                  <Typography sx={{ textAlign: 'center', color: 'grey' }}>
-                    There are no reviews yet
-                  </Typography>
-                ) : (
-                  reviews.map((review, index) => (
-                    <Box key={index} sx={{ backgroundColor: '#F6F9FD', pt: 2, pr: 2, pl: 2, boxShadow: 0, borderRadius: 4, mb: 2, display: 'flex', flexDirection: 'column' }} onClick={() => handleReviewClick(review)}>
-                      <Typography sx={{ fontWeight: 'bold', mb: 2 }}>{review.customerName}</Typography>
-                      <Rating name="half-rating-read" value={review.rating} precision={0.5} readOnly />
-                      <Typography sx={{ color: 'grey' }}>Job role : {review.jobRole}</Typography>
-                      <Typography>{review.description}</Typography>
-                      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-                        <Report reportTo={review.customerEmail} />
-                      </Box>
-                    </Box>
-                  ))
-                )}
-              </Box>
+              ) : (
+                <Grid container spacing={2}>
+                  {reviews.map((review, index) => (
+                    <Grid item xs={12} sm={6} md={4} key={index}>
+                      <Card sx={{ minWidth: 275, backgroundColor: '#F6F9FD', borderRadius: 4, boxShadow: 1 }}>
+                        <CardContent>
+                          <Typography sx={{ fontWeight: 'bold', mb: 1 }}>{review.customerName}</Typography>
+                          <Rating name="half-rating-read" value={review.rating} precision={0.5} readOnly />
+                          <Typography sx={{ color: 'grey', mt: 1 }}>Job role: {review.jobRole}</Typography>
+                          <Typography sx={{ mt: 1 }}>{review.description}</Typography>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              )}
+            </Box>
           </Grid>
         </Grid>
       </Box>
