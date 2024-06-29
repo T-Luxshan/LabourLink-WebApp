@@ -36,19 +36,18 @@ const CustomLineChart = ({ series, xAxis, yAxisLabel, width, height }) => {
   );
 };
 
-const LabourPerformance = () => {
+const LabourPerformance = ({email}) => {
 
   React.useEffect(() => {
     fetchBookingDetails(email);
     fetchRatingDetails(email);
-  }, []);
+  }, [email]);
 
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const [selectedRole, setSelectedRole] = React.useState('all');
   const [bookingDetails, setBookingDetails] = React.useState([]);
   const [ratingDetails, setRatingDetails] = React.useState([]);
   const allBookingStagePieData = [];
-  let email = localStorage.getItem('userEmail');
   
 
   const fetchBookingDetails = (email) => {
