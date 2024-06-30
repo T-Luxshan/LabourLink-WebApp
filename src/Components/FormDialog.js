@@ -127,13 +127,45 @@ function FormDialog({ labourEmail, cutomerEmail, labourName }) {
     }
   };
 
+  // const labourHiredNotificationToLabour = async () => {
+  //   const notification = {
+  //     title: `New Job From ${cutomerEmail}`,
+  //     message: `You have received hiring request from ${cutomerEmail} respond to him as soon as possible`,
+  //     recipient: labourEmail, // Adjust as necessary
+  //     createdAt: new Date().toISOString(), // Add current time
+  //   };
+
+  //   try {
+  //     await saveNotifications(notification);
+  //   } catch (error) {
+  //     console.error("Error saving notification", error);
+  //   }
+  // };
+
   const labourHiredNotificationToLabour = async () => {
     const notification = {
-      title: `New Job From ${cutomerEmail}`,
-      message: `You have received hiring request from ${cutomerEmail} respond to him as soon as possible`,
-      recipient: labourEmail, // Adjust as necessary
-      createdAt: new Date().toISOString(), // Add current time
+      title: `New Job from ${cutomerEmail}`,
+      message: `You have received hiring request from ${cutomerEmail} for ${jobRole}`,
+      recipient: labourEmail,
+      createdAt: new Date().toISOString(),
     };
+
+    await fetch("https://app.nativenotify.com/api/indie/notification", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer dwb6dAoCmrQD8faaLyciTU`,
+      },
+      body: JSON.stringify({
+        appId: 21639,
+        appToken: "dwb6dAoCmrQD8faaLyciTU",
+        title: notification.title,
+        message: notification.message,
+        // userId: notification.recipient,
+        subID: labourEmail,
+        date: notification.createdAt,
+      }),
+    });
 
     try {
       await saveNotifications(notification);
