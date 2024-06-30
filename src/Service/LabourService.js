@@ -16,6 +16,7 @@ export const deleteLabour = (email) => {
   return axiosAuthInstance.delete(`${REST_API_BASE_URL}/${email}`)
 };
 
+
 export const updateLabour = (email, name, mobileNumber, nic) => {
   return axiosAuthInstance.put(`${REST_API_BASE_URL}/${email}`, {
     name, mobileNumber, nic
