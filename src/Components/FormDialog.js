@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import {
@@ -18,6 +18,7 @@ import addNotification from "react-push-notification";
 import logo from "../Images/app-logo3.png";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import HowToRegRoundedIcon from "@mui/icons-material/HowToRegRounded";
+import { getCustomersByEmail } from "../Service/CustomerService";
 
 function FormDialog({ labourEmail, cutomerEmail, labourName }) {
   // Destructure props
@@ -39,6 +40,26 @@ function FormDialog({ labourEmail, cutomerEmail, labourName }) {
   const email = cutomerEmail;
   const navigate = useNavigate();
   const [userRole, setUserRole] = useState(localStorage.getItem("userRole"));
+  // const [customerName,setCustomerName]=useState(localStorage.getItem("customerName"));
+  const [customer, setCustomer] = useState({});
+
+
+  useEffect(() => {
+    fetchCustomerData(email);
+  }, [email]);
+
+  async function fetchCustomerData(email) {
+    try {
+      console.log("Fetching customer data for email:", email);
+      const response = await getCustomersByEmail(email);
+      const imageData = response.data;
+      console.log("Customer data fetched:", response.data);
+      setCustomer(response.data);
+    } catch (error) {
+      navigate("/login");
+      console.error("Error fetching customer data:", error);
+    }
+  }
   
 
   const handleClickOpen = () => {
@@ -127,13 +148,45 @@ function FormDialog({ labourEmail, cutomerEmail, labourName }) {
     }
   };
 
+  // const labourHiredNotificationToLabour = async () => {
+  //   const notification = {
+  //     title: `New Job From ${cutomerEmail}`,
+  //     message: `You have received hiring request from ${cutomerEmail} respond to him as soon as possible`,
+  //     recipient: labourEmail, // Adjust as necessary
+  //     createdAt: new Date().toISOString(), // Add current time
+  //   };
+
+  //   try {
+  //     await saveNotifications(notification);
+  //   } catch (error) {
+  //     console.error("Error saving notification", error);
+  //   }
+  // };
+
   const labourHiredNotificationToLabour = async () => {
     const notification = {
-      title: `New Job From ${cutomerEmail}`,
-      message: `You have received hiring request from ${cutomerEmail} respond to him as soon as possible`,
-      recipient: labourEmail, // Adjust as necessary
-      createdAt: new Date().toISOString(), // Add current time
+      title: `New Job from ${customer.name}`,
+      message: `You have received hiring request from ${customer.name} for ${jobRole}`,
+      recipient: labourEmail,
+      createdAt: new Date().toISOString(),
     };
+
+    await fetch("https://app.nativenotify.com/api/indie/notification", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer dwb6dAoCmrQD8faaLyciTU`,
+      },
+      body: JSON.stringify({
+        appId: 21639,
+        appToken: "dwb6dAoCmrQD8faaLyciTU",
+        title: notification.title,
+        message: notification.message,
+        // userId: notification.recipient,
+        subID: labourEmail,
+        date: notification.createdAt,
+      }),
+    });
 
     try {
       await saveNotifications(notification);
