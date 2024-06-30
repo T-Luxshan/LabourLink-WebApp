@@ -13,6 +13,13 @@ import ManIcon from "@mui/icons-material/Man";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import FormDialog from "../Components/FormDialog";
 import findMe from "../Images/findMeCropped.png";
+import { getLabourProfileById } from "../Service/LabourHomeService";
+import LabourPerfomance from './LabourPerfomance';
+import Rating from '@mui/material/Rating';
+import { getReviewOFTheLabour } from "../Service/ReviewService";
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
 
 const MapView = () => {
   const [labourPosition, setLabourPosition] = useState([]);
@@ -25,6 +32,8 @@ const MapView = () => {
   const navigate=useNavigate();
 
   const job=jobRole;
+  const [labourProfile, SetLabourProfile] = useState(null);
+  const [reviews, setReviews] = useState([]);
 
   // Get the user's location when the component mounts
   useEffect(() => {
@@ -67,6 +76,7 @@ const MapView = () => {
     setSelectedUser(user);
     console.log(user);
     labourFullDetails(user.labourId);
+    FetchlabourReviews(user.labourId);
   };
 
   const labourFullDetails = async (labourId) => {
@@ -77,7 +87,21 @@ const MapView = () => {
     } catch (error) {
       console.log("Error fetching labour details:", error);
     }
+
+    try {
+      const labourProfile = await getLabourProfileById(labourId);
+      SetLabourProfile(labourProfile.data);
+    }
+    catch (error) {
+      console.log("Error fetching labour about:", error);
+    }
   };
+
+  const FetchlabourReviews = (labourId) => {
+    getReviewOFTheLabour(labourId)
+      .then(res => setReviews(res.data))
+      .catch(err => console.log("failed to fetch reviews"));
+  }
 
   // const handleHireClick = () => {
   //   console.log("clicked");
@@ -168,14 +192,6 @@ const MapView = () => {
 
                 <Grid container spacing={2}>
                   <Grid item xs={4}>
-                    <Typography variant="body1" style={{ fontWeight: "bold" }}>Email:</Typography>
-                  </Grid>
-                  <Grid item xs={8}>
-                    <Typography variant="body1">
-                      {labourSelected?.email || "N/A"}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4}>
                     <Typography variant="body1" style={{ fontWeight: "bold" }}>Name:</Typography>
                   </Grid>
                   <Grid item xs={8}>
@@ -184,11 +200,20 @@ const MapView = () => {
                     </Typography>
                   </Grid>
                   <Grid item xs={4}>
-                    <Typography variant="body1" style={{ fontWeight: "bold" }}>Mobile Number:</Typography>
+                    <Typography variant="body1" style={{ fontWeight: "bold" }}>Gender:</Typography>
                   </Grid>
                   <Grid item xs={8}>
                     <Typography variant="body1">
-                      {labourSelected?.mobileNumber || "N/A"}
+                      {labourProfile?.gender || "N/A"}
+                    </Typography>
+                  </Grid>
+
+                  <Grid item xs={4}>
+                    <Typography variant="body1" style={{ fontWeight: "bold" }}>Languages:</Typography>
+                  </Grid>
+                  <Grid item xs={8}>
+                    <Typography variant="body1">
+                      {labourProfile?.languages.join(", ") || "N/A"}
                     </Typography>
                   </Grid>
                   <Grid item xs={4}>
@@ -196,8 +221,14 @@ const MapView = () => {
                   </Grid>
                   <Grid item xs={8}>
                     <Typography variant="body1">
-                      {labourSelected?.about || "N/A"}
+                      {labourProfile?.aboutMe || "N/A"}
                     </Typography>
+                  </Grid>
+                  <Grid item xs={8}>
+                    {/* <Typography variant="body1">
+                      {labourAbout?.aboutMe || "N/A"}
+                    </Typography> */}
+                    <LabourPerfomance email={labourSelected?.email || "N/A"}/>
                   </Grid>
                   <Grid item xs={12}>
                     {/* <Button variant="outlined" onClick={handleHireClick}>
@@ -267,9 +298,32 @@ const MapView = () => {
               boxSizing: "border-box",
             }}
           >
+          <Box sx={{ backgroundColor: 'white', p: 2, borderRadius: 4, maxHeight: '250vh', overflowY: 'auto', m: 4 }}>
             <Typography variant="h5" gutterBottom sx={{ marginTop: "40px" }}>
               <strong>Reviews</strong>
             </Typography>
+              {reviews.length === 0 ? (
+                <Typography sx={{ textAlign: 'center', color: 'grey', m: 4 }}>
+                  There are no reviews yet
+                  <br /><br />
+                </Typography>
+              ) : (
+                <Grid container spacing={2}>
+                  {reviews.map((review, index) => (
+                    <Grid item xs={12} sm={6} md={4} key={index}>
+                      <Card sx={{ minWidth: 275, backgroundColor: '#F6F9FD', borderRadius: 4, boxShadow: 1 }}>
+                        <CardContent>
+                          <Typography sx={{ fontWeight: 'bold', mb: 1 }}>{review.customerName}</Typography>
+                          <Rating name="half-rating-read" value={review.rating} precision={0.5} readOnly />
+                          <Typography sx={{ color: 'grey', mt: 1 }}>Job role: {review.jobRole}</Typography>
+                          <Typography sx={{ mt: 1 }}>{review.description}</Typography>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              )}
+            </Box>
           </Grid>
         </Grid>
       </Box>
