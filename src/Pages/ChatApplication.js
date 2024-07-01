@@ -21,7 +21,6 @@ import {
   findConnectedUsers,
   updateUserStatus,
   findChatMessages,
-  findConnectedCustomers
 } from "../Service/UserService";
 import NavigationBarCustomer from "../Components/NavigationBar"
 import NavigationBarLabour from "../Components/NavigationBarLabour"
@@ -130,7 +129,7 @@ const ChatApplication = () => {
   async function findAndDisplayConnectedUsers() {
     if(userRole=='CUSTOMER'){
     try {
-      const connectedUserResponse = await findConnectedUsers(); // Call the function
+      const connectedUserResponse = await findConnectedUsers(senderEmail); // Call the function
       const connectedUsersData = await connectedUserResponse.data; // Access data property of response
       const filteredUsers = connectedUsersData.filter(
         (u) => u.email !== user.email
@@ -142,7 +141,7 @@ const ChatApplication = () => {
   }
   else{
     try {
-      const connectedUserResponse = await findConnectedCustomers(); // Call the function
+      const connectedUserResponse = await findConnectedUsers(senderEmail); // Call the function
       const connectedUsersData = await connectedUserResponse.data; // Access data property of response
       const filteredUsers = connectedUsersData.filter(
         (u) => u.email !== user.email
