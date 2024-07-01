@@ -212,9 +212,13 @@ const MapView = () => {
                     <Typography variant="body1" style={{ fontWeight: "bold" }}>Languages:</Typography>
                   </Grid>
                   <Grid item xs={8}>
-                    <Typography variant="body1">
-                      {labourProfile?.languages.join(", ") || "N/A"}
-                    </Typography>
+                  {labourProfile?
+                      <Typography variant="body1">
+                        {labourProfile.languages?.join(", ") ?? "N/A"}
+                      </Typography>
+                    :
+                    <Typography variant="body1"> N/A </Typography>
+                  }
                   </Grid>
                   <Grid item xs={4}>
                     <Typography variant="body1"style={{ fontWeight: "bold" }}>About:</Typography>
