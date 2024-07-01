@@ -20,19 +20,25 @@ import {
   getUserByEmail,
   findConnectedUsers,
   updateUserStatus,
-  findChatMessages,
 } from "../Service/UserService";
-import NavigationBarCustomer from "../Components/NavigationBar"
-import NavigationBarLabour from "../Components/NavigationBarLabour"
+import {
+  findChatMessages,
+  markAsRead,
+  unreadMessageCount,
+} from "../Service/ChatService";
+import NavigationBarCustomer from "../Components/NavigationBar";
+import NavigationBarLabour from "../Components/NavigationBarLabour";
+import { MarkAsUnread } from "@mui/icons-material";
 var stompClient = null;
 
-
 const ChatApplication = () => {
-  const[ senderEmail,SetSenderEmail] =  useState(localStorage.getItem('userEmail'));
-  const[userRole,setUserRole]=useState(localStorage.getItem('userRole'));
+  const [senderEmail, SetSenderEmail] = useState(
+    localStorage.getItem("userEmail")
+  );
+  const [userRole, setUserRole] = useState(localStorage.getItem("userRole"));
   const { receiverEmail } = useParams();
   const [user, setUser] = useState({
-    email: senderEmail ,
+    email: senderEmail,
     receiverEmail: receiverEmail || "",
     status: "OFFLINE",
     message: "",
@@ -48,13 +54,13 @@ const ChatApplication = () => {
   const [selectedUserName, setSelectedUserName] = useState();
 
   const chatAreaRef = useRef(null); // Create a reference to the chat area
-  const navigate=useNavigate();
-  
+  const navigate = useNavigate();
+
   useEffect(() => {
-    if(senderEmail !== null){
+    if (senderEmail !== null) {
       console.log(user);
-    }else{
-      navigate('/login');
+    } else {
+      navigate("/login");
     }
   }, [user]);
 
@@ -72,11 +78,6 @@ const ChatApplication = () => {
     registerUser(user);
   }, [user.email]); // Use `email` as the dependency here when email changes refreshes
 
-  useEffect(() => {
-    // Update received messages count whenever messages state changes
-    setReceivedMessagesCount(messages.length);
-  }, [messages]);
-
   const connect = (event) => {
     if (user.email) {
       // Create a SockJS instance and connect with STOMP over WebSocket
@@ -86,31 +87,29 @@ const ChatApplication = () => {
     }
   };
 
-
   const onConnected = () => {
     if (!user || !user.email) {
-        console.error("User information is incomplete.");
-        return;
+      console.error("User information is incomplete.");
+      return;
     }
 
     // Check connection state before subscribing and sending
     if (stompClient.connected) {
-        stompClient.subscribe(
-            "/user/" + user.email + "/queue/messages",
-            onMessageReceived
-        );
-        stompClient.subscribe("/user/public", onMessageReceived);
+      stompClient.subscribe(
+        "/user/" + user.email + "/queue/messages",
+        onMessageReceived
+      );
+      stompClient.subscribe("/user/public", onMessageReceived);
 
-        // Call findAndDisplayConnectedUsers only after connection
-        findAndDisplayConnectedUsers();
+      // Call findAndDisplayConnectedUsers only after connection
+      findAndDisplayConnectedUsers();
 
-        // Call userJoin after establishing the connection
-        userJoin();
+      // Call userJoin after establishing the connection
+      userJoin();
     } else {
-        console.log("Waiting for connection to be established...");
+      console.log("Waiting for connection to be established...");
     }
-};
-
+  };
 
   const userJoin = () => {
     // Ensure that user.email is present and accurate
@@ -127,31 +126,30 @@ const ChatApplication = () => {
   };
 
   async function findAndDisplayConnectedUsers() {
-    if(userRole=='CUSTOMER'){
-    try {
-      const connectedUserResponse = await findConnectedUsers(senderEmail); // Call the function
-      const connectedUsersData = await connectedUserResponse.data; // Access data property of response
-      const filteredUsers = connectedUsersData.filter(
-        (u) => u.email !== user.email
-      );
-      setConnectedUsers(filteredUsers);
-    } catch (error) {
-      console.log("Error fetching connected users:", error);
+    if (userRole == "CUSTOMER") {
+      try {
+        const connectedUserResponse = await findConnectedUsers(senderEmail); // Call the function
+        const connectedUsersData = await connectedUserResponse.data; // Access data property of response
+        const filteredUsers = connectedUsersData.filter(
+          (u) => u.email !== user.email
+        );
+        setConnectedUsers(filteredUsers);
+      } catch (error) {
+        console.log("Error fetching connected users:", error);
+      }
+    } else {
+      try {
+        const connectedUserResponse = await findConnectedUsers(senderEmail); // Call the function
+        const connectedUsersData = await connectedUserResponse.data; // Access data property of response
+        const filteredUsers = connectedUsersData.filter(
+          (u) => u.email !== user.email
+        );
+        setConnectedUsers(filteredUsers);
+      } catch (error) {
+        console.log("Error fetching connected users:", error);
+      }
     }
   }
-  else{
-    try {
-      const connectedUserResponse = await findConnectedUsers(senderEmail); // Call the function
-      const connectedUsersData = await connectedUserResponse.data; // Access data property of response
-      const filteredUsers = connectedUsersData.filter(
-        (u) => u.email !== user.email
-      );
-      setConnectedUsers(filteredUsers);
-    } catch (error) {
-      console.log("Error fetching connected users:", error);
-    }
-
-  }}
 
   //update connected users and display in realtime at every time message is sent and received
   useEffect(() => {
@@ -206,6 +204,7 @@ const ChatApplication = () => {
     setselectedUser(selectedUser);
     console.log(selectedUser);
     fetchAndDisplayUserChat(selectedUser);
+    handleMarkAsRead(senderEmail, selectedUser);
   };
 
   const fetchAndDisplayUserChat = async (selectedUser) => {
@@ -233,7 +232,6 @@ const ChatApplication = () => {
     }
   }, [messages]);
 
-
   const updateUserStatusToDB = async (user) => {
     console.log(user);
 
@@ -254,10 +252,36 @@ const ChatApplication = () => {
     console.log(name);
   };
 
+  async function handleMarkAsRead(senderEmail, receiverEmail) {
+    try {
+      await markAsRead(senderEmail, receiverEmail);
+      console.log("Messages marked as read successfully.");
+    } catch (error) {
+      console.error("Failed to mark messages as read:", error);
+    }
+  }
+
+  async function getUnreadCount(senderEmail, receiverEmail) {
+    try {
+      const count = await unreadMessageCount(senderEmail, receiverEmail);
+      // console.log('Unread Messages: '+ count.data);
+      setReceivedMessagesCount(count.data);
+    } catch (error) {
+      console.error("Failed to get unread messages count", error);
+    }
+  }
+
+  useEffect(() => {
+    getUnreadCount(senderEmail, receiverEmail);
+  }, [messages]);
+
   return (
-    
     <Container sx={{ mt: 10 }}>
-      {userRole === 'CUSTOMER' ? <NavigationBarCustomer /> : <NavigationBarLabour />}
+      {userRole === "CUSTOMER" ? (
+        <NavigationBarCustomer />
+      ) : (
+        <NavigationBarLabour />
+      )}
       {user.status === "ONLINE" ? (
         <Box sx={{ my: 4 }}>
           <Typography
@@ -321,7 +345,9 @@ const ChatApplication = () => {
                     },
                   }}
                 >
-                  <Box sx={{ padding: "20px", height: "100%", overflowY: "auto" }}>
+                  <Box
+                    sx={{ padding: "20px", height: "100%", overflowY: "auto" }}
+                  >
                     <Typography variant="h6" gutterBottom>
                       Connected Users
                     </Typography>
@@ -330,7 +356,9 @@ const ChatApplication = () => {
                         <ListItem
                           button
                           key={user.email}
-                          onClick={() => handleUserSelection(user.email, user.name)}
+                          onClick={() =>
+                            handleUserSelection(user.email, user.name)
+                          }
                           sx={{
                             backgroundColor:
                               selectedUser === user.email
@@ -345,7 +373,7 @@ const ChatApplication = () => {
                         >
                           <Avatar sx={{ marginRight: "10px" }} />
                           <ListItemText
-                            primary={`${user.name}`}
+                            primary={`${user.name}, ${receivedMessagesCount}`}
                             primaryTypographyProps={{ color: "#fff" }}
                           />
                         </ListItem>
@@ -354,7 +382,7 @@ const ChatApplication = () => {
                   </Box>
                 </Drawer>
               </Box>
-  
+
               <Box
                 sx={{
                   flex: { xs: "none", md: 1 },
@@ -393,13 +421,21 @@ const ChatApplication = () => {
                       <Avatar sx={{ marginRight: "10px" }} />
                       <ListItemText
                         primary={`${user.name}`}
+                        secondary={
+                          receivedMessagesCount !== 0
+                            ? `${receivedMessagesCount}`
+                            : null
+                        }
                         primaryTypographyProps={{ color: "#fff" }}
+                        secondaryTypographyProps={{
+                          style: { color: "#ff0000" },
+                        }}
                       />
                     </ListItem>
                   ))}
                 </List>
               </Box>
-  
+
               <Box
                 sx={{
                   flex: 3,
@@ -436,7 +472,9 @@ const ChatApplication = () => {
                               ? "#3498db"
                               : "#ecf0f1",
                           color:
-                            message.senderId === user.email ? "#fff" : "#34495e",
+                            message.senderId === user.email
+                              ? "#fff"
+                              : "#34495e",
                           padding: "10px",
                           borderRadius: "8px",
                           maxWidth: "75%",
@@ -448,7 +486,11 @@ const ChatApplication = () => {
                     </Box>
                   ))}
                 </Box>
-                <Box component="form" sx={{ display: "flex" }} onSubmit={sendMessage}>
+                <Box
+                  component="form"
+                  sx={{ display: "flex" }}
+                  onSubmit={sendMessage}
+                >
                   <TextField
                     id="message"
                     label="Type your message..."
@@ -478,7 +520,6 @@ const ChatApplication = () => {
       )}
     </Container>
   );
-  
 };
 
 export default ChatApplication;
