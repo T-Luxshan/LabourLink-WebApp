@@ -20,8 +20,8 @@ export const unreadMessageCount = (senderEmail, recipientEmail) => {
   );
 };
 
-export const totalUnreadMessageCount = (senderEmail) => {
+export const totalUnreadMessageCount = (recipientEmail) => {
   return axiosAuthInstance.get(
-    REST_API_BASE_URL + `/totalUnreadMessageCount/${senderEmail}}`
+    REST_API_BASE_URL + `/totalUnreadMessageCount/${recipientEmail}`
   );
 };
