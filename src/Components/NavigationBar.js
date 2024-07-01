@@ -68,7 +68,7 @@ const NavigationBar = () => {
     try {
       const response = await totalUnreadMessageCount(email);
       setTotalUnreadMessageCounts(response.data);
-      console.log("total unread :",response.data);
+      // console.log("total unread :",response.data);
     } catch (error) {
       console.log("Error fetching unread message count ", error);
     }

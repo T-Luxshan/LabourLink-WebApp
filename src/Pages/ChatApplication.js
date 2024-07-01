@@ -257,7 +257,7 @@ const ChatApplication = () => {
   async function getUnreadCount(receiverEmail, senderEmail) {
     try {
       const count = await unreadMessageCount(receiverEmail, senderEmail);
-      console.log('Unread Messages for ' + receiverEmail + ': ' + count.data);
+      // console.log('Unread Messages for ' + receiverEmail + ': ' + count.data);
       setReceivedMessagesCount(prevState => ({
         ...prevState,
         [receiverEmail]: count.data
