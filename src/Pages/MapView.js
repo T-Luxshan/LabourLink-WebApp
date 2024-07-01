@@ -6,7 +6,7 @@ import {
   AdvancedMarker,
   Pin,
 } from "@vis.gl/react-google-maps";
-import { CircularProgress, Grid, Box, Typography } from "@material-ui/core";
+import { CircularProgress, Grid, Box, Typography } from "@mui/material";
 import { getLocationsByJobRole } from "../Service/LocationService";
 import { getLabourById } from "../Service/LabourService";
 import ManIcon from "@mui/icons-material/Man";

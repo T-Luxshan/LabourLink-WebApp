@@ -41,7 +41,8 @@
     "sockjs-client": "^1.6.1",
     "stompjs": "^2.3.3",
     "web-vitals": "^2.1.4",
-    "yup": "^1.4.0"
+    "yup": "^1.4.0",
+    "clsx": "^1.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
