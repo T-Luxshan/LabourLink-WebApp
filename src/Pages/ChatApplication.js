@@ -126,28 +126,15 @@ const ChatApplication = () => {
   };
 
   async function findAndDisplayConnectedUsers() {
-    if (userRole == "CUSTOMER") {
-      try {
-        const connectedUserResponse = await findConnectedUsers(senderEmail); // Call the function
-        const connectedUsersData = await connectedUserResponse.data; // Access data property of response
-        const filteredUsers = connectedUsersData.filter(
-          (u) => u.email !== user.email
-        );
-        setConnectedUsers(filteredUsers);
-      } catch (error) {
-        console.log("Error fetching connected users:", error);
-      }
-    } else {
-      try {
-        const connectedUserResponse = await findConnectedUsers(senderEmail); // Call the function
-        const connectedUsersData = await connectedUserResponse.data; // Access data property of response
-        const filteredUsers = connectedUsersData.filter(
-          (u) => u.email !== user.email
-        );
-        setConnectedUsers(filteredUsers);
-      } catch (error) {
-        console.log("Error fetching connected users:", error);
-      }
+    try {
+      const connectedUserResponse = await findConnectedUsers(senderEmail); // Call the function
+      const connectedUsersData = await connectedUserResponse.data; // Access data property of response
+      const filteredUsers = connectedUsersData.filter(
+        (u) => u.email !== user.email
+      );
+      setConnectedUsers(filteredUsers);
+    } catch (error) {
+      console.log("Error fetching connected users:", error);
     }
   }
 
@@ -159,6 +146,12 @@ const ChatApplication = () => {
     // Optionally return a cleanup function if needed
     return () => {};
   }, [messages]);
+
+  useEffect(() => {
+    connectedUsers.forEach(user => {
+      getUnreadCount(user.email, senderEmail);
+    });
+  }, [connectedUsers, senderEmail]);
 
   const onError = () => {
     console.log("Error connecting to WebSocket server.");
@@ -204,7 +197,7 @@ const ChatApplication = () => {
     setselectedUser(selectedUser);
     console.log(selectedUser);
     fetchAndDisplayUserChat(selectedUser);
-    handleMarkAsRead(senderEmail, selectedUser);
+    handleMarkAsRead(selectedUser, senderEmail);
   };
 
   const fetchAndDisplayUserChat = async (selectedUser) => {
@@ -252,28 +245,31 @@ const ChatApplication = () => {
     console.log(name);
   };
 
-  async function handleMarkAsRead(senderEmail, receiverEmail) {
+  async function handleMarkAsRead(receiverEmail, senderEmail) {
     try {
-      await markAsRead(senderEmail, receiverEmail);
+      await markAsRead(receiverEmail, senderEmail);
       console.log("Messages marked as read successfully.");
     } catch (error) {
       console.error("Failed to mark messages as read:", error);
     }
   }
 
-  async function getUnreadCount(senderEmail, receiverEmail) {
+  async function getUnreadCount(receiverEmail, senderEmail) {
     try {
-      const count = await unreadMessageCount(senderEmail, receiverEmail);
-      // console.log('Unread Messages: '+ count.data);
-      setReceivedMessagesCount(count.data);
+      const count = await unreadMessageCount(receiverEmail, senderEmail);
+      console.log('Unread Messages for ' + receiverEmail + ': ' + count.data);
+      setReceivedMessagesCount(prevState => ({
+        ...prevState,
+        [receiverEmail]: count.data
+      }));
     } catch (error) {
       console.error("Failed to get unread messages count", error);
     }
   }
 
-  useEffect(() => {
-    getUnreadCount(senderEmail, receiverEmail);
-  }, [messages]);
+  // useEffect(() => {
+  //   getUnreadCount(senderEmail, receiverEmail);
+  // }, [messages,senderEmail]);
 
   return (
     <Container sx={{ mt: 10 }}>
@@ -422,8 +418,8 @@ const ChatApplication = () => {
                       <ListItemText
                         primary={`${user.name}`}
                         secondary={
-                          receivedMessagesCount !== 0
-                            ? `${receivedMessagesCount}`
+                          receivedMessagesCount[user.email] !== 0
+                            ? `${receivedMessagesCount[user.email]}`
                             : null
                         }
                         primaryTypographyProps={{ color: "#fff" }}

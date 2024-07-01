@@ -31,6 +31,7 @@ import { findNotifications } from "../Service/NotificationService";
 import { LogoutUser } from "../Service/AuthService";
 import addNotification from "react-push-notification";
 import logo from "../Images/app-logo3.png";
+import {totalUnreadMessageCount} from "../Service/ChatService"
 
 const NavigationBar = () => {
   const [email, setEmail] = useState(localStorage.getItem("userEmail"));
@@ -40,6 +41,7 @@ const NavigationBar = () => {
   const isMatch = useMediaQuery(theme.breakpoints.down("md"));
   const [openDrawer, setOpenDrawer] = useState(false);
   const navigate = useNavigate();
+  const [totalUnreadMessageCounts,setTotalUnreadMessageCounts]=useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -62,9 +64,20 @@ const NavigationBar = () => {
     }
   }
 
+  async function findtotalUnreadMessageCounts(email) {
+    try {
+      const response = await totalUnreadMessageCount(email);
+      setTotalUnreadMessageCounts(response.data);
+      console.log("total unread :",response.data);
+    } catch (error) {
+      console.log("Error fetching unread message count ", error);
+    }
+  }
+
   useEffect(() => {
     findNotificationMessages(email);
-  }, [notifications]);
+    findtotalUnreadMessageCounts(email);
+  }, [notifications,totalUnreadMessageCounts]);
 
   const count = notifications.length;
   const readCount = notifications.filter(
@@ -165,7 +178,17 @@ const NavigationBar = () => {
                   textTransform: "none",
                   fontFamily: "Montserrat",
                 }}
-                icon={<ChatRoundedIcon />}
+                icon={
+                  <>
+                  <Badge
+                    color="secondary"
+                    badgeContent={totalUnreadMessageCounts}
+                    max={99}
+                  >
+                    <ChatRoundedIcon sx={{mb: 0.5}}/>
+                  </Badge>
+                </>
+                }
               />
               <Tab
                 label="History"
