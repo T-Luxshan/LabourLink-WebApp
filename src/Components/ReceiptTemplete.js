@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { getFullBookingDetails } from "../Service/HiringService";
 import PrintIcon from "@mui/icons-material/Print";
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 
 
 const ReceiptTemplate = () => {
