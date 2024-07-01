@@ -29,6 +29,7 @@ import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
 import HistoryRoundedIcon from "@mui/icons-material/HistoryRounded";
 import { findNotifications } from "../Service/NotificationService";
 import { LogoutUser } from "../Service/AuthService";
+import {totalUnreadMessageCount} from "../Service/ChatService"
 
 const NavigationBarLabour = () => {
   const [email, setEmail] = useState(localStorage.getItem("userEmail"));
@@ -38,6 +39,7 @@ const NavigationBarLabour = () => {
   const isMatch = useMediaQuery(theme.breakpoints.down("md"));
   const [openDrawer, setOpenDrawer] = useState(false);
   const navigate = useNavigate();
+  const [totalUnreadMessageCounts,setTotalUnreadMessageCounts]=useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -60,9 +62,20 @@ const NavigationBarLabour = () => {
     }
   }
 
+  async function findtotalUnreadMessageCounts(email) {
+    try {
+      const response = await totalUnreadMessageCount(email);
+      setTotalUnreadMessageCounts(response.data);
+      // console.log("total unread :",response.data);
+    } catch (error) {
+      console.log("Error fetching unread message count ", error);
+    }
+  }
+
   useEffect(() => {
     findNotificationMessages(email);
-  }, [notifications]);
+    findtotalUnreadMessageCounts(email);
+  }, [notifications,totalUnreadMessageCounts]);
 
   const count = notifications.length;
   const readCount = notifications.filter(
@@ -141,7 +154,17 @@ const NavigationBarLabour = () => {
                   textTransform: "none",
                   fontFamily: "Montserrat",
                 }}
-                icon={<ChatRoundedIcon />}
+                icon={
+                  <>
+                  <Badge
+                    color="secondary"
+                    badgeContent={totalUnreadMessageCounts}
+                    max={99}
+                  >
+                    <ChatRoundedIcon sx={{mb: 0.5}}/>
+                  </Badge>
+                </>
+                }
               />
               <Tab
                 label="Notification"
