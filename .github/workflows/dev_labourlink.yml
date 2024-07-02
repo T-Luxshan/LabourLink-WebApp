@@ -32,7 +32,7 @@ jobs:
           npm run test -- --passWithNoTests
       
       - name: List files after build
-        run: ls -la
+        run: dir
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
