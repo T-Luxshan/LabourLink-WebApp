@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { jwtDecode } from "jwt-decode";
 import dayjs from 'dayjs';
+import { URL } from './BaseUrl';
 
-const REST_API_BASE_URL_AUTH = "http://localhost:8080/api/v1/auth";
-const  baseURL = 'http://localhost:8080/api';
-const FORGOTPASSWORD_BASE_URL = "http://localhost:8080/forgotPassword";
+const REST_API_BASE_URL_AUTH = `${URL}/api/v1/auth`;
+const  baseURL = `${URL}/api`;
+const FORGOTPASSWORD_BASE_URL = `${URL}/forgotPassword`;
 
 // // API for register customer
 export const registerCustomer = (name, email, password, mobileNumber, address) => {

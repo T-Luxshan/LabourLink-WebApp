@@ -1,6 +1,7 @@
 import axiosAuthInstance from './AuthService';
+import { URL } from './BaseUrl';
 
-const REST_API_BASE_URL_PROFILE = "http://localhost:8080/api/v1/profile";
+const REST_API_BASE_URL_PROFILE = `${URL}/api/v1/profile`;
 
 export const addProfilePicture = (profileUri) => {
     return axiosAuthInstance.post(`${REST_API_BASE_URL_PROFILE}`, {

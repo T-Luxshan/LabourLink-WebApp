@@ -1,6 +1,6 @@
 import axiosAuthInstance from "./AuthService";
-
-const REST_API_BASE_URL = "http://localhost:8080/api/user";
+import { URL } from "./BaseUrl";
+const REST_API_BASE_URL = `${URL}/api/user`;
 
 export const getUserByEmail = (email) => {
   return axiosAuthInstance.get(REST_API_BASE_URL + "/" + email);
@@ -25,5 +25,5 @@ export const updateUserStatus = (email, newUser) => {
 
 
 export const getUserByToken = () => {
-  return axiosAuthInstance.get("http://localhost:8080/api/user/user");
+  return axiosAuthInstance.get(`${URL}/api/user/user`);
 };
