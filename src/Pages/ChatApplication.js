@@ -81,7 +81,7 @@ const ChatApplication = () => {
   const connect = (event) => {
     if (user.email) {
       // Create a SockJS instance and connect with STOMP over WebSocket
-      let socket = new SockJS("http://localhost:8080/ws");
+      let socket = new SockJS("https://localhost:8080/ws");
       stompClient = over(socket);
       stompClient.connect({}, onConnected, onError);
     }
