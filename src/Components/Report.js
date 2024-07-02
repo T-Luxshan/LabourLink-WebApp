@@ -38,6 +38,11 @@ const Report = ({reportTo}) => {
   const [error, setError] = React.useState('');
   const [reportId, setReportID] = React.useState(null);
 
+  React.useEffect(() => {
+    setReportID('');
+    setIssue('');
+    setDescription('');
+  }, [reportTo])
   
   const handleIssueChange = (event) => {
     setIssue(event.target.value);
@@ -47,7 +52,8 @@ const Report = ({reportTo}) => {
     setDescription(event.target.value);
   };
 
-  const handleClickOpen = () => setOpen(true);
+  const handleClickOpen = () => {
+    setOpen(true)};
   const handleCancel = () => setOpen(false);
 
   const handleSave = () => {
