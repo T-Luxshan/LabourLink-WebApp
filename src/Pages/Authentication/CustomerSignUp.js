@@ -64,7 +64,7 @@ const CustomerSignUp = () => {
 
   const onSubmit = async (data) => {
     console.log(data);
-    let lowercaseEmail = data.get('email').toLowerCase();
+    let lowercaseEmail = data.email.toLowerCase();
     try {
       let response = await registerCustomer(data.name, data.email, data.password ,data.mobileNumber, data.address); 
       localStorage.setItem("token", response.data.accessToken);
