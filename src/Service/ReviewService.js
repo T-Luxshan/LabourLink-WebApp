@@ -1,7 +1,8 @@
 import axiosAuthInstance from "./AuthService";
 import axios from "axios";
+import { URL } from "./BaseUrl";
 
-const REST_API_BASE_URL_REVIEW = "http://localhost:8080/api/v1/labourReview";
+const REST_API_BASE_URL_REVIEW = `${URL}/api/v1/labourReview`;
 
 // API for add review
 export const addReview = (jobRole, description, rating, labourEmail) => {

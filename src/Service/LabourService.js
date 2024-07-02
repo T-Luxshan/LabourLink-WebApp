@@ -1,6 +1,6 @@
 import axiosAuthInstance from "./AuthService";
-
-const REST_API_BASE_URL = "http://localhost:8080/api/labour";
+import { URL } from "./BaseUrl";
+const REST_API_BASE_URL = `${URL}/api/labour`;
 
 export const getLabourById = (email) => {
   return axiosAuthInstance.get(REST_API_BASE_URL + "/getLabourById/" + email);

@@ -1,6 +1,6 @@
 import axiosAuthInstance from "./AuthService";
-
-const REST_API_BASE_URL_REPORT = "http://localhost:8080/api/v1/report";
+import { URL } from "./BaseUrl";
+const REST_API_BASE_URL_REPORT = `${URL}/api/v1/report`;
 
 // API for add report.
 export const reportUser = (title, description, reportedTo) => {

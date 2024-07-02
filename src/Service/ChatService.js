@@ -1,6 +1,6 @@
 import axiosAuthInstance from "./AuthService";
-
-const REST_API_BASE_URL = "http://localhost:8080";
+import { URL } from "./BaseUrl";
+const REST_API_BASE_URL = `${URL}`;
 
 export const findChatMessages = (senderEmail, recipientEmail) => {
   return axiosAuthInstance.get(

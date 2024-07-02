@@ -1,8 +1,9 @@
 import axiosAuthInstance from "./AuthService";
 import axios from "axios";
+import { URL } from "./BaseUrl";
 
-const REST_API_BASE_URL_LABOUR_PROFILE = "http://localhost:8080/api/labour-profiles";
-const REST_API_BASE_URL_LABOUR_REVIEW = "http://localhost:8080/api/v1/labourReview";
+const REST_API_BASE_URL_LABOUR_PROFILE =  `${URL}/api/labour-profiles`;
+const REST_API_BASE_URL_LABOUR_REVIEW = `${URL}/api/v1/labourReview`;
 
 export const getLabourProfileById = (email) => {
     return axiosAuthInstance.get(`${REST_API_BASE_URL_LABOUR_PROFILE}/getLabourProfileById/${email}`)

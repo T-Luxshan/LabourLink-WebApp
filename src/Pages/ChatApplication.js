@@ -29,6 +29,7 @@ import {
 import NavigationBarCustomer from "../Components/NavigationBar";
 import NavigationBarLabour from "../Components/NavigationBarLabour";
 import { MarkAsUnread } from "@mui/icons-material";
+import { URL } from "../Service/BaseUrl";
 var stompClient = null;
 
 const ChatApplication = () => {
@@ -81,7 +82,7 @@ const ChatApplication = () => {
   const connect = (event) => {
     if (user.email) {
       // Create a SockJS instance and connect with STOMP over WebSocket
-      let socket = new SockJS("https://localhost:8080/ws");
+      let socket = new SockJS(`${URL}/ws`);
       stompClient = over(socket);
       stompClient.connect({}, onConnected, onError);
     }

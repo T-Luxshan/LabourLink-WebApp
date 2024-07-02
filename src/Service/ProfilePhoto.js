@@ -1,6 +1,6 @@
 import axiosAuthInstance from "./AuthService";
-
-const BASE_URL="http://localhost:8080/api/profilePhoto/"
+import { URL } from "./BaseUrl";
+const BASE_URL=`${URL}/api/profilePhoto/`
 
 export const displayProfilePhoto = (email) => {
   return axiosAuthInstance.get(BASE_URL+ "display/" + email);

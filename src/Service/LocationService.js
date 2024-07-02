@@ -1,7 +1,8 @@
 import axiosAuthInstance from "./AuthService";
 import axios from "axios";
+import { URL } from "./BaseUrl";
 
-const REST_API_BASE_URL = "http://localhost:8080/api/labour-locations";
+const REST_API_BASE_URL = `${URL}/api/labour-locations`;
 
 export const getAllLabourLocations = ()=>{
     return axiosAuthInstance.get(REST_API_BASE_URL);

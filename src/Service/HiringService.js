@@ -1,7 +1,8 @@
 import axiosAuthInstance from "./AuthService";
 import axios from "axios";
+import { URL } from "./BaseUrl";
 
-const REST_API_BASE_URL = "http://localhost:8080/api/bookings";
+const REST_API_BASE_URL = `${URL}/api/bookings`;
 
 export const bookLabour = (booking) => {
   return axiosAuthInstance.post(REST_API_BASE_URL, booking);
