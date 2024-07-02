@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy JAR app to Azure Web App - labourlink
+name: Build and deploy Node.js app to Azure Web App - labourlink
 
 on:
   push:
@@ -16,22 +16,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Java version
-        uses: actions/setup-java@v1
+      - name: Set up Node.js version
+        uses: actions/setup-node@v3
         with:
-          java-version: '17'
+          node-version: '18.x'
 
-      - name: Build with Maven
-        run: mvn clean install
-
+      - name: npm install, build, and test
+        run: |
+          npm install
+          npm run build --if-present
+          npm run test --if-present
+      
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
-          name: java-app
-          path: '${{ github.workspace }}/target/*.jar'
+          name: node-app
+          path: .
 
   deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     needs: build
     environment:
       name: 'Production'
@@ -43,20 +46,20 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
-          name: java-app
+          name: node-app
       
       - name: Login to Azure
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_CE0F7D0EAD5940DA98389D19C308157A }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_196A6F7FA9484C5CB210AE285FD2ACC0 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_41EEEFEF445544608E95FF7A019DF3A9 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_79AC385E6427440EB2F934CBFC659F75 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_53BD1A60C1EE478F9F1A57267A1CD4A8 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_EDC7EBCA8C0A4CECB531B590ED9309C5 }}
 
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
+      - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
+        id: deploy-to-webapp
         with:
           app-name: 'labourlink'
           slot-name: 'Production'
-          package: '*.jar'
+          package: .
           
