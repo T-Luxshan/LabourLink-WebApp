@@ -19,6 +19,12 @@ jobs:
         with:
           submodules: true
           lfs: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16' # Specify the version of Node.js you need
+      - name: Install dependencies
+        run: npm install --force
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
