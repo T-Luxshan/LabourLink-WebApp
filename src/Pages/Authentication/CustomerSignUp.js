@@ -64,10 +64,13 @@ const CustomerSignUp = () => {
 
   const onSubmit = async (data) => {
     console.log(data);
+    let lowercaseEmail = data.get('email').toLowerCase();
     try {
       let response = await registerCustomer(data.name, data.email, data.password ,data.mobileNumber, data.address); 
       localStorage.setItem("token", response.data.accessToken);
       localStorage.setItem("refreshToken", response.data.refreshToken);
+      localStorage.setItem("userEmail", lowercaseEmail);
+      localStorage.setItem("userRole","CUSTOMER");
       console.log(response);
       navigate('/');
       setLogError("");
