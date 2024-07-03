@@ -175,10 +175,20 @@ const ChatApplication = () => {
       console.log(chatMessage);
 
       // Sending the chat message to the backend
-      stompClient.send("/app/chat", {}, JSON.stringify(chatMessage));
-      console.log("Message Sent");
+      // stompClient.send("/app/chat", {}, JSON.stringify(chatMessage));
+      // console.log("Message Sent");
 
-      setMessageInput("");
+      // setMessageInput("");
+
+            // Check connection state before sending the chat message
+            if (stompClient.connected) {
+              stompClient.send("/app/chat", {}, JSON.stringify(chatMessage));
+              console.log("Message Sent");
+      
+              setMessageInput("");
+            } else {
+              console.error("Connection not established. Cannot send message.");
+            }
     }
   };
 
