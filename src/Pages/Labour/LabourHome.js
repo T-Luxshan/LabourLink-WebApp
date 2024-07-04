@@ -364,7 +364,7 @@ const LabourHome = () => {
                             {appointment.startTime} |
                             <WorkIcon fontSize="small" sx={{ mr: "5px", ml: "5px" }} />
                             {appointment.jobRole}
-                            <Box sx={{ ml: 10, display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+                            <Box sx={{ ml: 8, display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
                               {/* <Button variant="outlined" color="secondary" onClick={()=> handleComplete(appointment.id)}>Completed</Button> */}
                               <JobAmount onAmountChange={handleAmountChange} bookingId={appointment.id}/>
                               <Button variant="outlined" color="error" onClick={()=> handleReject((appointment.id))}>Reject</Button>
