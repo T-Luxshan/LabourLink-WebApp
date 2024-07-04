@@ -49,7 +49,7 @@ const ReceiptTemplate = () => {
         <Grid container justifyContent="space-between" mb={3}>
           <Grid item xs={12} md={6} sx={{ marginBottom: { xs: 2, md: 0 } }}>
             <Barcode
-              value={`4n%${id}+ut%`}
+              value={`Booking Id: ${id}`}
               width={1}
               height={50}
               displayValue={false}
