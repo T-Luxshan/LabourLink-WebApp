@@ -8,7 +8,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { updateBookingAmount } from "../Service/HiringService";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import {Typography} from '@mui/material';
 
 const defaultTheme = createTheme({
   palette: {
@@ -28,10 +28,11 @@ export default function JobAmount({onAmountChange, bookingId}) {
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState("");
   const [bId, setBId] = useState(null);
+  const [error, setError] = useState('');
 
   const handleClickOpen = (id, initialAmount) => {
     setBId(id);
-    // alert(bookingId);
+    setError('');
     setAmount(initialAmount);
     setOpen(true);
   };
@@ -42,12 +43,16 @@ export default function JobAmount({onAmountChange, bookingId}) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if(amount < 0 || !amount){
+      setError("Please enter valid amount");
+      return;
+    }
     try {
       await updateBookingAmount(bookingId, amount);
       console.log("Booking amount updated successfully!");
       onAmountChange(bId);
     } catch (error) {
-      console.error("Error updating booking amount:", error);
+      console.log("Error updating booking amount:", error);
     }
     handleClose();
   };
@@ -83,6 +88,7 @@ export default function JobAmount({onAmountChange, bookingId}) {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
+          {error && <Typography sx={{color:'red', mt:1}}>{error}</Typography>}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
