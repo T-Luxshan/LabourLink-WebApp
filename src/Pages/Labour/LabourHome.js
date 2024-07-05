@@ -26,6 +26,9 @@ import { getProfilePicture } from '../../Service/ProfilePhotoService';
 import { LogoutUser } from '../../Service/AuthService';
 import JobAmount from '../../Components/JobAmount';
 import PageSkeleton from '../../Components/PageSkeleton';
+import addNotification from "react-push-notification";
+import { saveNotifications } from "../../Service/NotificationService";
+import logo from "../../Images/app-logo3.png";
 
 const defaultTheme = createTheme({
   palette: {
@@ -194,20 +197,98 @@ const LabourHome = () => {
     setGender(gen);
   };
 
-  const handleComplete = (id) => {
-    console.log("this is ", id);
-    UpdateBookingStage(id, "COMPLETED")
-      .then(res=>{
+  const handleComplete = (appointment) => {
+    labourComplete(appointment);
+    UpdateBookingStage(appointment.id, "COMPLETED")
+      .then(res => {
         console.log("updated to completed");
-        let updatedAccepted = acceptedAppointments.filter(appt => appt.id !== id);
-        let completedAppt = acceptedAppointments.find(appt => appt.id === id);
-
-        setService(service+1);
+        let updatedAccepted = acceptedAppointments.filter(appt => appt.id !== appointment.id);
+        setService(service + 1);
         setAcceptedAppointments(updatedAccepted);
-        setCompletedAppointments([...completedAppointments, completedAppt]);
+        setCompletedAppointments([...completedAppointments, appointment]);
       })
-      .catch(err=>console.log("update stage failed", err))
-  }
+      .catch(err => console.log("update stage failed", err))
+  };
+  
+  const labourComplete = async (appointment) => {
+    const notification = {
+      title: `Appointment from ${appointment.customerName} is completed`,
+      message: `You have successfully completed appointment request from ${appointment.customerName}`,
+      recipient: email,
+      createdAt: new Date().toISOString(),
+    };
+  
+    const notificationToCustomer = {
+      title: `Request for ${appointment.jobRole} accepted by ${appointment.labourName}`,
+      message: `Labour has successfully accepted hiring request`,
+      recipient: appointment.customerId,
+      createdAt: new Date().toISOString(),
+    };
+  
+    try {
+      await saveNotifications(notification);
+      await saveNotifications(notificationToCustomer);
+      addNotification({
+        title: notification.title,
+        message: notification.message,
+        duration: 4000,
+        icon: logo,
+        native: true,
+        onClick: () => navigate("/notification"),
+      });
+    } catch (error) {
+      console.error("Error saving notification", error);
+    }
+  };
+
+  // const handleComplete = (id) => {
+  //   console.log("this is ", id);
+  //   labourComplete(id);
+  //   UpdateBookingStage(id, "COMPLETED")
+  //     .then(res=>{
+  //       console.log("updated to completed");
+  //       let updatedAccepted = acceptedAppointments.filter(appt => appt.id !== id);
+  //       let completedAppt = acceptedAppointments.find(appt => appt.id === id);
+
+  //       setService(service+1);
+  //       setAcceptedAppointments(updatedAccepted);
+  //       setCompletedAppointments([...completedAppointments, completedAppt]);
+  //     })
+  //     .catch(err=>console.log("update stage failed", err))
+  // }
+
+  // const labourComplete = async (id) => {
+  //   const notification = {
+  //     title: `Appointment from ${id.customerName} is completed`,
+  //     message: `You have successfully completed appointment request from ${id.customerName}`,
+  //     recipient: email,
+  //     createdAt: new Date().toISOString(),
+  //   };
+
+  //   const notificationToCustomer = {
+  //     title: `Request for ${id.jobRole} accepted by ${id.labourName}`,
+  //     message: `Labour has successfully accepted hiring request`,
+  //     recipient: acceptedAppointments.customerId,
+  //     createdAt: new Date().toISOString(),
+  //   };
+
+  //   try {
+  //     await saveNotifications(notification);
+  //     await saveNotifications(notificationToCustomer);
+  //     addNotification({
+  //       title: notification.title,
+  //       message: notification.message,
+  //       duration: 4000,
+  //       icon: logo,
+  //       native: true,
+  //       onClick: () => navigate("/notification"),
+  //     });
+  //   } catch (error) {
+  //     console.error("Error saving notification", error);
+  //   }
+  // };
+
+
   const handleReject = (id) => {
     UpdateBookingStage(id, "DECLINED")
       .then(res=>{
@@ -224,8 +305,14 @@ const LabourHome = () => {
   }
 
   const handleAmountChange = (id) => {
-    handleComplete(id);
-  }
+    const appointment = acceptedAppointments.find(appt => appt.id === id);
+    if (!appointment) {
+      console.error("Appointment not found");
+      return;
+    }
+    
+    handleComplete(appointment);
+  };
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
@@ -364,7 +451,7 @@ const LabourHome = () => {
                             {appointment.startTime} |
                             <WorkIcon fontSize="small" sx={{ mr: "5px", ml: "5px" }} />
                             {appointment.jobRole}
-                            <Box sx={{ ml: 10, display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+                            <Box sx={{ ml: 8, display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
                               {/* <Button variant="outlined" color="secondary" onClick={()=> handleComplete(appointment.id)}>Completed</Button> */}
                               <JobAmount onAmountChange={handleAmountChange} bookingId={appointment.id}/>
                               <Button variant="outlined" color="error" onClick={()=> handleReject((appointment.id))}>Reject</Button>
